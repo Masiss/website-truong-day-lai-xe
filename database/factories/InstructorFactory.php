@@ -22,6 +22,8 @@ class InstructorFactory extends Factory
             'phone_numbers'=>$this->faker->unique()->numberBetween(1111111111,9999999999),
             'gender'=>$this->faker->boolean(),
             'salary'=>$this->faker->numberBetween(3000000,5000000),
+            'avatar'=>$this->faker->imageUrl(),
+            'password'=>$this->faker->password(),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\CourseControlller;
+use App\Http\Controllers\Admin\InstructorControlller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,18 +23,23 @@ Route::group([
     'as' => 'admin.',
     'prefix' => 'admin',
 ], function () {
+    Route::get('/', function () {
+        $route = Route::currentRouteName();
+        $breadCrumb = explode('.', $route);
+        $pageName = last($breadCrumb);
+        return view('admin.index', [
+            'pageName' => $pageName,
+            'breadCrumb' => $breadCrumb,
+        ]);
+    }
+    );
+    Route::get('drivers/api', [DriverController::class, 'api'])->name('drivers.api');
+    Route::resource('drivers', DriverController::class)->except([
+        'show',
+    ]);
     Route::group([
-        'as' => 'drivers.',
-        'prefix' => 'drivers',
-    ],
-        function () {
-            Route::get('/', [DriverController::class, 'index'])->name('index');
-            Route::get('/create', [DriverController::class, 'create'])->name('create');
-            Route::get('/api', [DriverController::class, 'api'])->name('api');
-        });
-    Route::group([
-        'as' => 'course.',
-        'prefix' => 'course',
+        'as' => 'courses.',
+        'prefix' => 'courses',
     ],
         function () {
             Route::get('/', [CourseControlller::class, 'index'])->name('index');
@@ -42,13 +48,13 @@ Route::group([
         }
     );
     Route::group([
-        'as' => 'driver.',
-        'prefix' => 'drivẻ',
+        'as' => 'instructors.',
+        'prefix' => 'instructors',
     ],
         function () {
-            Route::get('/', [DriverController::class, 'index'])->name('index');
-            Route::get('/create', [DriverController::class, 'create'])->name('create');
-            Route::get('/api', [DriverController::class, 'api'])->name('api');
+            Route::get('/', [InstructorControlller::class, 'index'])->name('index');
+            Route::get('/create', [InstructorControlller::class, 'create'])->name('create');
+            Route::get('/api', [InstructorControlller::class, 'api'])->name('api');
         }
     );
 });

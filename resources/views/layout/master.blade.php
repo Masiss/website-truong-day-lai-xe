@@ -20,6 +20,7 @@
 
     <!-- BEGIN: Vendor CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset('css/vendors.min.css')}}">
+    @stack('vendor')
 
     <!-- END: Vendor CSS-->
 
@@ -31,7 +32,6 @@
     <link rel="stylesheet" type="text/css" href="{{asset('css/dark-layout.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('css/bordered-layout.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('css/semi-dark-layout.min.css')}}">
-
     <!-- BEGIN: Page CSS-->
 @stack('css')
 <!-- END: Page CSS-->

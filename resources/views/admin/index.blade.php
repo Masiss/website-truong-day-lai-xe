@@ -5,27 +5,27 @@
 @section('content')
 
 
-            <div class="content-body">
-                <div class="row">
-                    <a href="{{route('admin.drivers.create')}}">Thêm</a>
-                    <table id="table-data">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tên</th>
-                            <th>Giới tính</th>
-                            <th>Mã khóa học</th>
-                            <th>CCCD</th>
-                            <th>Email</th>
-                            <th>SĐT</th>
-                            <th>Ngày sinh</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-
+    <div class="content-body">
+        <div class="row">
+            <div>
+                <a href="{{route('admin.courses.index')}}">
+                    <h3>Courses</h3>
+                </a>
             </div>
+            <div>
+                <a href="{{route('admin.instructors.index')}}">
+                    <h3>Instructors</h3>
+                </a>
+            </div>
+            <div>
+                <a href="{{route('admin.drivers.index')}}">
+                    <h3>Drivers</h3>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
 
     @push('javascript')
         <script type="text/javascript"
@@ -40,16 +40,22 @@
                 $('#table-data').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{!! route('admin.drivers.api') !!}',
+                    ajax: '{!! route('admin.instructors.api') !!}',
                     columns: [
                         {data: 'id', name: 'id'},
                         {data: 'name', name: 'name'},
-                        {data: 'gender', name: 'gender'},
-                        {data: 'course_id', name: 'course_id'},
-                        {data: 'id_numbers', name: 'id_numbers'},
+                        {
+                            data: 'avatar',
+                            name: 'avatar',
+                            render: function (data) {
+                                return `<img src=${data} style="width:100px;height:100px">`;
+                            },
+                        },
                         {data: 'email', name: 'email'},
                         {data: 'phone_numbers', name: 'phone_numbers'},
-                        {data: 'birthdate', name: 'birthdate'},
+                        {data: 'gender', name: 'gender'},
+                        {data: 'salary', name: 'salary'},
+
                     ]
                 });
             })

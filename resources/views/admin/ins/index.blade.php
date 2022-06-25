@@ -7,14 +7,16 @@
 
     <div class="content-body">
         <div class="row">
-            <a href="{{route('admin.courses.create')}}">Thêm</a>
             <table id="table-data">
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Số giờ còn lại</th>
-                    <th>Giá nguyên khóa</th>
-                    <th>Giá mỗi buổi</th>
+                    <th>Tên</th>
+                    <th>Ảnh</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Giới tính</th>
+                    <th>Lương</th>
 
                 </tr>
                 </thead>
@@ -36,12 +38,22 @@
                 $('#table-data').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{!! route('admin.courses.api') !!}',
+                    ajax: '{!! route('admin.instructors.api') !!}',
                     columns: [
                         {data: 'id', name: 'id'},
-                        {data: 'hours', name: 'hours'},
-                        {data: 'price', name: 'price'},
-                        {data: 'price_per_day', name: 'price_per_day'},
+                        {data: 'name', name: 'name'},
+                        {
+                            data: 'avatar',
+                            name: 'avatar',
+                            render: function (data)
+                            {
+                                return `<img src=${data} style="width:100px;height:100px">`;
+                            },
+                        },
+                        {data: 'email', name: 'email'},
+                        {data: 'phone_numbers', name: 'phone_numbers'},
+                        {data: 'gender', name: 'gender'},
+                        {data: 'salary', name: 'salary'},
 
                     ]
                 });

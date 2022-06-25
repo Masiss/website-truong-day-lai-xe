@@ -22,12 +22,21 @@ class InstructorControlller extends Controller
 
     public function index()
     {
-        return view('admin.instructor.index');
+        return view('admin.ins.index');
 
     }
+
     public function api(Request $request)
     {
         return DataTables::of(Instructor::query()->get())
+            ->editColumn('gender', function ($object) {
+                return $object->gender === 1 ? 'Male' : 'Female';
+            })
             ->make(true);
+    }
+
+    public function create()
+    {
+
     }
 }

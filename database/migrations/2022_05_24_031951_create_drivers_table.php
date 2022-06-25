@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('birthdate');
             $table->string('file');
             $table->boolean('is_full');
+            $table->string('password');
             $table->timestamps();
         });
     }

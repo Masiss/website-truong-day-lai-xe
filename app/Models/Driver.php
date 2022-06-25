@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 class Driver extends Model
 {
     use HasFactory;
+    protected $cast = [
+        'birthdate'=>'date:d-m-Y',
+    ];
     protected function genderName(): Attribute
     {
         return Attribute::make(
@@ -19,5 +22,10 @@ class Driver extends Model
                     :'Male';
             }
         );
+    }
+
+    public function course()
+    {
+        return $this->hasOne(Course::class, 'id', 'course_id');
     }
 }

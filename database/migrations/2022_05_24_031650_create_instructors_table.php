@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('phone_numbers',10);
             $table->boolean('gender');
             $table->integer('salary')->nullable();
+            $table->string('avatar');
+            $table->string('password');
+            $table->enum('level',[0,1]);
             $table->timestamps();
         });
     }

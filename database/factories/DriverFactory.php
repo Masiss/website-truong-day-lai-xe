@@ -25,8 +25,9 @@ class DriverFactory extends Factory
             'email'=>$this->faker->email(),
             'phone_numbers'=>$this->faker->unique()->numberBetween(1111111111,9999999999),
             'birthdate'=>$this->faker->dateTimeBetween('-70 years','-18 years'),
-            'file'=>$this->faker->image(),
+            'file'=>$this->faker->imageUrl(),
             'is_full'=>$this->faker->boolean(),
+            'password'=>$this->faker->password(),
 
 
         ];

@@ -101,7 +101,7 @@
 
                     </i>
                     <span
-                        class="menu-title text-truncate" data-i18n="Email">Email</span>
+                        class="menu-title text-truncate" data-i18n="Email">Học viên</span>
                 </a>
             </li>
             <li class=" nav-item">

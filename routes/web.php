@@ -32,7 +32,7 @@ Route::group([
             'breadCrumb' => $breadCrumb,
         ]);
     }
-    );
+    )->name('index');
     Route::get('drivers/api', [DriverController::class, 'api'])->name('drivers.api');
     Route::resource('drivers', DriverController::class)->except([
         'show',

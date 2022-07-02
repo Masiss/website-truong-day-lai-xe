@@ -33,8 +33,8 @@
     <link rel="stylesheet" type="text/css" href="{{asset('css/bordered-layout.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('css/semi-dark-layout.min.css')}}">
     <!-- BEGIN: Page CSS-->
-@stack('css')
-<!-- END: Page CSS-->
+    @stack('css')
+    <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}">
@@ -75,21 +75,40 @@
 
 </div>
 
-
+{{--Vendor JS--}}
 <script src="{{asset('js/vendors.min.js')}}"></script>
 <!-- BEGIN: Theme JS-->
 <script src="{{asset('js/app-menu.min.js')}}"></script>
 <script src="{{asset('js/app.min.js')}}"></script>
 <script src="{{asset('js/customizer.min.js')}}"></script>
+{{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>--}}
+
 <!-- END: Theme JS-->
 @stack('javascript')
+
 <script>
     $(window).on('load', function () {
         if (feather) {
             feather.replace({width: 14, height: 14});
         }
     })
+    $(window).on('load', function () {
+        let a = $(".main-menu-content ul li a");
+        var path = window.location.pathname.split('/');
+        path = path.length < 4 ? path : path.slice(0, -2);
+        $(".main-menu-content ul li a").map(function (index, value) {
+            var $this = $(this);
+
+            if ($this.attr("href") === path.join("/")) {
+
+                $this.closest("li").addClass('active');
+            }
+        });
+
+    })
+
 </script>
+
 </body>
 <!-- END: Body-->
 </html>

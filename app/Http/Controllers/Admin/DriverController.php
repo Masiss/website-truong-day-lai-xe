@@ -39,6 +39,12 @@ class DriverController extends Controller
             ->addColumn('edit',fn($object)=>$object->id)
             ->make(true);
     }
+    public function create(){
+        return view('admin.driver.create');
+    }
+    public function store(Request $request){
+dd($request->all());
+    }
     public function edit(Driver $driver)
     {
 //        $course=Course::query()->where('id',$driver->id)->get();

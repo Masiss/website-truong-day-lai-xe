@@ -47,15 +47,9 @@ Route::group([
             Route::get('/api', [CourseControlller::class, 'api'])->name('api');
         }
     );
-    Route::group([
-        'as' => 'instructors.',
-        'prefix' => 'instructors',
-    ],
-        function () {
-            Route::get('/', [InstructorControlller::class, 'index'])->name('index');
-            Route::get('/create', [InstructorControlller::class, 'create'])->name('create');
-            Route::get('/api', [InstructorControlller::class, 'api'])->name('api');
-        }
-    );
+    Route::resource('instructors',InstructorControlller::class)->except([
+        'show',
+    ]);
+    Route::get('instructors/api',[InstructorControlller::class,'api'])->name('instructors.api');
 });
 

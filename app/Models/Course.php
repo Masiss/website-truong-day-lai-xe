@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
+    protected $fillable=[
+        'days_of_week',
+        'price',
+        'price_per_day',
+    ];
 }

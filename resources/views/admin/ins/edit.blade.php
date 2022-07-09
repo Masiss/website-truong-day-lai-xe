@@ -15,12 +15,12 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" id="form-data-1" class="needs-validation"
+                <form enctype="multipart/form-data" action="{{route('admin.instructors.update',$ins->id)}}" method="POST" id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Thêm giáo viên</h4>
+                                <h4 class="card-title">Thêm học viên</h4>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li>
@@ -31,16 +31,18 @@
                             </div>
 
                             @csrf
-
+                            @method('PUT')
                             <div class="card-content collapse show">
 
                                 <div class="card-body">
 
                                     <div class="row">
+                                        <input value="{{$ins->id}}" name="id" hidden>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="name">Tên</label>
 
                                             <input
+                                                value="{{$ins->name}}"
                                                 type="text"
                                                 id="name"
                                                 class="form-control"
@@ -61,6 +63,9 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
+                                                    @if($ins->gender===0)
+                                                        {{"checked"}}
+                                                        @endif
                                                     />
                                                     <label class="form-check-label" for="validationRadio3">Nam</label>
                                                 </div>
@@ -71,6 +76,9 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
+                                                    @if($ins->gender===1)
+                                                        {{"checked"}}
+                                                        @endif
                                                     />
                                                     <label class="form-check-label" for="validationRadio4">Nữ</label>
                                                 </div>
@@ -82,6 +90,8 @@
                                             </label>
 
                                             <input
+                                                value="{{$ins->birthdate}}"
+
                                                 type="text"
                                                 name="birthdate"
                                                 id="fp-human-friendly"
@@ -92,10 +102,12 @@
                                             <div class="valid-feedback"></div>
                                             <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
-                                        <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
+                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="phone_numbers">Số điện thoại</label>
 
                                             <input
+                                                value="{{$ins->phone_numbers}}"
+
                                                 type="number"
                                                 id="phone_numbers"
                                                 class="form-control"
@@ -106,21 +118,14 @@
                                             <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
 
-                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
-                                            <label class="form-label" for="email">Email</label>
-                                            <input
-                                                type="email"
-                                                id="email"
-                                                class="form-control"
-                                                placeholder="email"
-                                                name="email"
-                                                required
-                                            />
-                                            <div class="invalid-feedback">Please enter a valid email</div>
-                                        </div>
-                                        <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
-                                            <label for="customFile1" class="form-label">File hình thẻ</label>
-                                            <input class="form-control" name="avatar" type="file" id="file" required/>
+
+                                        {{--                                        col-xl-5 col-md-6 col-sm-12 mb-2--}}
+                                        <div class=" text-center col-xl-6 ">
+                                            <label for="customFile1" class="form-label">Avatar</label>
+                                            <input value="" class="form-control" name="Avatar"
+                                                   type="file" id="Avatar"/>
+                                            <img class="rounded d-block" src="{{$ins->avatar}}"
+                                                 style="max-height: 20em;">
                                         </div>
                                         <div class="col-xl-1 center-layout">
                                             <button class="btn btn-primary " id="btn-submit">
@@ -128,13 +133,10 @@
                                             </button>
                                         </div>
 
-
                                     </div>
                                 </div>
 
                             </div>
-
-
                         </div>
 
 
@@ -162,43 +164,7 @@
         <script src={{asset('js/select2.full.min.js')}}></script>
         <script src={{asset('js/jquery.validate.min.js')}}></script>
         <script src={{asset('js/form-select2.min.js')}}></script>
-        <script type="text/javascript">
 
-            $(document).ready(function () {
-                $("#btn-submit").click(function (event) {
-                    //validate
-                    var form = document.getElementById('form-data-1');
-                    form.dispatchEvent(new Event('submit'));
-                    // Form data
-                    var form1 = new FormData(document.getElementById('form-data-1'));
-                    event.preventDefault();
-                    //ajax
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        url: '{{route('admin.instructors.store')}}',
-                        type: 'POST',
-                        dataType: "JSON",
-                        data: form1,
-                        contentType: false,
-                        processData: false,
-                        success: function (event) {
-                            if (event == "1") {
-                                window.location = "{{route('admin.instructors.store')}}";
-
-                            } else {
-                                console.log(0);
-                            }
-                        },
-                        error: function () {
-                            console.log(0);
-                        },
-
-                    });
-                })
-            });
-        </script>
         <script src={{asset('js/form-validation.js')}}></script>
 
     @endpush

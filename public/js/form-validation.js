@@ -20,18 +20,26 @@ $(function () {
         var $this = $(this);
         $this.wrap('<div class="position-relative"></div>');
         $this
-        //     .select2({
-        //         placeholder: 'Select value',
-        //         // dropdownParent: $this.parent()
-        //     })
+                .select2({
+                    placeholder: 'Select value',
+                    // dropdownParent: $this.parent()
+                })
             .change(function () {
-                $(this).valid();
+                // $(this).valid();
             });
     });
 
     // Picker
     if (picker.length) {
+        let now = new Date(),
+            currY = now.getFullYear(),
+            currM = now.getMonth(),
+            currD = now.getDate(),
+            max = currY - 18,
+            min = currY - 70;
         picker.flatpickr({
+            maxDate: new Date(max, currM, currD),
+            minDate: new Date(min, currM, currD),
             allowInput: true,
             onReady: function (selectedDates, dateStr, instance) {
                 if (instance.isMobile) {
@@ -46,11 +54,20 @@ $(function () {
     if (bootstrapForm.length) {
         Array.prototype.filter.call(bootstrapForm, function (form) {
             form.addEventListener('submit', function (event) {
-                if (form.checkValidity() === false) {
+                if($("select#select2-limited").length){
+                    $("select#select2-limited").valid();
+                    form.classList.add('invalid');
+                    event.preventDefault();
+
+
+                }
+                if (form.checkValidity() === false ) {
                     form.classList.add('invalid');
                     event.preventDefault();
 
                 }
+
+
                 form.classList.add('was-validated');
                 // if (inputGroupValidation) {
                 //   inputGroupValidation(form);

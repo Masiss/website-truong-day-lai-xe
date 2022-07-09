@@ -4,7 +4,6 @@
 @endpush
 @section('content')
 
-
     <div class="content-body">
         <div class="row">
             <a href="{{route('admin.drivers.create')}}">Thêm</a>
@@ -20,6 +19,7 @@
                     <th>SĐT</th>
                     <th>Ngày sinh</th>
                     <th>Avatar</th>
+                    <th></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -52,17 +52,28 @@
                         {data: 'phone_numbers', name: 'phone_numbers'},
                         {data: 'birthdate', name: 'birthdate'},
                         {
-                            data:'file',
-                            name:'file',
-                            render: function(data){
+                            data: 'file',
+                            name: 'file',
+                            render: function (data) {
                                 return `<img src='${data}' style="width:100px;height:100px">`;
                             },
                         },
                         {
-                            data:'edit',
-                            name:'edit',
-                            render: function(data){
+                            data: 'edit',
+                            name: 'edit',
+                            render: function (data) {
                                 return `<a href="drivers/${data}/edit">Sửa</a>`;
+                            }
+                        },
+                        {
+                            data: 'delete',
+                            name: 'delete',
+                            render: function (data) {
+                                return `<form action="drivers/${data}" method="POST" >
+                                @csrf
+                                @method('DELETE')
+                                <button class="" type="submit">Xóa</button>
+                            </form>"`;
                             }
                         },
                     ]

@@ -4,10 +4,8 @@
 .picker {
 	width: 100%;
 	text-align: left;
-	position: absolute;
-	top: 100%;
+	position: relative;
 	margin-top: -1px;
-	z-index: 990;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;

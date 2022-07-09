@@ -3,21 +3,20 @@
     <link rel="stylesheet" type="text/css" href="{{asset('css/vertical-menu.min.css')}}">
 @endpush
 @section('content')
-
-
     <div class="content-body">
         <div class="row">
+            <a href="{{route('admin.instructors.create')}}">Thêm</a>
             <table id="table-data">
                 <thead>
                 <tr>
                     <th>#</th>
                     <th>Tên</th>
+                    <th>Giới tính</th>
                     <th>Ảnh</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
-                    <th>Giới tính</th>
                     <th>Lương</th>
-
+                    <th></th>
                 </tr>
                 </thead>
             </table>
@@ -42,18 +41,24 @@
                     columns: [
                         {data: 'id', name: 'id'},
                         {data: 'name', name: 'name'},
+                        {data: 'gender', name: 'gender'},
                         {
-                            data: 'avatar',
-                            name: 'avatar',
-                            render: function (data)
-                            {
-                                return `<img src=${data} style="width:100px;height:100px">`;
+                            data:'avatar',
+                            name:'avatar',
+                            render: function(data){
+                                return `<img src='${data}' style="width:100px;height:100px">`;
                             },
                         },
                         {data: 'email', name: 'email'},
                         {data: 'phone_numbers', name: 'phone_numbers'},
-                        {data: 'gender', name: 'gender'},
                         {data: 'salary', name: 'salary'},
+                        {
+                            data: 'edit',
+                            name: 'edit',
+                            render: function (data) {
+                                return `<a href="instructors/${data}/edit">Sửa</a>`;
+                            }
+                        }
 
                     ]
                 });

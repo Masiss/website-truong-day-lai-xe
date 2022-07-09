@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -17,16 +16,20 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('gender');
-            $table->foreignId('course_id')->constrained('courses');
-            $table->integer('id_numbers');
+            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+            $table->string('id_numbers', 12);
             $table->string('email');
-            $table->string('phone_numbers',10);
+            $table->string('phone_numbers', 10);
             $table->date('birthdate');
             $table->string('file');
             $table->boolean('is_full');
             $table->string('password');
             $table->timestamps();
+            $table->softDeletes();
+
         });
+
+
     }
 
     /**
@@ -36,6 +39,10 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('drivers', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
         Schema::dropIfExists('drivers');
+
     }
 };

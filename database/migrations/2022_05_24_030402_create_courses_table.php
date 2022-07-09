@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->integer('hours');
-            $table->string('days_of_week');
-            $table->integer('price')->nullable();
-            $table->integer('price_per_day')->nullable();
+            $table->json('days_of_week');
+            $table->unsignedInteger('price')->nullable();
+            $table->unsignedInteger('price_per_day')->nullable();
             $table->timestamps();
         });
     }

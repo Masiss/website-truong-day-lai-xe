@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreInstructorRequest;
 use App\Models\Instructor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,7 @@ class InstructorControlller extends Controller
                 return Storage::url($object->avatar);
             })
             ->addColumn('edit', fn($object) => $object->id)
+            ->addColumn('delete', fn($object) => $object->id)
             ->make(true);
     }
 
@@ -49,7 +51,7 @@ class InstructorControlller extends Controller
         return view('admin.ins.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreInstructorRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -110,5 +112,20 @@ class InstructorControlller extends Controller
         }
         return redirect()->route('admin.instructors.index');
 
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $ins = Instructor::find($id);
+            $ins->delete();
+            DB::commit();
+            return redirect()->route('admin.instructors.index');
+        } catch (Throwable $e) {
+            report($e);
+            DB::rollBack();
+            return false;
+        }
     }
 }

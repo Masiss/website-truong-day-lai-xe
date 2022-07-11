@@ -6,10 +6,12 @@ use DateInterval;
 use DatePeriod;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lesson extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     public static function getDate($date, array $dow, int $limit)
     {

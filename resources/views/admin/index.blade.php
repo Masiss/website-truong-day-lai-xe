@@ -4,12 +4,11 @@
 @endpush
 @section('content')
 
-
     <div class="content-body">
         <div class="row">
             <div>
-                <a href="{{route('admin.courses.index')}}">
-                    <h3>Courses</h3>
+                <a href="{{route('admin.salary.index')}}">
+                    <h3>Salary</h3>
                 </a>
             </div>
             <div>

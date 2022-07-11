@@ -121,7 +121,7 @@
                 </a>
             </li>
             <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/admin/courses">
+                <a class="d-flex align-items-center" href="#">
                     <i
                         data-feather="book">
 

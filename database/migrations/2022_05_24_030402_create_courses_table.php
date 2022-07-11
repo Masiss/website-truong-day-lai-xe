@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('price')->nullable();
             $table->unsignedInteger('price_per_day')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

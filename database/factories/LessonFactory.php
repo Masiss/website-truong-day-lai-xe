@@ -24,6 +24,7 @@ class LessonFactory extends Factory
             'last'=>random_int(2,4),
             'start_at'=>random_int(7,16),
             'date'=>$this->faker->dateTimeBetween('now'),
+            'rating'=>$this->faker->numberBetween(1,5),
         ];
     }
 }

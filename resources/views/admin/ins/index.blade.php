@@ -17,6 +17,7 @@
                     <th>Số điện thoại</th>
                     <th>Lương</th>
                     <th></th>
+                    <th></th>
                 </tr>
                 </thead>
             </table>
@@ -43,9 +44,9 @@
                         {data: 'name', name: 'name'},
                         {data: 'gender', name: 'gender'},
                         {
-                            data:'avatar',
-                            name:'avatar',
-                            render: function(data){
+                            data: 'avatar',
+                            name: 'avatar',
+                            render: function (data) {
                                 return `<img src='${data}' style="width:100px;height:100px">`;
                             },
                         },
@@ -58,7 +59,18 @@
                             render: function (data) {
                                 return `<a href="instructors/${data}/edit">Sửa</a>`;
                             }
-                        }
+                        },
+                        {
+                            data: 'delete',
+                            name: 'delete',
+                            render: function (data) {
+                                return `<form action="instructors/${data}" method="POST" >
+                                @csrf
+                                @method('DELETE')
+                                <button class="" type="submit">Xóa</button>
+                            </form>"`;
+                            }
+                        },
 
                     ]
                 });

@@ -1,4 +1,3 @@
-
 <!-- BEGIN: Customizer-->
 <div class="customizer d-none d-md-block">
     <a class="customizer-toggle d-flex align-items-center justify-content-center"

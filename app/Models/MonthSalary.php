@@ -6,14 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Course extends Model
+class MonthSalary extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
-        'days_of_week',
-        'price',
-        'price_per_day',
+        'ins_id',
+        'total_lessons',
+        'total_salary',
     ];
+
+//    public function total_lessons()
+//    {
+//        return $this->hasMany()
+//    }
 }

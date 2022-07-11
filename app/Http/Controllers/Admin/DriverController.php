@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreDriverRequest;
 use App\Models\Course;
 use App\Models\Driver;
 use App\Models\Lesson;
@@ -56,7 +57,7 @@ class DriverController extends Controller
         return view('admin.driver.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreDriverRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -195,19 +196,19 @@ class DriverController extends Controller
 
     public function destroy(Request $request, $id)
     {
-//        DB::beginTransaction();
-//        try {
-//            $course = Course::find($id);
-//            $course->update(['ins_id' => null]);
-//            $course->delete();
-//            $lesson=Lesson::find('driver_id','===',$id);
-//            $lesson->delete();
-//            DB::table('drivers')->where('id', $id)->delete();
-//            DB::commit();
-//        } catch (Throwable $e) {
-//            report($e);
-//            DB::rollBack();
-//            return false;
-//        }
+        DB::beginTransaction();
+        try {
+            $course = Course::find($id);
+            $course->delete();
+            $lesson = Lesson::where('driver_id', '===', $id);
+            $lesson->delete();
+            Driver::find($id)->delete();
+            DB::commit();
+            return redirect()->route('admin.drivers.index');
+        } catch (Throwable $e) {
+            report($e);
+            DB::rollBack();
+            return false;
+        }
     }
 }

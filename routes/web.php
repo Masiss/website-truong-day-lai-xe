@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\DriverController;
-use App\Http\Controllers\Admin\CourseControlller;
 use App\Http\Controllers\Admin\InstructorControlller;
+use App\Http\Controllers\Admin\SalaryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('index', function () {
+    return view('index');
+})->name('index');
+Route::get('register', function () {
+    return view('register');
+})->name('register');
 Route::group([
     'as' => 'admin.',
     'prefix' => 'admin',
@@ -37,19 +43,16 @@ Route::group([
     Route::resource('drivers', DriverController::class)->except([
         'show',
     ]);
-    Route::group([
-        'as' => 'courses.',
-        'prefix' => 'courses',
-    ],
-        function () {
-            Route::get('/', [CourseControlller::class, 'index'])->name('index');
-            Route::get('/create', [CourseControlller::class, 'create'])->name('create');
-            Route::get('/api', [CourseControlller::class, 'api'])->name('api');
-        }
-    );
-    Route::resource('instructors',InstructorControlller::class)->except([
+    Route::resource('salary', SalaryController::class)->except([
         'show',
     ]);
-    Route::get('instructors/api',[InstructorControlller::class,'api'])->name('instructors.api');
+    Route::get('salary/api', [SalaryController::class, 'api'])->name('salary.api');
+    Route::get('salary/calculate', [SalaryController::class, 'calculate'])->name('salary.calculate');
+    Route::get('salary/{id}/approve', [SalaryController::class, 'approve'])->where('id',
+        '[0-9]+')->name('salary.approve');
+    Route::resource('instructors', InstructorControlller::class)->except([
+        'show',
+    ]);
+    Route::get('instructors/api', [InstructorControlller::class, 'api'])->name('instructors.api');
 });
 

@@ -49,7 +49,7 @@
                                                 required
                                             />
                                             <div class="valid-feedback"></div>
-                                            <div class="invalid-feedback">Please enter your name.</div>
+                                            <div class="invalid-feedback">Vui lòng điền tên.</div>
                                         </div>
                                         <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
                                             <label class="form-label" class="d-block">Giới tính</label>
@@ -90,7 +90,7 @@
                                                 required
                                             />
                                             <div class="valid-feedback"></div>
-                                            <div class="invalid-feedback">Please enter your name.</div>
+                                            <div class="invalid-feedback">Vui lòng chọn ngày tháng năm sinh.</div>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="phone_numbers">Số điện thoại</label>
@@ -103,7 +103,7 @@
                                                 name="phone_numbers"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Please enter your name.</div>
+                                            <div class="invalid-feedback">Vui lòng nhập số điện thoại.</div>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="id_numbers">CCCD/CMND</label>
@@ -116,7 +116,7 @@
                                                 name="id_numbers"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Please enter your name.</div>
+                                            <div class="invalid-feedback">Vui lòng nhập CCCD/CMND.</div>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="email">Email</label>
@@ -128,7 +128,7 @@
                                                 name="email"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Please enter a valid email</div>
+                                            <div class="invalid-feedback">Vui lòng nhập email.</div>
                                         </div>
 
                                         <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
@@ -182,7 +182,8 @@
                                         </div>
                                         <div class="col-md-6 mb-1">
                                             <label class="form-label" for="select2-limited">Chọn thứ</label>
-                                            <select name="days_of_week" class="max-length form-select form-control select2"
+                                            <select name="days_of_week"
+                                                    class="max-length form-select form-control select2"
                                                     id="select2-limited" multiple required>
                                                 <optgroup label="Thứ">
                                                     <option value="Mon">Thứ 2</option>
@@ -192,20 +193,19 @@
                                                     <option value="Fri">Thứ 6</option>
                                                     <option value="Sat">Thứ 7</option>
                                                 </optgroup>
-                                                <div class="invalid-feedback">Please enter your name.</div>
                                             </select>
                                         </div>
                                         <!-- Basic Select -->
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="last">Thời gian mỗi buổi</label>
-                                            <select  name="last" class="form-select" id="last">
+                                            <select name="last" class="form-select" id="last">
                                                 <option value="2">2 tiếng</option>
                                                 <option value="4">4 tiếng</option>
                                             </select>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="shift">Ca</label>
-                                            <select  name="shift" class="form-select" id="shift">
+                                            <select name="shift" class="form-select" id="shift">
                                                 <option value="AM">Sáng</option>
                                                 <option value="PM">Chiều</option>
                                             </select>
@@ -256,20 +256,20 @@
         <script type="text/javascript">
 
             $(document).ready(function () {
-               let last= document.getElementById("last");
-               last.addEventListener("change",function(){
-                   if(last.value==="2"){
-                       document.getElementById("lesson").value=20;
-                   } else if(last.value==="4"){
-                       document.getElementById("lesson").value=10;
-                   }
+                let last = document.getElementById("last");
+                last.addEventListener("change", function () {
+                    if (last.value === "2") {
+                        document.getElementById("lesson").value = 20;
+                    } else if (last.value === "4") {
+                        document.getElementById("lesson").value = 10;
+                    }
                 });
                 $("#btn-submit").click(function (event) {
                     //validate
                     var form = document.getElementById('form-data-1');
                     form.dispatchEvent(new Event('submit'));
-                     // Form data
-                    let dow=$("select#select2-limited").val();
+                    // Form data
+                    let dow = $("select#select2-limited").val();
                     var form1 = new FormData(document.getElementById('form-data-1'));
                     var day = $('input[name="lesson"]').val();
                     var last = $('select[name="last"]').val();
@@ -289,14 +289,14 @@
 
                         contentType: false,
                         processData: false,
-                        success:function(event){
-                            if(event=="1"){
-                                window.location="{{route('admin.drivers.store')}}";
-                            }else {
+                        success: function (event) {
+                            if (event == "1") {
+                                window.location = "{{route('admin.drivers.store')}}";
+                            } else {
                                 console.log(0);
                             }
                         },
-                        error:function(){
+                        error: function () {
                             console.log(0);
                         },
 

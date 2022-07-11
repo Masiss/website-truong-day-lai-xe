@@ -12,18 +12,16 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('lessons', function (Blueprint $table) {
+        Schema::create('month_salaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('driver_id')->constrained('drivers');
-            $table->foreignId('ins_id')->nullable()->constrained('instructors');
-            $table->tinyInteger('last');
-            $table->tinyInteger('start_at');
-            $table->date('date');
-            $table->string('report')->nullable();
-            $table->string('rating')->default('5');
+            $table->foreignId('ins_id')->nullable()->constrained('instructors')->nullOnDelete();
+            $table->date('month');
+            $table->integer('total_lessons');
+            $table->integer('total_hours');
+            $table->integer('total_salaries');
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
@@ -34,9 +32,9 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::table('lessons', function (Blueprint $table) {
+        Schema::table('month_salaries', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
-        Schema::dropIfExists('lessons');
+        Schema::dropIfExists('month_salary');
     }
 };

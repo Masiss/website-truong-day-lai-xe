@@ -1,4 +1,3 @@
-
 <!-- BEGIN: Footer-->
 <footer class="footer footer-static footer-light">
     <p class="clearfix mb-0">

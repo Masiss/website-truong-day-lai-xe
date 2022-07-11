@@ -49,7 +49,7 @@
                                                 required
                                             />
                                             <div class="valid-feedback"></div>
-                                            <div class="invalid-feedback">Please enter your name.</div>
+                                            <div class="invalid-feedback">Vui lòng điền tên.</div>
                                         </div>
                                         <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
                                             <label class="form-label" class="d-block">Giới tính</label>
@@ -103,7 +103,7 @@
                                                 name="phone_numbers"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Please enter your name.</div>
+                                            <div class="invalid-feedback">Vui lòng điền số điện thoại.</div>
                                         </div>
 
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
@@ -116,7 +116,7 @@
                                                 name="email"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Please enter a valid email</div>
+                                            <div class="invalid-feedback">Vui lòng điền email</div>
                                         </div>
                                         <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
                                             <label for="customFile1" class="form-label">File hình thẻ</label>

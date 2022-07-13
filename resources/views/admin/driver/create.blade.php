@@ -109,6 +109,8 @@
                                             <label class="form-label" for="id_numbers">CCCD/CMND</label>
 
                                             <input
+                                                min="12"
+                                                max="12"
                                                 type="number"
                                                 id="id_numbers"
                                                 class="form-control"
@@ -160,7 +162,7 @@
                                             <div class="demo-inline-spacing">
                                                 <div class="form-check my-50">
                                                     <input
-                                                        value="true"
+                                                        value="1"
                                                         type="radio"
                                                         name="is_full"
                                                         class="form-check-input"
@@ -170,7 +172,7 @@
                                                 </div>
                                                 <div class="form-check my-50">
                                                     <input
-                                                        value="false"
+                                                        value="0"
                                                         type="radio"
                                                         name="is_full"
                                                         class="form-check-input"

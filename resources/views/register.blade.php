@@ -37,7 +37,8 @@
 <div class="content-body">
     <section class="bs-validation m-3">
         <div class="row">
-            <form enctype="multipart/form-data" id="form-data-1" class="needs-validation"
+            <form enctype="multipart/form-data" id="form-data-1"
+                  class="needs-validation"
                   name="form1" novalidate>
                 <div class="col-md-12 ">
                     <div class="card">
@@ -58,9 +59,10 @@
                                 </ul>
                             </div>
                         </div>
-
                         @csrf
-
+                        @error('name')
+                        <div class="alert alert-danger">{{$message}}</div>
+                        @enderror
                         <div class="card-content collapse show">
 
                             <div class="card-body m-3">
@@ -70,6 +72,7 @@
                                         <label class="form-label" for="name">Tên</label>
 
                                         <input
+                                            value="{{old('name')}}"
                                             type="text"
                                             id="name"
                                             class="form-control"
@@ -80,6 +83,9 @@
                                         <div class="valid-feedback"></div>
                                         <div class="invalid-feedback">Vui lòng điền tên.</div>
                                     </div>
+                                    @error('gender')
+                                    <div class="alert alert-danger">{{$message}}</div>
+                                    @enderror
                                     <div class="col-xl-3 col-md-4 col-sm-12 mb-1 px-5">
                                         <label class="form-label" class="d-block">Giới tính</label>
                                         <div class="demo-inline-spacing">
@@ -100,18 +106,22 @@
                                                     name="gender"
                                                     class="form-check-input"
                                                     required
+
                                                 />
                                                 <label class="form-check-label" for="validationRadio4">Nữ</label>
                                             </div>
                                         </div>
                                     </div>
+                                    @error('birthdate')
+                                    <div class="alert alert-danger">{{$message}}</div>
+                                    @enderror
                                     <div class="col-xl-5 col-md-6 mb-1">
                                         <label class="form-label" for="dob">
                                             Ngày tháng năm sinh
                                         </label>
 
                                         <input
-                                            type="text"
+                                            type="date"
                                             name="birthdate"
                                             id="fp-human-friendly"
                                             class="form-control picker flatpickr-human-friendly "
@@ -121,10 +131,15 @@
                                         <div class="valid-feedback"></div>
                                         <div class="invalid-feedback">Vui lòng chọn ngày tháng năm sinh.</div>
                                     </div>
+                                    @error('phone_numbers')
+                                    <div class="alert alert-danger">{{$message}}</div>
+                                    @enderror
                                     <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                         <label class="form-label" for="phone_numbers">Số điện thoại</label>
 
                                         <input
+                                            value="{{old('phone_numbers')}}"
+
                                             type="number"
                                             id="phone_numbers"
                                             class="form-control"
@@ -134,10 +149,15 @@
                                         />
                                         <div class="invalid-feedback">Vui lòng nhập số điện thoại.</div>
                                     </div>
+                                    @error('id_numbers')
+                                    <div class="alert alert-danger">{{$message}}</div>
+                                    @enderror
                                     <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                         <label class="form-label" for="id_numbers">CCCD/CMND</label>
 
                                         <input
+                                            value="{{old('id_numbers')}}"
+
                                             type="number"
                                             id="id_numbers"
                                             class="form-control"
@@ -147,9 +167,14 @@
                                         />
                                         <div class="invalid-feedback">Vui lòng nhập CCCD/CMND.</div>
                                     </div>
+                                    @error('email')
+                                    <div class="alert alert-danger">{{$message}}</div>
+                                    @enderror
                                     <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                         <label class="form-label" for="email">Email</label>
                                         <input
+                                            value="{{old('email')}}"
+
                                             type="email"
                                             id="email"
                                             class="form-control"
@@ -159,10 +184,28 @@
                                         />
                                         <div class="invalid-feedback">Vui lòng nhập email.</div>
                                     </div>
-
+                                    @error('file')
+                                    <div class="alert alert-danger">{{$message}}</div>
+                                    @enderror
                                     <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
                                         <label for="customFile1" class="form-label">File hình thẻ</label>
                                         <input class="form-control" name="file" type="file" id="file" required/>
+                                    </div>
+                                    <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
+                                        <label class="form-label" for="password">Mật khẩu</label>
+
+                                        <input
+                                            value="{{old('password')}}"
+                                            max="20"
+                                            min="8"
+                                            type="password"
+                                            id="password"
+                                            class="form-control"
+                                            placeholder="Mật khẩu"
+                                            name="password"
+                                            required
+                                        />
+                                        <div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
                                     </div>
 
                                 </div>
@@ -188,7 +231,7 @@
                                     <div class="col-md-4 mb-1">
                                         <label class="form-label" for="select2-limited">Chọn thứ</label>
                                         <select name="days_of_week"
-                                                class="max-length form-select form-control select2"
+                                                class="max-length form-select form-control select2 required"
                                                 id="select2-limited" multiple required>
                                             <optgroup label="Thứ">
                                                 <option value="Mon">Thứ 2</option>
@@ -223,12 +266,15 @@
                                                    disabled/>
                                         </div>
                                     </div>
+                                    @error('is_full')
+                                    <div class="alert alert-danger">{{$message}}</div>
+                                    @enderror
                                     <div class="col-xl-4 col-md-6 col-sm-12 mb-1">
                                         <label class="form-label" class="d-block">Trọn gói</label>
                                         <div class="demo-inline-spacing">
                                             <div class="form-check my-50">
                                                 <input
-                                                    value="true"
+                                                    value="1"
                                                     type="radio"
                                                     name="is_full"
                                                     class="form-check-input"
@@ -238,7 +284,7 @@
                                             </div>
                                             <div class="form-check my-50">
                                                 <input
-                                                    value="false"
+                                                    value="0"
                                                     type="radio"
                                                     name="is_full"
                                                     class="form-check-input"
@@ -257,7 +303,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-lg-center center-layout">
-                                        <button class="btn btn-primary " id="btn-submit">
+                                        <button type="submit" class="btn btn-primary " id="btn-submit">
                                             Submit
                                         </button>
                                     </div>
@@ -340,6 +386,7 @@
         }
         $("#btn-submit").click(function (event) {
             //validate
+            console.log($("select#select2-limited").length);
             var form = document.getElementById('form-data-1');
             form.dispatchEvent(new Event('submit'));
             event.preventDefault();
@@ -352,29 +399,31 @@
             form1.append('lesson', day);
             form1.set('days_of_week', dow);
             //ajax
-            {{--$.ajax({--}}
-            {{--    headers: {--}}
-            {{--        'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
-            {{--    },--}}
-            {{--    url: '',--}}
-            {{--    type: 'POST',--}}
-            {{--    dataType: "JSON",--}}
-            {{--    data: form1,--}}
-            {{--    // "'X-CSRF-TOKEN'": data1,--}}
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: '{{route('registering')}}',
+                type: 'POST',
+                dataType: "JSON",
+                data: form1,
+                // "'X-CSRF-TOKEN'": data1,
 
-            {{--    contentType: false,--}}
-            {{--    processData: false,--}}
-            {{--    success: function (event) {--}}
-            {{--        if (event == "1") {--}}
-            {{--        } else {--}}
-            {{--            console.log(0);--}}
-            {{--        }--}}
-            {{--    },--}}
-            {{--    error: function () {--}}
-            {{--        console.log(0);--}}
-            {{--    },--}}
+                contentType: false,
+                processData: false,
+                success: function (event) {
+                    if (event == "1") {
+                        window.location = "{{route('index')}}";
+                    } else {
+                        console.log(0);
+                    }
+                },
+                error: function () {
+                    console.log(1);
 
-            {{--});--}}
+                },
+
+            });
         })
     });
 </script>

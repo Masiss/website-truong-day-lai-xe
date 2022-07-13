@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->boolean('gender');
-            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained('courses');
             $table->string('id_numbers', 12);
             $table->string('email');
             $table->string('phone_numbers', 10);
@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->string('file');
             $table->boolean('is_full');
             $table->string('password');
+            $table->string('remember_token',100)->nullable();
             $table->timestamps();
             $table->softDeletes();
 

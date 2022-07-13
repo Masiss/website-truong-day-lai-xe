@@ -7,7 +7,7 @@
     <div class="content-body">
         <div class="row">
             <div>
-                <a href="{{route('admin.salary.index')}}">
+                <a href="{{route('admin.salaries.index')}}">
                     <h3>Salary</h3>
                 </a>
             </div>

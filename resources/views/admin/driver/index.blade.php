@@ -7,23 +7,32 @@
     <div class="content-body">
         <div class="row">
             <a href="{{route('admin.drivers.create')}}">Thêm</a>
-            <table id="table-data">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tên</th>
-                    <th>Giới tính</th>
-                    <th>Mã khóa học</th>
-                    <th>CCCD</th>
-                    <th>Email</th>
-                    <th>SĐT</th>
-                    <th>Ngày sinh</th>
-                    <th>Avatar</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                </thead>
-            </table>
+            <div class="card">
+                <div class="col-md-10">
+                    <div class="card">
+                        <table class="table " id="table-data">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tên</th>
+                                <th>Giới tính</th>
+{{--                                <th>Mã khóa học</th>--}}
+                                <th>CCCD</th>
+                                <th>Email</th>
+                                <th>SĐT</th>
+                                <th>Ngày sinh</th>
+                                <th>Hình thẻ</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
@@ -46,7 +55,7 @@
                         {data: 'id', name: 'id'},
                         {data: 'name', name: 'name'},
                         {data: 'gender', name: 'gender'},
-                        {data: 'course_id', name: 'course_id'},
+                        // {data: 'course_id', name: 'course_id'},
                         {data: 'id_numbers', name: 'id_numbers'},
                         {data: 'email', name: 'email'},
                         {data: 'phone_numbers', name: 'phone_numbers'},
@@ -72,7 +81,7 @@
                                 return `<form action="drivers/${data}" method="POST" >
                                 @csrf
                                 @method('DELETE')
-                                <button class="" type="submit">Xóa</button>
+                                <button class="btn btn-outline-bitbucket" type="submit">Xóa</button>
                             </form>"`;
                             }
                         },

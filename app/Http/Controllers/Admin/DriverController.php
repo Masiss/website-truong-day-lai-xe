@@ -98,6 +98,8 @@ class DriverController extends Controller
                 'days_of_week' => json_encode($course['days_of_week']),
                 'price' => $course['price'],
                 'price_per_day' => $course['price_per_day'],
+                'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
+
             ]);
             $arr['file'] = Storage::disk('public')
                 ->put('file', $arr['file']);
@@ -113,6 +115,7 @@ class DriverController extends Controller
                     'file' => $arr['file'],
                     'is_full' => $arr['is_full'],
                     'password' => $password,
+                    'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
                 ]);
             $sub = DB::table('lessons')
                 ->select('ins_id', DB::raw('count(*) as less_ins'))
@@ -145,6 +148,8 @@ class DriverController extends Controller
                     'last' => $request->last,
                     'start_at' => $start_at,
                     'date' => $date,
+                    'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
+
                 ]);
             }
             DB::commit();

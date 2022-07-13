@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Instructor;
 use App\Models\MonthSalary;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,13 @@ class SalaryController extends Controller
 
     public function index()
     {
-        return view('admin.salary.index');
+        $now = new \DateTime();
+        $month = $now->format('m');
+        $year = $now->format('Y');
+        return view('admin.salary.index', [
+            'month' => $month,
+            'year' => $year,
+        ]);
     }
 
     public function api()
@@ -38,7 +45,7 @@ class SalaryController extends Controller
             ->editColumn('status', function ($object) {
                 return $object->status == 0 ? 'Chờ duyệt' : 'Đã duyệt';
             })
-            ->addColumn('edit', function ($object) {
+            ->addColumn('show', function ($object) {
                 return $object->id;
             })
             ->addColumn('approve', function ($object) {
@@ -47,14 +54,17 @@ class SalaryController extends Controller
             ->make(true);
     }
 
-    public function calculate()
+    public function calculate(Request $request)
     {
-        DB::beginTransaction();
 
+        DB::beginTransaction();
         $fixed = 75000;
         $diff = 500000;
-        $date = new \DateTime();
-        $month = $date->format('Y/m/01');
+        $today = new \DateTime();
+        $month = $request->month;
+        $year = $request->year;
+        $str = '01/'.$month.'/'.$year;
+        $month = \DateTime::createFromFormat('d/m/Y', $str)->format('Y/m/d');
 //
 
         $ins_ids = DB::table('instructors')->select('id')
@@ -68,7 +78,7 @@ class SalaryController extends Controller
             })
             ->pluck('id')->toArray();
         foreach ($ins_ids as $id) {
-            $checkExist = MonthSalary::where('ins_id', $id)->where('month', $date->format('Y/m/01'))->first();
+            $checkExist = MonthSalary::where('ins_id', $id)->where('month', $month)->first();
             if (!$checkExist) {
                 $lessons = DB::table('lessons')
                     ->select('ins_id',
@@ -90,7 +100,7 @@ class SalaryController extends Controller
                         'total_lessons' => $total_lessons,
                         'total_salaries' => $salary,
                         'month' => $month,
-                        'created_at' => $date,
+                        'created_at' => $today,
                     ]);
                     DB::commit();
                 } catch (Throwable $e) {
@@ -101,9 +111,39 @@ class SalaryController extends Controller
             }
 
         }
-        return redirect()->route('admin.salary.index');
+        return redirect()->route('admin.salaries.index');
 
 
+    }
+
+    public function show($id)
+    {
+        $diff = 500000;
+        $month_salary = DB::table('month_salaries')->where('id', $id)->get();
+        $ins_id = $month_salary->pluck('ins_id');
+        $date = $month_salary->pluck('month')->toArray()[0];
+        $month = date_format(new \DateTime($date), 'm');
+        $year = date_format(new \DateTime($date), 'Y');
+        $ins = DB::table('instructors')->where('id', '=', $ins_id)->first();
+        $lessons = DB::table('lessons')
+            ->where('ins_id', '=', $ins_id)
+            ->whereMonth('date', '=', $month)
+            ->whereYear('date', '=', $year)
+            ->join('drivers', 'drivers.id', '=', 'lessons.id')
+            ->get();
+        $detail_salary = new Collection();
+        $detail_salary->base = array_sum($lessons->pluck('last')->toArray()) * 75000;
+        $rating = $lessons->pluck('rating')->toArray();
+        $detail_salary->minus = ceil(array_sum($rating) / count($rating)) * $diff;
+
+        $detail_salary->total = $detail_salary->base - $detail_salary->minus;
+
+        return view('admin.salary.show', [
+            'ins' => $ins,
+            'lessons' => $lessons,
+            'month_salary' => $month_salary,
+            'detail_salary' => $detail_salary,
+        ]);
     }
 
     public function approve(Request $request, $id)
@@ -113,7 +153,7 @@ class SalaryController extends Controller
                 'status' => 1,
             ]);
 
-        return redirect()->route('admin.salary.index');
+        return redirect()->route('admin.salaries.index');
 
     }
 }

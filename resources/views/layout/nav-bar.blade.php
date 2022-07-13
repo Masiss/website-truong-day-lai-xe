@@ -107,7 +107,7 @@
 
                         </i> FAQ</a>
                     <a
-                        class="dropdown-item" href="auth-login-cover.html">
+                        class="dropdown-item" href="{{route('logout')}}">
                         <i class="me-50" data-feather="power">
 
                         </i>

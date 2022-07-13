@@ -50,7 +50,6 @@
 @include('layout.nav-bar')
 {{--SIDE-BAR--}}
 @include('layout.side-bar')
-
 <!-- BEGIN: Content-->
 <div class="app-content content ">
     <div class="content-overlay">

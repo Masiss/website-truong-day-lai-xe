@@ -23,11 +23,11 @@ return new class extends Migration {
             $table->string('avatar')->nullable();
             $table->string('password');
             $table->tinyInteger('level');
+            $table->string('remember_token',100)->nullable();
             $table->timestamps();
             $table->softDeletes();
 
         });
-
 
     }
 

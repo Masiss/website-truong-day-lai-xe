@@ -54,13 +54,7 @@ $(function () {
     if (bootstrapForm.length) {
         Array.prototype.filter.call(bootstrapForm, function (form) {
             form.addEventListener('submit', function (event) {
-                if($("select#select2-limited").length){
-                    $("select#select2-limited").valid();
-                    form.classList.add('invalid');
-                    event.preventDefault();
 
-
-                }
                 if (form.checkValidity() === false ) {
                     form.classList.add('invalid');
                     event.preventDefault();

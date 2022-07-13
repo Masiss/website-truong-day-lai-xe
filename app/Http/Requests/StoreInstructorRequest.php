@@ -15,7 +15,7 @@ class StoreInstructorRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class StoreInstructorRequest extends FormRequest
             'name' => 'bail|required|filled|string',
             'email' => 'bail|required|email',
             'phone_numbers' => 'bail|required|size:10',
-            'birthdate' => 'bail|required|before'.now()->subYears(18)->toDateString(),
+            'birthdate' => 'bail|required|before:'.now()->subYears(18)->toDateString(),
             'gender' => 'bail|required|boolean',
             'avatar' => 'bail|required|file',
             'level' => new Enum(LevelEnum::class),

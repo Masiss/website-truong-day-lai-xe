@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\Admin\DriverController;
-use App\Http\Controllers\Admin\InstructorControlller;
-use App\Http\Controllers\Admin\SalaryController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InstructorController;
+use App\Http\Middleware\CheckLogin;
+use App\Http\Middleware\InstructorMiddleware;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,37 +24,15 @@ Route::get('/', function () {
 Route::get('index', function () {
     return view('index');
 })->name('index');
-Route::get('register', function () {
-    return view('register');
-})->name('register');
-Route::group([
-    'as' => 'admin.',
-    'prefix' => 'admin',
-], function () {
-    Route::get('/', function () {
-        $route = Route::currentRouteName();
-        $breadCrumb = explode('.', $route);
-        $pageName = last($breadCrumb);
-        return view('admin.index', [
-            'pageName' => $pageName,
-            'breadCrumb' => $breadCrumb,
-        ]);
-    }
-    )->name('index');
-    Route::get('drivers/api', [DriverController::class, 'api'])->name('drivers.api');
-    Route::resource('drivers', DriverController::class)->except([
-        'show',
-    ]);
-    Route::resource('salary', SalaryController::class)->except([
-        'show',
-    ]);
-    Route::get('salary/api', [SalaryController::class, 'api'])->name('salary.api');
-    Route::get('salary/calculate', [SalaryController::class, 'calculate'])->name('salary.calculate');
-    Route::get('salary/{id}/approve', [SalaryController::class, 'approve'])->where('id',
-        '[0-9]+')->name('salary.approve');
-    Route::resource('instructors', InstructorControlller::class)->except([
-        'show',
-    ]);
-    Route::get('instructors/api', [InstructorControlller::class, 'api'])->name('instructors.api');
+Route::get('register', [AuthController::class, 'register'])->name('register');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('registering', [AuthController::class, 'registering'])->name('registering');
+Route::get('login', [AuthController::class, 'login'])->name('login')->middleware(RedirectIfAuthenticated::class);
+Route::post('login_processing', [AuthController::class, 'login_processing'])->name('login_processing');
+//Route::middleware([AdminMiddleware::class])->name('admin.')->prefix('admin')->group(function () {
+//
+//});
+Route::prefix('instructors')->middleware(InstructorMiddleware::class)->name('instructors.')->group(function () {
+    Route::get('/', [InstructorController::class, 'index'])->name('index');
+    Route::get('/salaries', [InstructorController::class, 'index'])->name('salaries');
 });
-

@@ -82,7 +82,7 @@
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 
             <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/admin">
+                <a class="d-flex align-items-center" href="/instructors">
                     <i
                         data-feather="home">
 
@@ -93,26 +93,18 @@
 
             </li>
 
-            <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/admin/drivers">
-                    <i data-feather="users">
 
-                    </i>
-                    <span
-                        class="menu-title text-truncate">Học viên</span>
-                </a>
-            </li>
             <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/admin/instructors">
+                <a class="d-flex align-items-center" href="/instructors/info">
                     <i
                         data-feather="user">
 
                     </i>
-                    <span class="menu-title text-truncate">Giáo viên</span>
+                    <span class="menu-title text-truncate">Thông tin cá nhân</span>
                 </a>
             </li>
             <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/admin/salaries">
+                <a class="d-flex align-items-center" href="/instructors/salaries">
                     <i
                         data-feather="dollar-sign">
 
@@ -120,27 +112,27 @@
                     <span class="menu-title text-truncate">Bảng lương</span>
                 </a>
             </li>
-{{--            <li class=" nav-item">--}}
-{{--                <a class="d-flex align-items-center" href="#">--}}
-{{--                    <i--}}
-{{--                        data-feather="book">--}}
+            {{--            <li class=" nav-item">--}}
+            {{--                <a class="d-flex align-items-center" href="#">--}}
+            {{--                    <i--}}
+            {{--                        data-feather="book">--}}
 
-{{--                    </i>--}}
-{{--                    <span class="menu-title text-truncate">Khóa học</span>--}}
-{{--                </a>--}}
-{{--                <ul class="menu-content">--}}
-{{--                    <li>--}}
-{{--                        <a class="d-flex align-items-center">--}}
-{{--                            <i--}}
-{{--                                data-feather="circle">--}}
+            {{--                    </i>--}}
+            {{--                    <span class="menu-title text-truncate">Khóa học</span>--}}
+            {{--                </a>--}}
+            {{--                <ul class="menu-content">--}}
+            {{--                    <li>--}}
+            {{--                        <a class="d-flex align-items-center">--}}
+            {{--                            <i--}}
+            {{--                                data-feather="circle">--}}
 
-{{--                            </i>--}}
-{{--                            <span class="menu-item text-truncate">Buổi học</span>--}}
-{{--                        </a>--}}
+            {{--                            </i>--}}
+            {{--                            <span class="menu-item text-truncate">Buổi học</span>--}}
+            {{--                        </a>--}}
 
-{{--                    </li>--}}
-{{--                </ul>--}}
-{{--            </li>--}}
+            {{--                    </li>--}}
+            {{--                </ul>--}}
+            {{--            </li>--}}
 
         </ul>
     </div>

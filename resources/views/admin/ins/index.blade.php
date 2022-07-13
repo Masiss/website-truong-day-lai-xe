@@ -5,24 +5,29 @@
 @section('content')
     <div class="content-body">
         <div class="row">
-            <a href="{{route('admin.instructors.create')}}">Thêm</a>
-            <table id="table-data">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tên</th>
-                    <th>Giới tính</th>
-                    <th>Ảnh</th>
-                    <th>Email</th>
-                    <th>Số điện thoại</th>
-                    <th>Lương</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                </thead>
-            </table>
+            <div class="card">
+                <div class="col-md-12">
+                    <div class="card">
+                        <a href="{{route('admin.instructors.create')}}">Thêm</a>
+                        <table class="table" id="table-data">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tên</th>
+                                <th>Giới tính</th>
+                                <th>Ảnh</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Lương</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
 
     @push('javascript')
@@ -67,7 +72,7 @@
                                 return `<form action="instructors/${data}" method="POST" >
                                 @csrf
                                 @method('DELETE')
-                                <button class="" type="submit">Xóa</button>
+                                <button class="btn btn-outline-bitbucket" type="submit">Xóa</button>
                             </form>"`;
                             }
                         },

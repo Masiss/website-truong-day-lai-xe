@@ -29,7 +29,7 @@ class SalaryController extends Controller
         $now = new \DateTime();
         $month = $now->format('m');
         $year = $now->format('Y');
-        return view('admin.salary.index', [
+        return view('admin.salaries.index', [
             'month' => $month,
             'year' => $year,
         ]);
@@ -42,15 +42,11 @@ class SalaryController extends Controller
             ->editColumn('ins_id', function ($object) {
                 return Instructor::where('id', '=', $object->ins_id)->pluck('name')[0];
             })
-            ->editColumn('status', function ($object) {
-                return $object->status == 0 ? 'Chờ duyệt' : 'Đã duyệt';
-            })
-            ->addColumn('show', function ($object) {
-                return $object->id;
-            })
-            ->addColumn('approve', function ($object) {
-                return $object->id;
-            })
+            ->editColumn('month', fn($object) => date_format(new \DateTime($object->month), 'm/Y'))
+            ->editColumn('status', fn($object) => $object->status == 0 ? 'Chờ duyệt' : 'Đã duyệt')
+            ->editColumn('created_at', fn($object) => $object->created_at)
+            ->addColumn('show', fn($object) => $object->id)
+            ->addColumn('approve', fn($object) => $object->id)
             ->make(true);
     }
 
@@ -138,7 +134,7 @@ class SalaryController extends Controller
 
         $detail_salary->total = $detail_salary->base - $detail_salary->minus;
 
-        return view('admin.salary.show', [
+        return view('admin.salaries.show', [
             'ins' => $ins,
             'lessons' => $lessons,
             'month_salary' => $month_salary,

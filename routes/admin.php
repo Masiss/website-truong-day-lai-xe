@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\InstructorControlller;
+use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\SalaryController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,7 @@ Route::resource('drivers', DriverController::class)->except([
 Route::get('salaries/api', [SalaryController::class, 'api'])->name('salaries.api');
 Route::get('salaries/calculate', [SalaryController::class, 'calculate'])->name('salaries.calculate');
 Route::get('salaries/{id}/approve', [SalaryController::class, 'approve'])->where('id',
-    '[0-9]+')->name('salary.approve');
+    '[0-9]+')->name('salaries.approve');
 Route::resource('salaries', SalaryController::class)->except([
     'edit',
     'destroy',
@@ -35,3 +36,5 @@ Route::resource('instructors', InstructorControlller::class)->except([
     'show',
 ]);
 Route::get('instructors/api', [InstructorControlller::class, 'api'])->name('instructors.api');
+Route::get('/lessons', [LessonController::class, 'index'])->name('lessons');
+Route::get('/lessons/api', [LessonController::class, 'api'])->name('lessons.api');

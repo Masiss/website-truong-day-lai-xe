@@ -35,12 +35,8 @@ class InstructorControlller extends Controller
     public function api(Request $request)
     {
         return DataTables::of(Instructor::query()->where('level', 1)->get())
-            ->editColumn('gender', function ($object) {
-                return $object->gender === 1 ? 'Nữ' : 'Nam';
-            })
-            ->editColumn('avatar', function ($object) {
-                return Storage::url($object->avatar);
-            })
+            ->editColumn('gender', fn($object) => $object->gender === 1 ? 'Nữ' : 'Nam')
+            ->editColumn('avatar', fn($object) => Storage::url($object->avatar))
             ->addColumn('edit', fn($object) => $object->id)
             ->addColumn('delete', fn($object) => $object->id)
             ->make(true);

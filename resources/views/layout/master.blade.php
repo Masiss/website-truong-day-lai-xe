@@ -49,7 +49,11 @@
 {{--NAV-BAR--}}
 @include('layout.nav-bar')
 {{--SIDE-BAR--}}
-@include('layout.side-bar')
+@if(\App\Models\Instructor::checkLevel()==\App\Enums\LevelEnum::INSTRUCTOR->name)
+    @include('layout.ins_side-bar')
+@elseif(\App\Models\Instructor::checkLevel()==\App\Enums\LevelEnum::ADMIN->name)
+    @include('layout.side-bar')
+@endif
 <!-- BEGIN: Content-->
 <div class="app-content content ">
     <div class="content-overlay">

@@ -3,27 +3,31 @@
     <link rel="stylesheet" type="text/css" href="{{asset('css/vertical-menu.min.css')}}">
 @endpush
 @section('content')
+
     <div class="content-body">
         <div class="row">
             <div class="card">
                 <div class="col-md-12">
                     <div class="card">
-                        <table class="table" id="table-data">
+                        
+                        <table class="table " id="table-data">
                             <thead>
                             <tr>
+                                <th>#</th>
+                                <th>Tên học viên</th>
                                 <th>Tên giáo viên</th>
-                                <th>Tổng buổi dạy</th>
-                                <th>Tổng giờ dạy</th>
-                                <th>Tổng lương</th>
-                                <th>Trạng thái</th>
-                                <th></th>
+                                <th>Thời gian học</th>
+                                <th>Thời gian bắt đầu</th>
+                                <th>Đánh giá của học viên</th>
                                 <th></th>
                                 <th></th>
                             </tr>
                             </thead>
+
                         </table>
                     </div>
                 </div>
+
             </div>
 
         </div>
@@ -43,27 +47,24 @@
                 $('#table-data').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{!! route('instructors.salaries.api') !!}',
-                    columns:
-                        [
-                            {data: 'month', name: 'month'},
-                            {data: 'total_lessons', name: 'total_lessons'},
-                            {data: 'total_hours', name: 'total_hours'},
-                            {data: 'total_salaries', name: 'total_salaries'},
-                            {
-                                data: 'status',
-                                name: 'status',
-                            },
-                            {
-                                data: 'show',
-                                name: 'show',
-                                render: function (data) {
-                                    return `<a href="salaries/show/${data}">Chi tiết</a>`;
-                                }
-                            },
+                    ajax: '{!! route('admin.lessons.api') !!}',
+                    columns: [
+                        {data: 'id', name: 'id'},
+                        {data: 'driver_name', name: 'driver_name'},
+                        {data: 'ins_name', name: 'ins_name'},
+                        {data: 'last', name: 'last'},
+                        {data: 'date', name: 'date'},
+                        {data: 'rating', name: 'rating'},
+                        {data: 'status', name: 'status'},
 
-
-                        ]
+                        {
+                            data: 'edit',
+                            name: 'edit',
+                            render: function (data) {
+                                return `<a href="drivers/${data}/edit">Sửa</a>`;
+                            }
+                        },
+                    ]
                 });
             })
 
@@ -71,7 +72,3 @@
         </script>
     @endpush
 @endsection
-
-
-
-

@@ -17,14 +17,14 @@ class CheckLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard('instructor')->viaRemember()) {
+        if (Auth::guard('instructor')->viaRemember() || Auth::guard('instructor')->check()) {
             if (Auth::guard('instructor')->user()->level == 0) {
                 return redirect()->route('admin.index');
             } elseif (Auth::guard('instructor')->user()->level == 1) {
                 return redirect()->route('instructors.index');
             }
         }
-        if (Auth::guard('driver')->viaRemember()) {
+        if (Auth::guard('driver')->viaRemember() || Auth::guard('driver')->check()) {
             return redirect()->route('index');
         }
         return $next($request);

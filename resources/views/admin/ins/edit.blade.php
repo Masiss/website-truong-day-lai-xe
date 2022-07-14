@@ -20,7 +20,7 @@
                     <div class="col-md-12 ">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Thêm học viên</h4>
+                                <h4 class="card-title">Cập nhật thông tin giáo viên</h4>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li>
@@ -127,9 +127,9 @@
                                             <img class="rounded d-block" src="{{$ins->avatar}}"
                                                  style="max-height: 20em;">
                                         </div>
-                                        <div class="col-xl-1 center-layout">
+                                        <div class="d-flex justify-content-center">
                                             <button class="btn btn-primary " id="btn-submit">
-                                                Submit
+                                                Cập nhật
                                             </button>
                                         </div>
 

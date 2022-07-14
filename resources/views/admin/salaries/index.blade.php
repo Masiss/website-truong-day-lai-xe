@@ -9,7 +9,8 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="m-1">
-                            <form action="{{route('admin.salaries.calculate')}}" method="GET" enctype="multipart/form-data">
+                            <form action="{{route('admin.salaries.calculate')}}" method="GET"
+                                  enctype="multipart/form-data">
                                 @csrf
                                 @method('GET')
                                 <div class="row">
@@ -30,7 +31,7 @@
                                         </select>
                                     </div>
 
-                                    <div >
+                                    <div>
                                         <button type="submit" class="btn btn-outline-bitbucket">Tính lương</button>
                                     </div>
                                 </div>
@@ -42,9 +43,11 @@
                             <tr>
                                 <th>#</th>
                                 <th>Tên giáo viên</th>
+                                <th>Tháng</th>
                                 <th>Tổng buổi dạy</th>
                                 <th>Tổng giờ dạy</th>
                                 <th>Tổng lương</th>
+                                <th>Thời gian tạo</th>
                                 <th>Trạng thái</th>
                                 <th></th>
                                 <th></th>
@@ -77,9 +80,11 @@
                         [
                             {data: 'id', name: 'id'},
                             {data: 'ins_id', name: 'ins_id'},
+                            {data: 'month', name: 'month'},
                             {data: 'total_lessons', name: 'total_lessons'},
                             {data: 'total_hours', name: 'total_hours'},
                             {data: 'total_salaries', name: 'total_salaries'},
+                            {data: 'created_at', name: 'created_at'},
                             {
                                 data: 'status',
                                 name: 'status',

@@ -3,8 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Middleware\CheckLogin;
-use App\Http\Middleware\InstructorMiddleware;
-use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,7 +30,10 @@ Route::post('login_processing', [AuthController::class, 'login_processing'])->na
 //Route::middleware([AdminMiddleware::class])->name('admin.')->prefix('admin')->group(function () {
 //
 //});
-Route::prefix('instructors')->middleware('web','instructor')->name('instructors.')->group(function () {
+Route::prefix('instructors')->middleware('web', 'instructor')->name('instructors.')->group(function () {
     Route::get('/', [InstructorController::class, 'index'])->name('index');
-    Route::get('/salaries', [InstructorController::class, 'index'])->name('salaries');
+    Route::get('/salaries', [InstructorController::class, 'salaries'])->name('salaries');
+    Route::get('/salaries/api', [InstructorController::class, 'api'])->name('salaries.api');
+    Route::get('/salaries/show/{id}', [InstructorController::class, 'show'])->where('id',
+        '[0-9]+')->name('salaries.show');
 });

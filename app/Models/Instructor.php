@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LevelEnum;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,5 +28,17 @@ class Instructor extends \Illuminate\Foundation\Auth\User
         'created_at',
         'updated_at'
     ];
+
+    public static function checkLevel()
+    {
+        if (auth()->guard('instructor')->user()->level == LevelEnum::INSTRUCTOR->value) {
+            return LevelEnum::INSTRUCTOR->name;
+        } elseif (auth()->guard('instructor')->user()->level == LevelEnum::ADMIN->value) {
+            return LevelEnum::ADMIN->name;
+        } else {
+            return redirect()->route('login');
+        }
+
+    }
 
 }

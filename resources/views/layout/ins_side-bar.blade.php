@@ -93,16 +93,6 @@
 
             </li>
 
-
-            <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/instructors/info">
-                    <i
-                        data-feather="user">
-
-                    </i>
-                    <span class="menu-title text-truncate">Thông tin cá nhân</span>
-                </a>
-            </li>
             <li class=" nav-item">
                 <a class="d-flex align-items-center" href="/instructors/salaries">
                     <i

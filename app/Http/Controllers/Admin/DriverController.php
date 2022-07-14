@@ -38,15 +38,9 @@ class DriverController extends Controller
     public function api(Request $request)
     {
         return DataTables::of($this->model->get())
-            ->editColumn('gender', function ($object) {
-                return $object->genderName;
-            })
-            ->editColumn('birthdate', function ($object) {
-                return date('d-m-Y', strtotime($object->birthdate));
-            })
-            ->editColumn('file', function ($object) {
-                return Storage::url($object->file);
-            })
+            ->editColumn('gender', fn($object) => $object->genderName)
+            ->editColumn('birthdate', fn($object) => date('d-m-Y', strtotime($object->birthdate)))
+            ->editColumn('file', fn($object) => Storage::url($object->file))
             ->addColumn('edit', fn($object) => $object->id)
             ->addColumn('delete', fn($object) => $object->id)
             ->make(true);

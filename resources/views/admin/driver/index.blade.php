@@ -6,17 +6,22 @@
 
     <div class="content-body">
         <div class="row">
-            <a href="{{route('admin.drivers.create')}}">Thêm</a>
             <div class="card">
                 <div class="col-md-10">
                     <div class="card">
+                        <div class="m-1">
+                            <a href="{{route('admin.drivers.create')}}">
+
+                                <i data-feather="plus-circle"></i>
+                                <span>Thêm</span>
+                            </a>
+                        </div>
                         <table class="table " id="table-data">
                             <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Tên</th>
                                 <th>Giới tính</th>
-{{--                                <th>Mã khóa học</th>--}}
                                 <th>CCCD</th>
                                 <th>Email</th>
                                 <th>SĐT</th>
@@ -55,7 +60,6 @@
                         {data: 'id', name: 'id'},
                         {data: 'name', name: 'name'},
                         {data: 'gender', name: 'gender'},
-                        // {data: 'course_id', name: 'course_id'},
                         {data: 'id_numbers', name: 'id_numbers'},
                         {data: 'email', name: 'email'},
                         {data: 'phone_numbers', name: 'phone_numbers'},

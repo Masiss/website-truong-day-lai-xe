@@ -149,12 +149,12 @@ class AuthController extends Controller
 //            $email = $request->email;
 //            $password = $request->password;
             $remember = $request->save_login ? true : false;
-            if (Auth::guard('driver')->attempt($credentials,$remember)) {
+            if (Auth::guard('driver')->attempt($credentials, $remember)) {
                 $user = Driver::where('email', '=', $credentials['email'])->first();
                 Auth::guard('driver')->login($user, $remember);
                 return redirect()->route('index');
             }
-            if (Auth::guard('instructor')->attempt($credentials,$remember)) {
+            if (Auth::guard('instructor')->attempt($credentials, $remember)) {
                 $user = Instructor::where('email', '=', $credentials['email'])->first();
                 $user->level = LevelEnum::from($user->level);
                 Auth::guard('instructor')->login($user, $remember);
@@ -165,7 +165,7 @@ class AuthController extends Controller
 
                 }
             }
-//            return redirect()->route('login');
+            return redirect()->route('login');
 
 
         } catch (Throwable $e) {

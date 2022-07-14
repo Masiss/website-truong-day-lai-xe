@@ -120,6 +120,15 @@
                     <span class="menu-title text-truncate">Bảng lương</span>
                 </a>
             </li>
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="/admin/lessons">
+                    <i
+                        data-feather="calendar">
+
+                    </i>
+                    <span class="menu-title text-truncate">Các buổi học</span>
+                </a>
+            </li>
 {{--            <li class=" nav-item">--}}
 {{--                <a class="d-flex align-items-center" href="#">--}}
 {{--                    <i--}}

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->date('date');
             $table->string('report')->nullable();
             $table->string('rating')->default('5');
+            $table->tinyInteger('status');
             $table->timestamps();
             $table->softDeletes();
 

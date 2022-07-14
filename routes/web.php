@@ -27,12 +27,12 @@ Route::get('index', function () {
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('registering', [AuthController::class, 'registering'])->name('registering');
-Route::get('login', [AuthController::class, 'login'])->name('login')->middleware(RedirectIfAuthenticated::class);
+Route::get('login', [AuthController::class, 'login'])->name('login')->middleware(CheckLogin::class);
 Route::post('login_processing', [AuthController::class, 'login_processing'])->name('login_processing');
 //Route::middleware([AdminMiddleware::class])->name('admin.')->prefix('admin')->group(function () {
 //
 //});
-Route::prefix('instructors')->middleware(InstructorMiddleware::class)->name('instructors.')->group(function () {
+Route::prefix('instructors')->middleware('web','instructor')->name('instructors.')->group(function () {
     Route::get('/', [InstructorController::class, 'index'])->name('index');
     Route::get('/salaries', [InstructorController::class, 'index'])->name('salaries');
 });

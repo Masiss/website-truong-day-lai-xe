@@ -15,12 +15,12 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" id="form-data-1" class="needs-validation"
+                <form enctype="multipart/form-data" action="{{route('drivers.update',auth('driver')->user()->id)}}" method="POST" id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Thêm học viên</h4>
+                                <h4 class="card-title">Cập nhật thông tin học viên</h4>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li>
@@ -31,16 +31,18 @@
                             </div>
 
                             @csrf
-
+                            @method('PUT')
                             <div class="card-content collapse show">
 
                                 <div class="card-body">
 
                                     <div class="row">
+                                        <input value="{{$driver->id}}" name="id" hidden>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="name">Tên</label>
 
                                             <input
+                                                value="{{$driver->name}}"
                                                 type="text"
                                                 id="name"
                                                 class="form-control"
@@ -49,7 +51,7 @@
                                                 required
                                             />
                                             <div class="valid-feedback"></div>
-                                            <div class="invalid-feedback">Vui lòng điền tên.</div>
+                                            <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
                                         <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
                                             <label class="form-label" class="d-block">Giới tính</label>
@@ -61,6 +63,9 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
+                                                    @if($driver->gender===0)
+                                                        {{"checked"}}
+                                                        @endif
                                                     />
                                                     <label class="form-check-label" for="validationRadio3">Nam</label>
                                                 </div>
@@ -71,6 +76,9 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
+                                                    @if($driver->gender===1)
+                                                        {{"checked"}}
+                                                        @endif
                                                     />
                                                     <label class="form-check-label" for="validationRadio4">Nữ</label>
                                                 </div>
@@ -82,6 +90,8 @@
                                             </label>
 
                                             <input
+                                                value="{{$driver->birthdate}}"
+
                                                 type="text"
                                                 name="birthdate"
                                                 id="fp-human-friendly"
@@ -90,12 +100,14 @@
                                                 required
                                             />
                                             <div class="valid-feedback"></div>
-                                            <div class="invalid-feedback">Vui lòng chọn ngày tháng năm sinh.</div>
+                                            <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="phone_numbers">Số điện thoại</label>
 
                                             <input
+                                                value="{{$driver->phone_numbers}}"
+
                                                 type="number"
                                                 id="phone_numbers"
                                                 class="form-control"
@@ -103,13 +115,13 @@
                                                 name="phone_numbers"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Vui lòng nhập số điện thoại.</div>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="id_numbers">CCCD/CMND</label>
 
                                             <input
-                                                size="12"
+                                                value="{{$driver->id_numbers}}"
+
                                                 type="number"
                                                 id="id_numbers"
                                                 class="form-control"
@@ -117,11 +129,12 @@
                                                 name="id_numbers"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Vui lòng nhập CCCD/CMND.</div>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="email">Email</label>
                                             <input
+                                                value="{{$driver->email}}"
+
                                                 type="email"
                                                 id="email"
                                                 class="form-control"
@@ -129,12 +142,14 @@
                                                 name="email"
                                                 required
                                             />
-                                            <div class="invalid-feedback">Vui lòng nhập email.</div>
                                         </div>
-
-                                        <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
+                                        {{--                                        col-xl-5 col-md-6 col-sm-12 mb-2--}}
+                                        <div class=" text-center col-xl-6 ">
                                             <label for="customFile1" class="form-label">File hình thẻ</label>
-                                            <input class="form-control" name="file" type="file" id="file" required/>
+                                            <input value="{{$driver->file}}" class="form-control" name="file"
+                                                   type="file" id="file"/>
+                                            <img class="rounded d-block" src="{{$driver->file}}"
+                                                 style="max-height: 20em;">
                                         </div>
 
                                     </div>
@@ -160,66 +175,45 @@
                                             <label class="form-label" class="d-block">Trọn gói</label>
                                             <div class="demo-inline-spacing">
                                                 <div class="form-check my-50">
-                                                    <input
-                                                        value="1"
-                                                        type="radio"
-                                                        name="is_full"
-                                                        class="form-check-input"
-                                                        required
-                                                    />
-                                                    <label class="form-check-label" for="validationRadio3">Có</label>
+                                                    @if($driver->is_full)
+                                                        <label class="form-check-label"
+                                                               for="validationRadio3">Có</label>
+                                                    @else
+                                                        <label class="form-check-label"
+                                                               for="validationRadio4">Không</label>
+                                                    @endif
                                                 </div>
-                                                <div class="form-check my-50">
-                                                    <input
-                                                        value="0"
-                                                        type="radio"
-                                                        name="is_full"
-                                                        class="form-check-input"
-                                                        required
-                                                    />
-                                                    <label class="form-check-label" for="validationRadio4">Không</label>
-                                                </div>
+
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-1">
-                                            <label class="form-label" for="select2-limited">Chọn thứ</label>
-                                            <select name="days_of_week"
-                                                    class="max-length form-select form-control select2"
-                                                    id="select2-limited" multiple required>
-                                                <optgroup label="Thứ">
-                                                    <option value="Mon">Thứ 2</option>
-                                                    <option value="Tue">Thứ 3</option>
-                                                    <option value="Wed">Thứ 4</option>
-                                                    <option value="Thu">Thứ 5</option>
-                                                    <option value="Fri">Thứ 6</option>
-                                                    <option value="Sat">Thứ 7</option>
-                                                </optgroup>
-                                            </select>
+                                            <label class="form-label" for="">Ngày học</label>
+                                            <input
+                                                value="{{$course['days_of_week']}}"
+                                                type="text"
+                                                class="form-control"
+                                                required
+                                                disabled
+                                            />
                                         </div>
                                         <!-- Basic Select -->
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="last">Thời gian mỗi buổi</label>
-                                            <select name="last" class="form-select" id="last">
+                                            <select name="last" class="form-select" id="last" disabled>
                                                 <option value="2">2 tiếng</option>
                                                 <option value="4">4 tiếng</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
-                                            <label class="form-label" for="shift">Ca</label>
-                                            <select name="shift" class="form-select" id="shift">
-                                                <option value="AM">Sáng</option>
-                                                <option value="PM">Chiều</option>
                                             </select>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-12">
                                             <div class="mb-1">
                                                 <label class="form-label" for="disabledInput">Số buổi</label>
-                                                <input name="lesson" type="number" value="20" class="form-control"
-                                                       id="lesson"
-                                                       disabled/>
+                                                <input
+                                                    name="lesson" type="number" value="20" class="form-control"
+                                                    id="lesson"
+                                                    disabled/>
                                             </div>
                                         </div>
-                                        <div class="col-xl-1 center-layout">
+                                        <div class="d-flex justify-content-center">
                                             <button class="btn btn-primary " id="btn-submit">
                                                 Submit
                                             </button>
@@ -255,55 +249,45 @@
         <script src={{asset('js/jquery.validate.min.js')}}></script>
         <script src={{asset('js/form-select2.min.js')}}></script>
         <script type="text/javascript">
+            {{--$(document).ready(function () {--}}
+            {{--    $("#btn-submit").click(function (event) {--}}
+            {{--        //validate--}}
+            {{--        var form = document.getElementById('form-data-1');--}}
+            {{--        form.dispatchEvent(new Event('submit'));--}}
+            {{--        // for (var key of form.entries()) {--}}
+            {{--        //     console.log(key[0] + ', ' + key[1])--}}
+            {{--        // }--}}
+            {{--        // Form data--}}
+            {{--        var form1 = new FormData(document.getElementById('form-data-1'));--}}
 
-            $(document).ready(function () {
-                let last = document.getElementById("last");
-                last.addEventListener("change", function () {
-                    if (last.value === "2") {
-                        document.getElementById("lesson").value = 20;
-                    } else if (last.value === "4") {
-                        document.getElementById("lesson").value = 10;
-                    }
-                });
-                $("#btn-submit").click(function (event) {
-                    //validate
-                    var form = document.getElementById('form-data-1');
-                    form.dispatchEvent(new Event('submit'));
-                    // Form data
-                    let dow = $("select#select2-limited").val();
-                    var form1 = new FormData(document.getElementById('form-data-1'));
-                    var day = $('input[name="lesson"]').val();
-                    var last = $('select[name="last"]').val();
-                    form1.append('lesson', day);
-                    form1.set('days_of_week', dow);
-                    event.preventDefault();
-                    //ajax
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        url: '{{route('admin.drivers.store')}}',
-                        type: 'POST',
-                        dataType: "JSON",
-                        data: form1,
-                        // "'X-CSRF-TOKEN'": data1,
+            {{--        event.preventDefault();--}}
+            {{--        //ajax--}}
+            {{--        $.ajax({--}}
+            {{--            headers: {--}}
+            {{--                'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
+            {{--            },--}}
+            {{--            url: '{{route('admin.drivers.update',$driver->id)}}',--}}
+            {{--            type: 'PUT',--}}
+            {{--            dataType: "JSON",--}}
+            {{--            data: form1,--}}
 
-                        contentType: false,
-                        processData: false,
-                        success: function (event) {
-                            if (event == "1") {
-                                window.location = "{{route('admin.drivers.store')}}";
-                            } else {
-                                console.log(0);
-                            }
-                        },
-                        error: function () {
-                            console.log(0);
-                        },
+            {{--            contentType: false,--}}
+            {{--            processData: false,--}}
+            {{--            success: function (event) {--}}
+            {{--                if (event == "1") {--}}
+            {{--                    window.location = "{{route('admin.drivers.store')}}";--}}
+            {{--                } else {--}}
+            {{--                    console.log(0);--}}
+            {{--                }--}}
+            {{--            },--}}
+            {{--            error: function () {--}}
+            {{--                console.log(0);--}}
 
-                    });
-                })
-            });
+            {{--            },--}}
+
+            {{--        });--}}
+            {{--    })--}}
+            {{--});--}}
         </script>
         <script src={{asset('js/form-validation.js')}}></script>
 

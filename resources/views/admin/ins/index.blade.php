@@ -8,7 +8,12 @@
             <div class="card">
                 <div class="col-md-12">
                     <div class="card">
-                        <a href="{{route('admin.instructors.create')}}">Thêm</a>
+                        <div class="m-1">
+                            <a href="{{route('admin.instructors.create')}}">
+                                <i data-feather="plus-circle"></i>
+                                <span>Thêm</span>
+                            </a>
+                        </div>
                         <table class="table" id="table-data">
                             <thead>
                             <tr>

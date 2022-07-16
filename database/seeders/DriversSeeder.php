@@ -22,11 +22,11 @@ class DriversSeeder extends Seeder
                 'gender'=>0,
                 'course_id'=>1,
                 'id_numbers'=>'123456789123',
-                'birthdate'=>'2021/01/01',
+                'birthdate'=>'2003/11/03',
                 'is_full'=>0,
                 'email' => 'john@example.com',
                 'phone_numbers'=>'0123456789',
-                'file'=>'http://tny.im/sLH',
+                'file'=>'file/cha.jpg',
                 'password' => Hash::make(123),
             ]
         );

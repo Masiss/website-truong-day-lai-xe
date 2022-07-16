@@ -62,17 +62,17 @@
                             </div>
                         </div>
                         @csrf
-
+                        <div class="error d-flex justify-content-center ">
+                            @error('message')
+                            {{$message}}
+                            @enderror
+                        </div>
                         <div class="card-content collapse show">
 
                             <div class="card-body m-3">
 
                                 <div class="row">
 
-
-                                    @error('email')
-                                    <div class="alert alert-danger">{{$message}}</div>
-                                    @enderror
                                     <div class="col-xl-12 col-md-6 col-sm-12 mb-2">
                                         <label class="form-label" for="email">Email</label>
                                         <input
@@ -119,6 +119,7 @@
                                             Submit
                                         </button>
                                     </div>
+
 
                                 </div>
                             </div>

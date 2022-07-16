@@ -38,15 +38,9 @@ class DriverController extends Controller
     public function api(Request $request)
     {
         return DataTables::of($this->model->get())
-            ->editColumn('gender', function ($object) {
-                return $object->genderName;
-            })
-            ->editColumn('birthdate', function ($object) {
-                return date('d-m-Y', strtotime($object->birthdate));
-            })
-            ->editColumn('file', function ($object) {
-                return Storage::url($object->file);
-            })
+            ->editColumn('gender', fn($object) => $object->genderName)
+            ->editColumn('birthdate', fn($object) => date('d-m-Y', strtotime($object->birthdate)))
+            ->editColumn('file', fn($object) => Storage::url($object->file))
             ->addColumn('edit', fn($object) => $object->id)
             ->addColumn('delete', fn($object) => $object->id)
             ->make(true);
@@ -126,7 +120,7 @@ class DriverController extends Controller
                 ->first();
             $ins_id = DB::table('instructors')
                 ->select('id')
-                ->whereNotExists(function ($query) {
+                ->whereNotIn('id',function ($query) {
                     $query->select('ins_id')
                         ->from('lessons');
                 })
@@ -149,6 +143,7 @@ class DriverController extends Controller
                     'start_at' => $start_at,
                     'date' => $date,
                     'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
+                    'status' => 0,
 
                 ]);
             }
@@ -203,8 +198,8 @@ class DriverController extends Controller
     {
         DB::beginTransaction();
         try {
-            $course = Course::find($id);
-            $course->delete();
+            $driver = Driver::query()->where('id', $id)->first();
+            $course = Course::query()->where('id',$driver->course_id)->delete();
             $lesson = Lesson::where('driver_id', '===', $id);
             $lesson->delete();
             Driver::find($id)->delete();

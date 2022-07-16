@@ -11,12 +11,12 @@
                         <table class="table" id="table-data">
                             <thead>
                             <tr>
-                                <th>Tháng</th>
-                                <th>Tổng buổi dạy</th>
-                                <th>Tổng giờ dạy</th>
-                                <th>Tổng lương</th>
-                                <th>Trạng thái</th>
-                                <th></th>
+                                <th>Ngày</th>
+                                <th>Giờ</th>
+                                <th>Tên học viên</th>
+                                <th>Thời gian dạy</th>
+                                <th>Số điện thoại</th>
+                                <th>Email</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -43,23 +43,27 @@
                 $('#table-data').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{!! route('instructors.salaries.api') !!}',
+                    ajax: '{!! route('instructors.getLessons') !!}',
+                    order: [[0, 'asc'], [1, 'asc'], [6, 'asc']],
                     columns:
                         [
-                            {data: 'month', name: 'month'},
-                            {data: 'total_lessons', name: 'total_lessons'},
-                            {data: 'total_hours', name: 'total_hours'},
-                            {data: 'total_salaries', name: 'total_salaries'},
+                            {data: 'date', name: 'date'},
+                            {data: 'start_at', name: 'start_at'},
+                            {data: 'name', name: 'name'},
+                            {data: 'last', name: 'last'},
+                            {data: 'phone_numbers', name: 'phone_numbers'},
+                            {data: 'email', name: 'email'},
                             {
                                 data: 'status',
                                 name: 'status',
                             },
                             {
-                                data: 'show',
-                                name: 'show',
-                                render: function (data) {
-                                    return `<a href="salaries/show/${data}">Chi tiết</a>`;
-                                }
+                                data: 'checkin',
+                                name: 'checkin',
+                                render: function (data, type, row, meta) {
+                                    return data ? ` <a href="./checkin/${data}" class="btn">Checkin</a>` : null;
+                                },
+
                             },
 
 

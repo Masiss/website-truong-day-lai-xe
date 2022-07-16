@@ -13,8 +13,8 @@
     <title>Layout Empty - Vuexy - Bootstrap HTML admin template</title>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.css"/>
-    <link rel="apple-touch-icon" href="../../../app-assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="../../../app-assets/images/ico/favicon.ico">
+    <link rel="apple-touch-icon" href="{{asset('apple-touch-icon.png')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset('favicon.ico')}}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
           rel="stylesheet">
 
@@ -49,7 +49,13 @@
 {{--NAV-BAR--}}
 @include('layout.nav-bar')
 {{--SIDE-BAR--}}
-@include('layout.side-bar')
+@if(auth()->guard('driver')->check())
+    @include('layout.driver_sidebar')
+@elseif(\App\Models\Instructor::checkLevel()==\App\Enums\LevelEnum::INSTRUCTOR->name)
+    @include('layout.ins_sidebar')
+@elseif(\App\Models\Instructor::checkLevel()==\App\Enums\LevelEnum::ADMIN->name)
+    @include('layout.sidebar')
+@endif
 <!-- BEGIN: Content-->
 <div class="app-content content ">
     <div class="content-overlay">

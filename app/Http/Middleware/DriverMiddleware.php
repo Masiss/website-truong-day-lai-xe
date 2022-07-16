@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class DriverMiddleware
 {
@@ -16,6 +18,12 @@ class DriverMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        if (Auth::guard('driver')->check()) {
+            return $next($request);
+        } else {
+            return Redirect::route('login')->withErrors([
+                'message' => 'Đăng nhập đê bạn ây',
+            ]);
+        }
     }
 }

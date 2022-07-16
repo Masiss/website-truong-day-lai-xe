@@ -11,7 +11,7 @@
                         <table class="table" id="table-data">
                             <thead>
                             <tr>
-                                <th>Tên giáo viên</th>
+                                <th>Tháng</th>
                                 <th>Tổng buổi dạy</th>
                                 <th>Tổng giờ dạy</th>
                                 <th>Tổng lương</th>

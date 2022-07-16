@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LessonStatusEnum;
+use App\Enums\LevelEnum;
 use App\Models\Instructor;
+use App\Models\Lesson;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\DataTables;
 
@@ -51,10 +56,9 @@ class InstructorController extends Controller
     public function show(Request $request, $id)
     {
         $diff = 500000;
-        $month_salary = DB::table('month_salaries')->where('id', $id)->get();
-        $date = $month_salary->pluck('month')->toArray()[0];
-        $month = date_format(new \DateTime($date), 'm');
-        $year = date_format(new \DateTime($date), 'Y');
+        $month_salary = DB::table('month_salaries')->where('id', $id)->first();
+        $month = date('n', strtotime($month_salary->month));
+        $year = date('Y', strtotime($month_salary->month));
         $ins = Auth::guard('instructor')->user();
         $lessons = DB::table('lessons')
             ->where('ins_id', '=', $ins->id)
@@ -77,8 +81,78 @@ class InstructorController extends Controller
         ]);
     }
 
-    public function info()
+    public function getLessons(Request $request)
     {
+//
+        return DataTables::of(DB::table('lessons')->where('ins_id', auth()->guard('instructor')->user()->id)
+            ->join('drivers', 'drivers.id', '=', 'lessons.driver_id')
+            ->select('*', 'lessons.id as lesson_id')
+            ->get())
+            ->editColumn('date', fn($object) => date_format(new \DateTime($object->date), 'd/m/Y'))
+            ->editColumn('status', fn($object) => LessonStatusEnum::from($object->status)->name)
+            ->addColumn('checkin', function ($object) {
+                if ($object->status == LessonStatusEnum::HAPPENED->value || $object->status == LessonStatusEnum::CANCELED->value) {
+                    return null;
+                } else {
+
+                    return $object->lesson_id;
+                }
+            })
+            ->make(true);
+    }
+
+    public function checkin()
+    {
+        return view('ins.checkin');
+    }
+
+    public function updateStatus(Request $request, int $id)
+    {
+        try {
+            // Validate the value...
+            Lesson::query()->where('id', $id)->update([
+                'status' => LessonStatusEnum::HAPPENED->value,
+            ]);
+            return Redirect::back();
+        } catch (Throwable $e) {
+            report($e);
+
+            return false;
+        }
+    }
+
+    public function update(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Validate the value...
+            $get = DB::table('instructors')->where('id', auth()->guard('instructor')->user()->id)
+                ->where('level', LevelEnum::INSTRUCTOR->value);
+            if (isset($request->avatar)) {
+                $path = Storage::disk('public')->put('avatar', $request->avatar);
+                $get->update([
+                    'name' => $request->name,
+                    'gender' => $request->gender,
+                    'birthdate' => $request->birthdate,
+                    'phone_numbers' => $request->phone_numbers,
+                    'avatar' => $request->avatar,
+                ]);
+            } else {
+                $get->update([
+                    'name' => $request->name,
+                    'gender' => $request->gender,
+                    'birthdate' => $request->birthdate,
+                    'phone_numbers' => $request->phone_numbers,
+                ]);
+            }
+            DB::commit();
+            return Redirect::back();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            report($e);
+
+            return false;
+        }
 
     }
 

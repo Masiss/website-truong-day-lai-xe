@@ -76,6 +76,7 @@
                     processing: true,
                     serverSide: true,
                     ajax: '{!! route('admin.salaries.api') !!}',
+                    order:[[6,"desc"],[7,"desc"]],
                     columns:
                         [
                             {data: 'id', name: 'id'},

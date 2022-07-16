@@ -22,7 +22,7 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Thông tin các buổi học</h4>
+                                <h4 class="card-title">Thông tin các buổi dạy</h4>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li>

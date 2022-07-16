@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\LessonStatusEnum;
 use App\Http\Controllers\Controller;
-use App\Models\Driver;
-use App\Models\Instructor;
 use App\Models\Lesson;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -30,23 +28,17 @@ class LessonController extends Controller
 
     public function api()
     {
-        return DataTables::of(Lesson::query()
-//            ->join('drivers', 'drivers.id', '=', 'lessons.driver_id')
-//            ->join('instructors', 'instructors.id', '=', 'lessons.ins_id')
+        return DataTables::of(Lesson::query()->orderBy('lessons.updated_at')
+            ->join('drivers', 'drivers.id', '=', 'lessons.driver_id')
+            ->join('instructors', 'instructors.id', '=', 'lessons.ins_id')
+            ->select('*', 'instructors.name as ins_name', 'drivers.name as driver_name', 'lessons.id as id')
             ->get())
-            ->addColumn('driver_name', function ($object) {
-                $driver = Driver::query()->where('id', '=', $object->driver_id)->first();
-                return $driver->name;
-            })
-            ->addColumn('ins_name', function ($object) {
-                $ins = Instructor::query()->where('id', $object->ins_id)->first();
-                return $ins->name;
-            })
+            ->addColumn('driver_name', fn($object) => $object->driver_name)
+            ->addColumn('ins_name', fn($object) => $object->ins_name)
             ->editColumn('status', fn($object) => LessonStatusEnum::from($object->status)->name)
             ->editColumn('rating', fn($object) => $object->rating.' / 5')
             ->editColumn('date',
                 fn($object) => $object->start_at.' giờ '.date_format(new \DateTime($object->date), 'd/m/Y'))
-            ->addColumn('edit', fn($object) => $object->id)
             ->make(true);
     }
 }

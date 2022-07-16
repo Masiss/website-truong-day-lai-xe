@@ -7,8 +7,11 @@
                    href="#">
                 <span
                     class="brand-logo">
-                <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                     height="24">
+{{--                <svg viewbox="0 0 139 95" version="1.1"--}}
+                    {{--                     xmlns="http://www.w3.org/2000/svg"--}}
+                    {{--                     src="{{asset('logo.png')}}"--}}
+                    {{--                     height="24">--}}
+                    <img viewbox="0 0 139 95" src="{{asset('logo.png')}}" height="24">
                 <defs>
                     <lineargradient id="linearGradient-1" x1="100%" y1="10.5120544%" x2="50%" y2="89.4879456%">
                       <stop stop-color="#000000" offset="0%">
@@ -55,9 +58,9 @@
 </g>
 </g>
 </g>
-</svg>
+                    </svg>
 </span>
-                    <h2 class="brand-text">Vuexy</h2>
+                    <h2 class="brand-text">Bao Đậu</h2>
                 </a>
             </li>
             <li class="nav-item nav-toggle">
@@ -82,7 +85,7 @@
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 
             <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/instructors">
+                <a class="d-flex align-items-center" href="/admin">
                     <i
                         data-feather="home">
 
@@ -94,12 +97,39 @@
             </li>
 
             <li class=" nav-item">
-                <a class="d-flex align-items-center" href="/instructors/salaries">
+                <a class="d-flex align-items-center" href="/admin/drivers">
+                    <i data-feather="users">
+
+                    </i>
+                    <span
+                        class="menu-title text-truncate">Học viên</span>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="/admin/instructors">
+                    <i
+                        data-feather="user">
+
+                    </i>
+                    <span class="menu-title text-truncate">Giáo viên</span>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="/admin/salaries">
                     <i
                         data-feather="dollar-sign">
 
                     </i>
                     <span class="menu-title text-truncate">Bảng lương</span>
+                </a>
+            </li>
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="/admin/lessons">
+                    <i
+                        data-feather="calendar">
+
+                    </i>
+                    <span class="menu-title text-truncate">Các buổi học</span>
                 </a>
             </li>
             {{--            <li class=" nav-item">--}}

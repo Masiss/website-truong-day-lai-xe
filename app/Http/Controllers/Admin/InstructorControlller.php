@@ -104,6 +104,7 @@ class InstructorControlller extends Controller
                 'gender' => $request->gender,
             ]);
         if ($request->avatar) {
+            $path = Storage::disk('public')->put('avatar', $request->avatar);
             $update->update(['avatar' => $request->avatar]);
         }
         return redirect()->route('admin.instructors.index');

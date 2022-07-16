@@ -12,6 +12,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -130,12 +131,7 @@ class AuthController extends Controller
 
     public function login()
     {
-
-        if (!Auth::check()) {
-            return view('login');
-        } else {
-            return redirect()->route('index');
-        }
+        return view('login');
     }
 
     public function login_processing(Request $request)
@@ -146,13 +142,11 @@ class AuthController extends Controller
                 'email' => ['required', 'email'],
                 'password' => ['required'],
             ]);
-//            $email = $request->email;
-//            $password = $request->password;
             $remember = $request->save_login ? true : false;
             if (Auth::guard('driver')->attempt($credentials, $remember)) {
                 $user = Driver::where('email', '=', $credentials['email'])->first();
                 Auth::guard('driver')->login($user, $remember);
-                return redirect()->route('index');
+                return redirect()->route('drivers.index');
             }
             if (Auth::guard('instructor')->attempt($credentials, $remember)) {
                 $user = Instructor::where('email', '=', $credentials['email'])->first();
@@ -165,12 +159,16 @@ class AuthController extends Controller
 
                 }
             }
-            return redirect()->route('login');
+            return Redirect::back()->withInput()->withErrors([
+                'message' => 'Email hoặc mật khẩu không đúng'
+            ]);
 
 
         } catch (Throwable $e) {
             report($e);
-            dd($e);
+            return Redirect::back()->withInput()->withErrors([
+                'message' => 'Email hoặc mật khẩu không đúng'
+            ]);
             return false;
         }
 

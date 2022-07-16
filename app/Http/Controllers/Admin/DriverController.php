@@ -120,7 +120,7 @@ class DriverController extends Controller
                 ->first();
             $ins_id = DB::table('instructors')
                 ->select('id')
-                ->whereNotExists(function ($query) {
+                ->whereNotIn('id',function ($query) {
                     $query->select('ins_id')
                         ->from('lessons');
                 })
@@ -143,6 +143,7 @@ class DriverController extends Controller
                     'start_at' => $start_at,
                     'date' => $date,
                     'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
+                    'status' => 0,
 
                 ]);
             }
@@ -197,8 +198,8 @@ class DriverController extends Controller
     {
         DB::beginTransaction();
         try {
-            $course = Course::find($id);
-            $course->delete();
+            $driver = Driver::query()->where('id', $id)->first();
+            $course = Course::query()->where('id',$driver->course_id)->delete();
             $lesson = Lesson::where('driver_id', '===', $id);
             $lesson->delete();
             Driver::find($id)->delete();

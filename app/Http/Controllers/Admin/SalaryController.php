@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\LessonStatusEnum;
+use App\Enums\SalaryStatus;
 use App\Http\Controllers\Controller;
-use App\Models\Instructor;
 use App\Models\MonthSalary;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ class SalaryController extends Controller
     {
         $now = new \DateTime();
         $month = $now->format('m');
+        $month--;
         $year = $now->format('Y');
         return view('admin.salaries.index', [
             'month' => $month,
@@ -38,12 +40,14 @@ class SalaryController extends Controller
     public function api()
     {
 
-        return DataTables::of($this->model->orderBy('updated_at')->orderBy('created_at')->get())
+        return DataTables::of(MonthSalary::query()
+            ->join('instructors', 'instructors.id', '=', 'month_salaries.ins_id')
+            ->get())
             ->editColumn('ins_id', function ($object) {
-                return Instructor::where('id', '=', $object->ins_id)->pluck('name')[0];
+                return $object->name;
             })
             ->editColumn('month', fn($object) => date_format(new \DateTime($object->month), 'm/Y'))
-            ->editColumn('status', fn($object) => $object->status == 0 ? 'Chờ duyệt' : 'Đã duyệt')
+            ->editColumn('status', fn($object) => SalaryStatus::from($object->status)->name)
             ->editColumn('created_at', fn($object) => $object->created_at)
             ->addColumn('show', fn($object) => $object->id)
             ->addColumn('approve', fn($object) => $object->id)
@@ -61,18 +65,12 @@ class SalaryController extends Controller
         $year = $request->year;
         $str = '01/'.$month.'/'.$year;
         $month = \DateTime::createFromFormat('d/m/Y', $str)->format('Y/m/d');
-//
-
+        $sub_query = DB::table('lessons')->select('ins_id')
+            ->whereMonth('date', $request->month)
+            ->whereYear('date', $request->year)
+            ->groupBy('ins_id')->pluck('ins_id');
         $ins_ids = DB::table('instructors')->select('id')
-            ->whereIn('id', function ($query) {
-                $time = new \DateTime();
-                $query->select('ins_id')
-                    ->from('lessons')
-                    ->whereMonth('date', $time->format('m'))
-                    ->whereYear('date', $time->format('Y'))
-                    ->groupBy('ins_id');
-            })
-            ->pluck('id')->toArray();
+            ->whereIn('id', $sub_query)->get()->pluck('id');
         foreach ($ins_ids as $id) {
             $checkExist = MonthSalary::where('ins_id', $id)->where('month', $month)->first();
             if (!$checkExist) {
@@ -82,28 +80,35 @@ class SalaryController extends Controller
                         DB::raw('avg(rating) as rating'),
                         DB::raw('sum(last) as total_hours'))
                     ->where('ins_id', '=', $id)
+                    ->where('status', '=', LessonStatusEnum::HAPPENED->value)
+                    ->whereMonth('date', $request->month)
+                    ->whereYear('date', $request->year)
                     ->groupBy('ins_id')
-                    ->get()->toArray()[0];
-                $ins_id = $lessons->ins_id;
-                $total_hours = $lessons->total_hours;
-                $rating = ceil($lessons->rating);
-                $total_lessons = $lessons->total_lessons;
-                $salary = $fixed * $total_hours - (5 - $rating) * $diff;
-                try {
-                    MonthSalary::query()->insert([
-                        'ins_id' => $ins_id,
-                        'total_hours' => $total_hours,
-                        'total_lessons' => $total_lessons,
-                        'total_salaries' => $salary,
-                        'month' => $month,
-                        'created_at' => $today,
-                    ]);
-                    DB::commit();
-                } catch (Throwable $e) {
-                    report($e);
-                    DB::rollBack();
-                    return false;
+                    ->first();
+                if ($lessons) {
+
+                    $ins_id = $lessons->ins_id;
+                    $total_hours = $lessons->total_hours;
+                    $rating = ceil($lessons->rating);
+                    $total_lessons = $lessons->total_lessons;
+                    $salary = $fixed * $total_hours - (5 - $rating) * $diff;
+                    try {
+                        MonthSalary::query()->insert([
+                            'ins_id' => $ins_id,
+                            'total_hours' => $total_hours,
+                            'total_lessons' => $total_lessons,
+                            'total_salaries' => $salary,
+                            'month' => $month,
+                            'created_at' => $today,
+                        ]);
+                        DB::commit();
+                    } catch (Throwable $e) {
+                        report($e);
+                        DB::rollBack();
+                        return false;
+                    }
                 }
+
             }
 
         }

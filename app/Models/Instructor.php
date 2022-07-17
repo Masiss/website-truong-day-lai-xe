@@ -41,4 +41,14 @@ class Instructor extends \Illuminate\Foundation\Auth\User
 
     }
 
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class, 'ins_id', 'id');
+    }
+
+    public function month_salaries()
+    {
+        return $this->hasMany(MonthSalary::class, 'ins_id','id');
+    }
+
 }

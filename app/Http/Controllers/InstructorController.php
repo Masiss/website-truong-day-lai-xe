@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Enums\LessonStatusEnum;
 use App\Enums\LevelEnum;
+use App\Enums\SalaryStatusEnum;
 use App\Models\Instructor;
 use App\Models\Lesson;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\MonthSalary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -39,65 +40,48 @@ class InstructorController extends Controller
     public function salaries()
     {
         return view('ins.salaries');
-//        MonthSalary::query()->where('id', $this->guard->user()->id)->get();
     }
 
     public function api(Request $request)
     {
-        return DataTables::of(Instructor::query()->where('instructors.id', $this->guard->user()->id)
-            ->join('month_salaries', 'month_salaries.ins_id', '=', 'instructors.id')
+
+        return DataTables::of(MonthSalary::query()->with('instructor')
+            ->where('ins_id', $this->guard->user()->id)
             ->get())
-            ->editColumn('status', fn($object) => $object->status == 0 ? 'Đang chờ duyệt' : 'Đã duyệt')
+            ->editColumn('status',
+                function ($object) {
+                    return $object->status == SalaryStatusEnum::PENDING->value ? 'Đang chờ duyệt' :
+                        ($object->status == SalaryStatusEnum::APPROVED->value ? 'Đã duyệt' : ' ');
+                })
             ->editColumn('month', fn($object) => date_format(new \DateTime($object->month), 'm/Y'))
             ->addColumn('show', fn($object) => $object->id)
             ->make(true);
     }
 
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        $diff = 500000;
-        $month_salary = DB::table('month_salaries')->where('id', $id)->first();
-        $month = date('n', strtotime($month_salary->month));
-        $year = date('Y', strtotime($month_salary->month));
-        $ins = Auth::guard('instructor')->user();
-        $lessons = DB::table('lessons')
-            ->where('ins_id', '=', $ins->id)
-            ->whereMonth('date', '=', $month)
-            ->whereYear('date', '=', $year)
-            ->join('drivers', 'drivers.id', '=', 'lessons.id')
-            ->get();
-        $detail_salary = new Collection();
-        $detail_salary->base = array_sum($lessons->pluck('last')->toArray()) * 75000;
-        $rating = $lessons->pluck('rating')->toArray();
-        $detail_salary->minus = ceil(array_sum($rating) / count($rating)) * $diff;
-
-        $detail_salary->total = $detail_salary->base - $detail_salary->minus;
+        $info = ActionController::showSalary($id);
 
         return view('ins.show', [
-            'ins' => $ins,
-            'lessons' => $lessons,
-            'month_salary' => $month_salary,
-            'detail_salary' => $detail_salary,
+            'lessons' => $info->lessons,
+            'month_salary' => $info->month_salary,
+            'detail_salary' => $info->detail_salary,
         ]);
     }
 
-    public function getLessons(Request $request)
+    public function checkinAPI(Request $request)
     {
-//
-        return DataTables::of(DB::table('lessons')->where('ins_id', auth()->guard('instructor')->user()->id)
-            ->join('drivers', 'drivers.id', '=', 'lessons.driver_id')
+        return DataTables::of(Lesson::query()->where('ins_id', auth()->guard('instructor')->user()->id)
+            ->with('driver')
+            ->where('status', LessonStatusEnum::PENDING->value)
             ->select('*', 'lessons.id as lesson_id')
             ->get())
-            ->editColumn('date', fn($object) => date_format(new \DateTime($object->date), 'd/m/Y'))
+            ->editColumn('name', fn($object) => $object->driver->name)
+            ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)
+            ->editColumn('email', fn($object) => $object->driver->email)
+            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
             ->editColumn('status', fn($object) => LessonStatusEnum::from($object->status)->name)
-            ->addColumn('checkin', function ($object) {
-                if ($object->status == LessonStatusEnum::HAPPENED->value || $object->status == LessonStatusEnum::CANCELED->value) {
-                    return null;
-                } else {
-
-                    return $object->lesson_id;
-                }
-            })
+            ->addColumn('checkin', fn($object) => $object->lesson_id)
             ->make(true);
     }
 
@@ -121,12 +105,12 @@ class InstructorController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function updateInfo(Request $request)
     {
         DB::beginTransaction();
         try {
             // Validate the value...
-            $get = DB::table('instructors')->where('id', auth()->guard('instructor')->user()->id)
+            $get = Instructor::query()->where('id', auth()->guard('instructor')->user()->id)
                 ->where('level', LevelEnum::INSTRUCTOR->value);
             if (isset($request->avatar)) {
                 $path = Storage::disk('public')->put('avatar', $request->avatar);
@@ -153,6 +137,28 @@ class InstructorController extends Controller
 
             return false;
         }
+
+    }
+
+    public function lessons()
+    {
+        return view('ins.lessons');
+    }
+
+    public function getLessons()
+    {
+        return DataTables::of(Lesson::query()->where('ins_id', $this->guard->user()->id)
+            ->with('driver:id,name,email,phone_numbers')
+            ->get())
+            ->editColumn('name', fn($object) => $object->driver->name)
+            ->editColumn('email', fn($object) => $object->driver->email)
+            ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)
+            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
+            ->editColumn('status', fn($object) => $object->status == LessonStatusEnum::PENDING->value ? "Chưa đến" :
+                ($object->status == LessonStatusEnum::HAPPENED->value ? "Đã xong" :
+                    ($object->status == LessonStatusEnum::CANCELED->value ? "Đã hủy" :
+                        " ")))
+                    ->make(true);
 
     }
 

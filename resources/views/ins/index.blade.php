@@ -15,7 +15,7 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" action="" method="POST" id="form-data-1" class="needs-validation"
+                <form enctype="multipart/form-data" action="{{route('instructors.updateInfo')}}" method="POST" id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
                         <div class="card">

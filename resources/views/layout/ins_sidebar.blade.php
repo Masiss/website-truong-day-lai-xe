@@ -109,6 +109,14 @@
                     <span class="menu-title text-truncate">Điểm danh</span>
                 </a>
             </li>
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="/instructors/lessons">
+                    <i
+                        data-feather="book">
+                    </i>
+                    <span class="menu-title text-truncate">Các buổi dạy</span>
+                </a>
+            </li>
             {{--            <li class=" nav-item">--}}
             {{--                <a class="d-flex align-items-center" href="#">--}}
             {{--                    <i--}}

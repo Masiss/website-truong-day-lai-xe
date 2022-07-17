@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\InstructorController;
@@ -34,15 +35,17 @@ Route::prefix('instructors')->middleware([
     'instructor'
 ])->controller(InstructorController::class)->name('instructors.')->group(function () {
     Route::get('/', 'index')->name('index');
-    Route::put('/','update')->name('update');
+    Route::put('/','updateInfo')->name('updateInfo');
     Route::get('/checkin', 'checkin')->name('checkin');
     Route::get('/checkin/{id}', 'updateStatus')
         ->where('id', '[0-9]+')->name('checkin.update');
-    Route::get('/getLessons', 'getLessons')->name('getLessons');
+    Route::get('/checkinAPI', 'checkinAPI')->name('checkinAPI');
     Route::get('/salaries', 'salaries')->name('salaries');
     Route::get('/salaries/api', 'api')->name('salaries.api');
     Route::get('/salaries/show/{id}', 'show')->where('id',
         '[0-9]+')->name('salaries.show');
+    Route::get('/lessons','lessons')->name('lessons');
+    Route::get('/getLessons','getLessons')->name('getLessons');
 });
 Route::prefix('drivers')->middleware(['driver'])
     ->name('drivers.')
@@ -50,4 +53,3 @@ Route::prefix('drivers')->middleware(['driver'])
     ->group(function () {
         Route::get('/', 'index')->name('index');
     });
-//Route::resource('drivers', DriverController::class);

@@ -15,7 +15,7 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" action="" method="POST"
+                <form enctype="multipart/form-data" action="{{route('admin.salaries.update',$ins->id)}}" method="POST"
                       id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
@@ -103,7 +103,7 @@
                                         <tbody>
                                         @foreach($lessons as $lesson)
                                             <tr>
-                                                <td>{{$lesson->name}}</td>
+                                                <td>{{$lesson->driver->name}}</td>
                                                 <td>{{$lesson->last}} tiếng</td>
                                                 <td>{{$lesson->date}}</td>
                                                 <td>@if(!$lesson->report)

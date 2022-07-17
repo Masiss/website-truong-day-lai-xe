@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,18 +32,6 @@ class Driver extends \Illuminate\Foundation\Auth\User
     protected $cast = [
         'birthdate' => 'date:d-m-Y',
     ];
-
-    protected function genderName(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value, $attribute) {
-                $attribute = $attribute['gender'];
-                return ($attribute === 0) ?
-                    'Nam'
-                    : 'Nữ';
-            }
-        );
-    }
 
     public function course()
     {

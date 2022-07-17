@@ -13,12 +13,15 @@ class MonthSalary extends Model
 
     protected $fillable = [
         'ins_id',
+        'month',
         'total_lessons',
-        'total_salary',
+        'total_hours',
+        'total_salaries',
+        'status,'
     ];
 
-//    public function total_lessons()
-//    {
-//        return $this->hasMany()
-//    }
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class,'ins_id','id');
+    }
 }

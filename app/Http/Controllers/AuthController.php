@@ -6,15 +6,14 @@ use App\Enums\LevelEnum;
 use App\Http\Requests\StoreDriverRequest;
 use App\Models\Driver;
 use App\Models\Instructor;
-use App\Models\Lesson;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Throwable;
 
 class AuthController extends Controller
@@ -26,6 +25,7 @@ class AuthController extends Controller
 
     public function registering(StoreDriverRequest $request)
     {
+
         DB::beginTransaction();
         try {
 
@@ -38,41 +38,17 @@ class AuthController extends Controller
                 'email',
                 'file',
                 'is_full',
-                'password'
+                'password',
             ]);
-            $arr['is_full'] = filter_var($arr['is_full'], FILTER_VALIDATE_BOOLEAN);
-            $request->lesson = (int) $request->last === 2 ? 20 : 10;
 
-
-            $password = Hash::make($arr['password']);
-            $course = $request->only([
-                'days_of_week',
-                'last',
-            ]);
-            $course['days_of_week'] = explode(',', $course['days_of_week']);
-
-
-            $date = new \DateTime();
-            if ($arr['is_full']) {
-                $lessons = Lesson::getDate($date, $course['days_of_week'], $request->lesson);
-                $course = Arr::add($course, 'price_per_day', null);
-                $course = Arr::add($course, 'price', 3500000);
-            } else {
-                $lessons = Lesson::getDate($date, $course['days_of_week'], count($course['days_of_week']));
-                $course = Arr::add($course, 'price_per_day', $request->last / 2 * 200000);
-                $course = Arr::add($course, 'price', null);
-            }
-            $course_id = DB::table('courses')->insertGetId([
-                'days_of_week' => json_encode($course['days_of_week']),
-                'price' => $course['price'],
-                'price_per_day' => $course['price_per_day'],
-                'created_at' => $date->format('Y/m/d'),
-
-            ]);
+            $request->is_full = $request->boolean('is_full');
+            $arr['password'] = Hash::make($request->password);
+            //add Course
+            $course_id = ActionController::createCourse($request);
             $arr['file'] = Storage::disk('public')
                 ->put('file', $arr['file']);
-            $driver_id = DB::table('drivers')
-                ->insertGetId([
+            $driver_id = Driver::query()
+                ->create([
                     'name' => $arr['name'],
                     'gender' => $arr['gender'],
                     'course_id' => $course_id,
@@ -82,49 +58,15 @@ class AuthController extends Controller
                     'email' => $arr['email'],
                     'file' => $arr['file'],
                     'is_full' => $arr['is_full'],
-                    'password' => $password,
-                    'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
-
-                ]);
-            $sub = DB::table('lessons')
-                ->select('ins_id', DB::raw('count(*) as less_ins'))
-                ->groupBy('driver_id', 'ins_id')
-                ->orderBy('less_ins', 'ASC')
-                ->limit(1)
-                ->pluck('ins_id')
-                ->first();
-            $ins_id = DB::table('instructors')
-                ->select('id')
-                ->whereNotExists(function ($query) {
-                    $query->select('ins_id')
-                        ->from('lessons');
-                })
-                ->orWhere('id', $sub)
-                ->pluck('id')
-                ->first();
-            if ($request->shift === 'AM') {
-                $start_at = 7;
-            } else {
-                if ($request->shift === 'PM') {
-                    $start_at = 14;
-                }
-            }
-
-            foreach ($lessons as $date) {
-                DB::table('lessons')->insert([
-                    'driver_id' => $driver_id,
-                    'ins_id' => $ins_id,
-                    'last' => $request->last,
-                    'start_at' => $start_at,
-                    'date' => $date,
-                    'created_at' => date_format(new \DateTime(), 'Y/m/d'),
-                ]);
-            }
+                    'password' => $arr['password'],
+                ])->id;
+            //add lessons
+            ActionController::AddLessons($request, $driver_id);
             DB::commit();
             echo "1";
         } catch (Throwable $e) {
             DB::rollBack();
-            echo $e;
+
             return false;
         }
     }
@@ -142,6 +84,7 @@ class AuthController extends Controller
                 'email' => ['required', 'email'],
                 'password' => ['required'],
             ]);
+
             $remember = $request->save_login ? true : false;
             if (Auth::guard('driver')->attempt($credentials, $remember)) {
                 $user = Driver::where('email', '=', $credentials['email'])->first();

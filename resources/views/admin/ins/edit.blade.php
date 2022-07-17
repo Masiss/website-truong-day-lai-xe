@@ -122,7 +122,7 @@
                                         {{--                                        col-xl-5 col-md-6 col-sm-12 mb-2--}}
                                         <div class=" text-center col-xl-6 ">
                                             <label for="customFile1" class="form-label">Avatar</label>
-                                            <input value="" class="form-control" name="Avatar"
+                                            <input value="" class="form-control" name="avatar"
                                                    type="file" id="Avatar"/>
                                             <img class="rounded d-block" src="{{$ins->avatar}}"
                                                  style="max-height: 20em;">

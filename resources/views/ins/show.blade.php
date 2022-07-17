@@ -48,7 +48,7 @@
                                         <tbody>
                                         @foreach($lessons as $lesson)
                                             <tr>
-                                                <td>{{$lesson->name}}</td>
+                                                <td>{{$lesson->driver->name}}</td>
                                                 <td>{{$lesson->last}} tiếng</td>
                                                 <td>{{$lesson->date}}</td>
                                                 <td>@if(!$lesson->report)

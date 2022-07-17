@@ -26,11 +26,10 @@ Route::get('salaries/api', [SalaryController::class, 'api'])->name('salaries.api
 Route::get('salaries/calculate', [SalaryController::class, 'calculate'])->name('salaries.calculate');
 Route::get('salaries/{id}/approve', [SalaryController::class, 'approve'])->where('id',
     '[0-9]+')->name('salaries.approve');
-Route::resource('salaries', SalaryController::class)->except([
-    'edit',
-    'destroy',
-    'create',
-    'store',
+Route::resource('salaries', SalaryController::class)->only([
+    'index',
+    'update',
+    'show',
 ]);
 Route::resource('instructors', InstructorControlller::class)->except([
     'show',

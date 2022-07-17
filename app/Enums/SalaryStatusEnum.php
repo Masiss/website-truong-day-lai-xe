@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum SalaryStatus: int
+enum SalaryStatusEnum: int
 {
     case PENDING = 0;
     case APPROVED = 1;

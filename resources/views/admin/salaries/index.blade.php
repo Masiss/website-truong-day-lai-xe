@@ -76,11 +76,11 @@
                     processing: true,
                     serverSide: true,
                     ajax: '{!! route('admin.salaries.api') !!}',
-                    order:[[6,"desc"],[7,"desc"]],
+                    order: [[6, "desc"], [7, "desc"]],
                     columns:
                         [
                             {data: 'id', name: 'id'},
-                            {data: 'ins_id', name: 'ins_id'},
+                            {data: 'name', name: 'name'},
                             {data: 'month', name: 'month'},
                             {data: 'total_lessons', name: 'total_lessons'},
                             {data: 'total_hours', name: 'total_hours'},
@@ -94,14 +94,19 @@
                                 data: 'show',
                                 name: 'show',
                                 render: function (data) {
-                                    return `<a href="salaries/${data}/">Chi tiết</a>`;
+                                    return `<a href="./salaries/${data}/">Chi tiết</a>`;
                                 }
                             },
                             {
                                 data: 'approve',
                                 name: 'approve',
                                 render: function (data) {
-                                    return `<a href="salaries/${data}/approve">Duyệt</a>`;
+                                    if (data != null) {
+                                        return `<a href="./salaries/${data}/approve">Duyệt</a>`;
+                                    } else {
+                                        return null;
+                                    }
+
                                 }
                             }
 

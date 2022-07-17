@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\GenderNameEnum;
+use App\Http\Controllers\ActionController;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDriverRequest;
 use App\Models\Course;
 use App\Models\Driver;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -38,7 +38,7 @@ class DriverController extends Controller
     public function api(Request $request)
     {
         return DataTables::of($this->model->get())
-            ->editColumn('gender', fn($object) => $object->genderName)
+            ->editColumn('gender', fn($object) => GenderNameEnum::from($object->gender)->name)
             ->editColumn('birthdate', fn($object) => date('d-m-Y', strtotime($object->birthdate)))
             ->editColumn('file', fn($object) => Storage::url($object->file))
             ->addColumn('edit', fn($object) => $object->id)
@@ -51,7 +51,7 @@ class DriverController extends Controller
         return view('admin.driver.create');
     }
 
-    public function store(StoreDriverRequest $request)
+    public function store(Request $request)
     {
         DB::beginTransaction();
         try {
@@ -66,39 +66,14 @@ class DriverController extends Controller
                 'file',
                 'is_full',
             ]);
-            $arr['is_full'] = filter_var($arr['is_full'], FILTER_VALIDATE_BOOLEAN);
-            $request->lesson = (int) $request->last === 2 ? 20 : 10;
-
-
+            $request->is_full = $request->boolean('is_full');
             $password = Hash::make(Str::random(8));
-            $course = $request->only([
-                'days_of_week',
-                'last',
-            ]);
-            $course['days_of_week'] = explode(',', $course['days_of_week']);
-
-
-            $date = new \DateTime();
-            if ($arr['is_full']) {
-                $lessons = Lesson::getDate($date, $course['days_of_week'], $request->lesson);
-                $course = Arr::add($course, 'price_per_day', null);
-                $course = Arr::add($course, 'price', 3500000);
-            } else {
-                $lessons = Lesson::getDate($date, $course['days_of_week'], count($course['days_of_week']));
-                $course = Arr::add($course, 'price_per_day', $request->last / 2 * 200000);
-                $course = Arr::add($course, 'price', null);
-            }
-            $course_id = DB::table('courses')->insertGetId([
-                'days_of_week' => json_encode($course['days_of_week']),
-                'price' => $course['price'],
-                'price_per_day' => $course['price_per_day'],
-                'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
-
-            ]);
+            //add Course
+            $course_id = ActionController::createCourse($request);
             $arr['file'] = Storage::disk('public')
                 ->put('file', $arr['file']);
-            $driver_id = DB::table('drivers')
-                ->insertGetId([
+            $driver_id = Driver::query()
+                ->create([
                     'name' => $arr['name'],
                     'gender' => $arr['gender'],
                     'course_id' => $course_id,
@@ -109,44 +84,9 @@ class DriverController extends Controller
                     'file' => $arr['file'],
                     'is_full' => $arr['is_full'],
                     'password' => $password,
-                    'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
-                ]);
-            $sub = DB::table('lessons')
-                ->select('ins_id', DB::raw('count(*) as less_ins'))
-                ->groupBy('driver_id', 'ins_id')
-                ->orderBy('less_ins', 'ASC')
-                ->limit(1)
-                ->pluck('ins_id')
-                ->first();
-            $ins_id = DB::table('instructors')
-                ->select('id')
-                ->whereNotIn('id',function ($query) {
-                    $query->select('ins_id')
-                        ->from('lessons');
-                })
-                ->orWhere('id', $sub)
-                ->pluck('id')
-                ->first();
-            if ($request->shift === 'AM') {
-                $start_at = 7;
-            } else {
-                if ($request->shift === 'PM') {
-                    $start_at = 14;
-                }
-            }
-
-            foreach ($lessons as $date) {
-                DB::table('lessons')->insert([
-                    'driver_id' => $driver_id,
-                    'ins_id' => $ins_id,
-                    'last' => $request->last,
-                    'start_at' => $start_at,
-                    'date' => $date,
-                    'created_at' => date_format(new \DateTime(), 'Y/m/d H:i:s'),
-                    'status' => 0,
-
-                ]);
-            }
+                ])->id;
+            //add lessons
+            ActionController::AddLessons($request, $driver_id);
             DB::commit();
             echo "1";
         } catch (Throwable $e) {
@@ -158,14 +98,11 @@ class DriverController extends Controller
 
     public function edit(Driver $driver)
     {
-//        $course=Course::query()->where('id',$driver->id)->get();
         $driver->file = Storage::url($driver->file);
         $course = Course::query()
             ->where('id', $driver->course_id)
-            ->get()
-            ->toArray()[0];
-        $course['days_of_week'] = implode(',', json_decode($course['days_of_week']));
-
+            ->first();
+        $course->days_of_week = implode(',', json_decode($course->days_of_week));
         return view('admin.driver.edit', [
                 'driver' => $driver,
                 'course' => $course,
@@ -175,8 +112,7 @@ class DriverController extends Controller
 
     public function update(Request $request, $id)
     {
-        $driver = DB::table('drivers');
-        $driver->where('id', $id)
+        Driver::query()->where('id', $id)
             ->update([
                 'name' => $request->name,
                 'gender' => $request->gender,
@@ -189,7 +125,7 @@ class DriverController extends Controller
         if ($request->file) {
             $file = Storage::disk('public')
                 ->put('file', $request->file);
-            $driver->update(['file' => $file]);
+            Driver::where('id', $id)->update(['file' => $file]);
         }
         return redirect()->route('admin.drivers.index');
     }
@@ -199,9 +135,8 @@ class DriverController extends Controller
         DB::beginTransaction();
         try {
             $driver = Driver::query()->where('id', $id)->first();
-            $course = Course::query()->where('id',$driver->course_id)->delete();
-            $lesson = Lesson::where('driver_id', '===', $id);
-            $lesson->delete();
+            $course = Course::query()->where('id', $driver->course_id)->delete();
+            $lesson = Lesson::where('driver_id', '===', $id)->delete();
             Driver::find($id)->delete();
             DB::commit();
             return redirect()->route('admin.drivers.index');

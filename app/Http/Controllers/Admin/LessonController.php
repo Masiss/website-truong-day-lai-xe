@@ -28,13 +28,13 @@ class LessonController extends Controller
 
     public function api()
     {
+
         return DataTables::of(Lesson::query()->orderBy('lessons.updated_at')
-            ->join('drivers', 'drivers.id', '=', 'lessons.driver_id')
-            ->join('instructors', 'instructors.id', '=', 'lessons.ins_id')
-            ->select('*', 'instructors.name as ins_name', 'drivers.name as driver_name', 'lessons.id as id')
+            ->with('instructor')
+            ->with('driver')
             ->get())
-            ->addColumn('driver_name', fn($object) => $object->driver_name)
-            ->addColumn('ins_name', fn($object) => $object->ins_name)
+            ->addColumn('driver_name', fn($object) => $object->driver->name)
+            ->addColumn('ins_name', fn($object) => $object->instructor->name)
             ->editColumn('status', fn($object) => LessonStatusEnum::from($object->status)->name)
             ->editColumn('rating', fn($object) => $object->rating.' / 5')
             ->editColumn('date',

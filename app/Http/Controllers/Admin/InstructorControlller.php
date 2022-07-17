@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\LevelEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInstructorRequest;
 use App\Models\Instructor;
@@ -18,7 +19,6 @@ class InstructorControlller extends Controller
 {
     public function __construct()
     {
-        $this->model = Instructor::query();
         $route = Route::currentRouteName();
         $breadCrumb = explode('.', $route);
         $pageName = last($breadCrumb);
@@ -52,26 +52,17 @@ class InstructorControlller extends Controller
         DB::beginTransaction();
         try {
             // Validate the value...
-            $arr = $request->only([
-                'name',
-                'email',
-                'phone_numbers',
-                'birthdate',
-                'gender',
-                'avatar',
-            ]);
-            $path = Storage::disk('public')->put('avatar', $arr['avatar']);
+            $path = Storage::disk('public')->put('avatar', $request->avatar);
             $password = Hash::make(Str::random(8));
-
-            $id = DB::table('instructors')->insert([
-                'name' => $arr['name'],
-                'email' => $arr['email'],
-                'phone_numbers' => $arr['phone_numbers'],
-                'birthdate' => $arr['birthdate'],
-                'gender' => $arr['gender'],
+            $id = Instructor::query()->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone_numbers' => $request->phone_numbers,
+                'birthdate' => $request->birthdate,
+                'gender' => $request->gender,
                 'avatar' => $path,
                 'password' => $password,
-                'level' => 1,
+                'level' => LevelEnum::INSTRUCTOR->value,
 
             ]);
             DB::commit();
@@ -95,17 +86,17 @@ class InstructorControlller extends Controller
 
     public function update(Request $request, $id)
     {
-        $update = DB::table('instructors');
-        $update->where('id', $id)->where('level', '=', 1)
-            ->update([
-                'name' => $request->name,
-                'phone_numbers' => $request->phone_numbers,
-                'birthdate' => $request->birthdate,
-                'gender' => $request->gender,
-            ]);
+        $ins = Instructor::query()->where('id', $id)
+            ->where('level', '=', LevelEnum::INSTRUCTOR->value);
+        $ins->update([
+            'name' => $request->name,
+            'phone_numbers' => $request->phone_numbers,
+            'birthdate' => $request->birthdate,
+            'gender' => $request->gender,
+        ]);
         if ($request->avatar) {
             $path = Storage::disk('public')->put('avatar', $request->avatar);
-            $update->update(['avatar' => $request->avatar]);
+            $ins->update(['avatar' => $path]);
         }
         return redirect()->route('admin.instructors.index');
 
@@ -115,8 +106,7 @@ class InstructorControlller extends Controller
     {
         DB::beginTransaction();
         try {
-            $ins = Instructor::find($id);
-            $ins->delete();
+            $ins = Instructor::find($id)->delete();
             DB::commit();
             return redirect()->route('admin.instructors.index');
         } catch (Throwable $e) {

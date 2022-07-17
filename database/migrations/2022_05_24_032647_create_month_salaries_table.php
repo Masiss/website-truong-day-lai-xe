@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('month_salaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ins_id')->nullable()->constrained('instructors')->nullOnDelete();
+            $table->foreignId('ins_id')->nullable()->constrained('instructors');
             $table->date('month');
             $table->integer('total_lessons');
             $table->integer('total_hours');

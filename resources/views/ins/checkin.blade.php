@@ -43,7 +43,7 @@
                 $('#table-data').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{!! route('instructors.getLessons') !!}',
+                    ajax: '{!! route('instructors.checkinAPI') !!}',
                     order: [[0, 'asc'], [1, 'asc'], [6, 'asc']],
                     columns:
                         [

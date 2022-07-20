@@ -6,20 +6,24 @@
     <div class="content-body">
         <div class="row">
             <div class="card">
-                @error('message')
-                    <span class="alert m-1 ">{{$message}}</span>
-                @enderror
                 <div class="col-md-12">
                     <div class="card">
+                        <div class="m-1">
+                            <a href="{{route('drivers.lessons.create')}}">
+
+                                <i data-feather="plus-circle"></i>
+                                <span>Thêm</span>
+                            </a>
+                        </div>
                         <table class="table" id="table-data">
                             <thead>
                             <tr>
                                 <th>Ngày</th>
                                 <th>Giờ</th>
-                                <th>Tên học viên</th>
-                                <th>Thời gian dạy</th>
-                                <th>Số điện thoại</th>
-                                <th>Email</th>
+                                <th>Thời gian học</th>
+                                <th>Tên giáo viên</th>
+                                <th>Số điện thoại giáo viên</th>
+                                <th>Email giáo viên</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -46,14 +50,14 @@
                 $('#table-data').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{!! route('instructors.checkinAPI') !!}',
-                    order: [[0, 'asc'], [1, 'asc'], [6, 'asc']],
+                    ajax: '{!! route('drivers.api') !!}',
+                    order: [[0, 'asc'], [1, 'asc']],
                     columns:
                         [
                             {data: 'date', name: 'date'},
                             {data: 'start_at', name: 'start_at'},
-                            {data: 'name', name: 'name'},
                             {data: 'last', name: 'last'},
+                            {data: 'name', name: 'name'},
                             {data: 'phone_numbers', name: 'phone_numbers'},
                             {data: 'email', name: 'email'},
                             {
@@ -61,13 +65,17 @@
                                 name: 'status',
                             },
                             {
-                                data: 'checkin',
-                                name: 'checkin',
-                                render: function (data, type, row, meta) {
-                                    return data ? ` <a href="./checkin/${data}" class="btn">Checkin</a>` : null;
-                                },
+                                data: 'cancel',
+                                name: 'cancel',
+                                render: function (data) {
+                                    if (data) {
+                                        return `<a href=./lessons/${data}/update>Hủy</a>`;
 
-                            },
+                                    } else {
+                                        return null;
+                                    }
+                                }
+                            }
 
 
                         ]

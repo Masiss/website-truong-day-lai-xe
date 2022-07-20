@@ -25,7 +25,7 @@ class CheckLogin
             }
         }
         if (Auth::guard('driver')->viaRemember() || Auth::guard('driver')->check()) {
-            return redirect()->route('index');
+            return redirect()->route('drivers.index');
         }
         return $next($request);
 

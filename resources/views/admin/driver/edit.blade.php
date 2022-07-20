@@ -216,7 +216,7 @@
                                                     disabled/>
                                             </div>
                                         </div>
-                                        <div class="col-xl-1 center-layout">
+                                        <div class="d-flex justify-content-center">
                                             <button class="btn btn-primary " id="btn-submit">
                                                 Submit
                                             </button>

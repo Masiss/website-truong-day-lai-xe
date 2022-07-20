@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\SalariesAction;
 use App\Enums\SalaryStatusEnum;
-use App\Http\Controllers\ActionController;
 use App\Http\Controllers\Controller;
 use App\Models\Instructor;
 use App\Models\MonthSalary;
@@ -67,17 +67,19 @@ class SalaryController extends Controller
             // month column format Y/m/01
             $checkExist = MonthSalary::where('ins_id', $id)->where('month', $month)->first();
             if (!$checkExist) {
-                $month_salaries = ActionController::calculate($request, $id);
+                $month_salaries = SalariesAction::calculate($request, $id);
                 try {
-                    MonthSalary::query()->create([
-                        'ins_id' => $month_salaries->ins_id,
-                        'total_hours' => $month_salaries->total_hours,
-                        'total_lessons' => $month_salaries->total_lessons,
-                        'total_salaries' => $month_salaries->total_salaries,
-                        'month' => $month,
-                        'status' => SalaryStatusEnum::PENDING->value,
-                    ]);
-                    DB::commit();
+                    if ($month_salaries) {
+                        MonthSalary::query()->create([
+                            'ins_id' => $month_salaries->ins_id,
+                            'total_hours' => $month_salaries->total_hours,
+                            'total_lessons' => $month_salaries->total_lessons,
+                            'total_salaries' => $month_salaries->total_salaries,
+                            'month' => $month,
+                            'status' => SalaryStatusEnum::PENDING->value,
+                        ]);
+                        DB::commit();
+                    }
                 } catch (Throwable $e) {
                     report($e);
                     DB::rollBack();
@@ -94,7 +96,11 @@ class SalaryController extends Controller
 
     public function show($id)
     {
-        $info = ActionController::showSalary($id);
+        $info = SalariesAction::showSalary($id);
+        $info->lessons->map(function ($lesson) {
+            $lesson->report = !$lesson->report ? "Trống" : $lesson->report;
+            return $lesson;
+        });
         return view('admin.salaries.show', [
             'ins' => $info->ins,
             'lessons' => $info->lessons,

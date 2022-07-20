@@ -95,12 +95,13 @@
             <li class=" nav-item">
                 <a class="d-flex align-items-center" href="/drivers/lessons">
                     <i
-                        data-feather="dollar-sign">
+                        data-feather="calendar">
 
                     </i>
-                    <span class="menu-title text-truncate">Bảng lương</span>
+                    <span class="menu-title text-truncate">Các buổi học</span>
                 </a>
             </li>
+
             {{--            <li class=" nav-item">--}}
             {{--                <a class="d-flex align-items-center" href="#">--}}
             {{--                    <i--}}

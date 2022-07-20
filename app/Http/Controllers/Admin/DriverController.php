@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CreateDriver;
 use App\Enums\GenderNameEnum;
-use App\Http\Controllers\ActionController;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Driver;
@@ -38,7 +38,7 @@ class DriverController extends Controller
     public function api(Request $request)
     {
         return DataTables::of($this->model->get())
-            ->editColumn('gender', fn($object) => GenderNameEnum::from($object->gender)->name)
+            ->editColumn('gender', fn($object) => GenderNameEnum::toVNese($object->gender))
             ->editColumn('birthdate', fn($object) => date('d-m-Y', strtotime($object->birthdate)))
             ->editColumn('file', fn($object) => Storage::url($object->file))
             ->addColumn('edit', fn($object) => $object->id)
@@ -69,7 +69,7 @@ class DriverController extends Controller
             $request->is_full = $request->boolean('is_full');
             $password = Hash::make(Str::random(8));
             //add Course
-            $course_id = ActionController::createCourse($request);
+            $course_id = CreateDriver::createCourse($request);
             $arr['file'] = Storage::disk('public')
                 ->put('file', $arr['file']);
             $driver_id = Driver::query()
@@ -86,7 +86,7 @@ class DriverController extends Controller
                     'password' => $password,
                 ])->id;
             //add lessons
-            ActionController::AddLessons($request, $driver_id);
+            CreateDriver::AddLessons($request, $driver_id);
             DB::commit();
             echo "1";
         } catch (Throwable $e) {

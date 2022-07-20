@@ -67,16 +67,17 @@ class="header-navbar navbar navbar-expand-lg align-items-center floating-nav nav
     <span class="user-name fw-bolder">{{auth()->guard('driver')->user()->name}}</span>
     <span
     class="user-status">DRIVER</span>
-    <span class="avatar">
-        <img class="round"
-        src="{{\Illuminate\Support\Facades\Storage::url(auth()->guard('driver')->user()->file)}}"
-        alt="avatar" height="40" width="40">
-        <span
-        class="avatar-status-online">
-
-    </span>
-</span>
 </div>
+
+<span class="avatar">
+    <img class="round"
+    src="{{\Illuminate\Support\Facades\Storage::url(auth()->guard('driver')->user()->file)}}"
+    alt="avatar" height="40" width="40">
+    <span
+    class="avatar-status-online">
+
+</span>
+</span>
 @endif
 
 </a>

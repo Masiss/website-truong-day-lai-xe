@@ -2,21 +2,31 @@
 
 namespace App\Enums;
 
-enum DaysOfWeekEnum: int
+enum DaysOfWeekEnum: string
 {
-    case Mon = 1;
-    case Tue = 2;
-    case Wed = 3;
-    case Thu = 4;
-    case Fri = 5;
-    case Sat = 6;
+    case Mon = "Thứ 2";
+    case Tue = "Thứ 3";
+    case Wed = "Thứ 4";
+    case Thu = "Thứ 5";
+    case Fri = "Thứ 6";
+    case Sat = "Thứ 7";
 
     public static function getKey($value)
     {
         foreach (self::cases() as $key) {
             if ($key->name === $value) {
-                return (int)$key->name;
+                return $key->name;
             }
         }
     }
+
+    public static function getValueByKey($value)
+    {
+        foreach (self::cases() as $key) {
+            if ($key->name === $value) {
+                return $key->value;
+            }
+        }
+    }
+
 }

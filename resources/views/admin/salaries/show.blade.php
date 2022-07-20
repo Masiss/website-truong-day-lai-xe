@@ -106,10 +106,7 @@
                                                 <td>{{$lesson->driver->name}}</td>
                                                 <td>{{$lesson->last}} tiếng</td>
                                                 <td>{{$lesson->date}}</td>
-                                                <td>@if(!$lesson->report)
-                                                        {{"<Trống>"}}
-                                                    @endif
-                                                </td>
+                                                <td>{{$lesson->report}}</td>
                                                 <td>{{$lesson->rating}}</td>
                                             </tr>
                                         @endforeach

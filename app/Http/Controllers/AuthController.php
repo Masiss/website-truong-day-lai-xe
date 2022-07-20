@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\createCourse;
+use App\Actions\CreateDriver;
+use App\Actions\StoreDriver;
 use App\Enums\LevelEnum;
 use App\Http\Requests\StoreDriverRequest;
 use App\Models\Driver;
@@ -44,7 +47,7 @@ class AuthController extends Controller
             $request->is_full = $request->boolean('is_full');
             $arr['password'] = Hash::make($request->password);
             //add Course
-            $course_id = ActionController::createCourse($request);
+            $course_id = CreateDriver::createCourse($request);
             $arr['file'] = Storage::disk('public')
                 ->put('file', $arr['file']);
             $driver_id = Driver::query()
@@ -61,7 +64,7 @@ class AuthController extends Controller
                     'password' => $arr['password'],
                 ])->id;
             //add lessons
-            ActionController::AddLessons($request, $driver_id);
+            CreateDriver::AddLessons($request, $driver_id);
             DB::commit();
             echo "1";
         } catch (Throwable $e) {
@@ -75,6 +78,7 @@ class AuthController extends Controller
     {
         return view('login');
     }
+
 
     public function login_processing(Request $request)
     {
@@ -112,7 +116,6 @@ class AuthController extends Controller
             return Redirect::back()->withInput()->withErrors([
                 'message' => 'Email hoặc mật khẩu không đúng'
             ]);
-            return false;
         }
 
     }

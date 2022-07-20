@@ -7,7 +7,23 @@
     <div class="content-body">
         <div class="row">
             <div class="card">
+                <div class="d-flex">
+                    <div>
+                        <button id="all" value="all" class="btn">Tất cả</button>
+                    </div>
+                    <div>
+                        <button id="today" value="today" class="btn">Hôm nay</button>
+                    </div>
+                    <div>
+                        <button id="this_week" value="this_week" class="btn">Tuần này</button>
+                    </div>
+                    <div>
+                        <button id="this_month" value="this_month" class="btn">Tháng này</button>
+                    </div>
+
+                </div>
                 <div class="col-md-12">
+
                     <div class="card">
 
                         <table class="table " id="table-data">
@@ -18,9 +34,8 @@
                                 <th>Tên giáo viên</th>
                                 <th>Thời gian học</th>
                                 <th>Thời gian bắt đầu</th>
-                                <th>Đánh giá của học viên</th>
-                                <th></th>
-                                <th></th>
+                                <th>Đánh giá</th>
+                                <th>Trạng thái</th>
                             </tr>
                             </thead>
 
@@ -44,22 +59,35 @@
         <script type="text/javascript">
 
             $(function () {
-                $('#table-data').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: '{!! route('admin.lessons.api') !!}',
-                    order: [[6, 'desc'], [4, 'asc'],],
-                    columns: [
-                        {data: 'id', name: 'id'},
-                        {data: 'driver_name', name: 'driver_name'},
-                        {data: 'ins_name', name: 'ins_name'},
-                        {data: 'last', name: 'last'},
-                        {data: 'date', name: 'date'},
-                        {data: 'rating', name: 'rating'},
-                        {data: 'status', name: 'status'},
+                let today = document.getElementById('today'),
+                    this_week = document.getElementById('this_week'),
+                    this_month = document.getElementById('this_month'),
+                    all = document.getElementById('all');
+                [today, this_week, this_month, all].map(element => element.addEventListener("click", function () {
+                    let table = $('#table-data').DataTable();
+                    table.destroy();
+                    $('#table-data').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            "url": '{!! route('admin.lessons.api') !!}',
+                            "data": {
+                                limit: this.value,
+                            }
+                        },
+                        order: [[4, 'asc']],
+                        columns: [
+                            {data: 'id', name: 'id'},
+                            {data: 'driver_name', name: 'driver_name'},
+                            {data: 'ins_name', name: 'ins_name'},
+                            {data: 'last', name: 'last'},
+                            {data: 'date', name: 'date'},
+                            {data: 'rating', name: 'rating'},
+                            {data: 'status', name: 'status'},
 
-                    ]
-                });
+                        ]
+                    })
+                }))
             })
 
 

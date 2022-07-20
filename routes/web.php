@@ -45,10 +45,18 @@ Route::prefix('instructors')->middleware([
     Route::get('/lessons', 'lessons')->name('lessons');
     Route::get('/getLessons', 'getLessons')->name('getLessons');
 });
-//Route::prefix('drivers')->middleware(['driver'])
-//    ->name('drivers.')
-//    ->controller(DriverController::class)
-//    ->group(function () {
-//        Route::get('/', 'index')->name('index');
-//    });
-Route::resource('drivers', DriverController::class);
+Route::prefix('drivers')->middleware(['driver'])
+    ->name('drivers.')
+    ->controller(DriverController::class)
+    ->group(function () {
+        Route::get('api', 'api')->name('api');
+        Route::get('lessons', 'lessons')->name('lessons');
+        Route::get('update', 'update')->name('update');
+        Route::get('lessons/create', 'create')->name('lessons.create');
+        Route::post('lessons/', 'store')->name('lessons.store');
+        Route::get('lessons/{id}/update', 'updateStatus')->name('lessons.update');
+
+        Route::get('/', 'index')->name('index');
+    });
+
+

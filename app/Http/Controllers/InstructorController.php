@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SalariesAction;
 use App\Enums\LessonStatusEnum;
 use App\Enums\LevelEnum;
 use App\Enums\SalaryStatusEnum;
@@ -60,7 +61,7 @@ class InstructorController extends Controller
 
     public function show($id)
     {
-        $info = ActionController::showSalary($id);
+        $info = SalariesAction::showSalary($id);
 
         return view('ins.show', [
             'lessons' => $info->lessons,
@@ -92,17 +93,20 @@ class InstructorController extends Controller
 
     public function updateStatus(Request $request, int $id)
     {
-        try {
-            // Validate the value...
-            Lesson::query()->where('id', $id)->update([
-                'status' => LessonStatusEnum::HAPPENED->value,
-            ]);
+        $lesson = Lesson::query()->where('id', $id)->get()->first();
+        $lesson->date=date("Y/m/d",strtotime($lesson->date));
+        if ($lesson->date == date('Y/m/d') || $lesson->date < date('Y/m/d')) {
+//            Lesson::query()->where('id', $id)->update([
+//                'status' => LessonStatusEnum::HAPPENED->value,
+//            ]);
             return Redirect::back();
-        } catch (Throwable $e) {
-            report($e);
-
-            return false;
+        } elseif ($lesson->date > date("Y/m/d")) {
+            return Redirect::back()->withErrors([
+                'message' => "Chưa đến ngày, chưa được checkin",
+            ]);
         }
+
+
     }
 
     public function updateInfo(Request $request)
@@ -158,7 +162,7 @@ class InstructorController extends Controller
                 ($object->status == LessonStatusEnum::HAPPENED->value ? "Đã xong" :
                     ($object->status == LessonStatusEnum::CANCELED->value ? "Đã hủy" :
                         " ")))
-                    ->make(true);
+            ->make(true);
 
     }
 

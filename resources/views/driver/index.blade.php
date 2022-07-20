@@ -159,7 +159,7 @@
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Đăng ký buổi học</h4>
+                                <h4 class="card-title">Thông tin khóa học</h4>
                                 <div class="heading-elements">
                                     <ul class="list-inline">
                                         <li>

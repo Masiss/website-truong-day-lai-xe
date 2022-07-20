@@ -21,7 +21,6 @@ class Lesson extends Model
         'rating',
         'status',
     ];
-
     public function instructor()
     {
         return $this->belongsTo(Instructor::class, 'ins_id', 'id');

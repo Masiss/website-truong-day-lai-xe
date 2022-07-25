@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use Yajra\DataTables\DataTables;
 
 class SalaryController extends Controller
 {
@@ -28,26 +27,29 @@ class SalaryController extends Controller
     {
         $month = date('n', strtotime("-1 month"));
         $year = date('Y');
+        $month_salaries = MonthSalary::query()->with('instructor')->orderBy('updated_at')->paginate(15);
+        $month_salaries->totalPage = ceil($month_salaries->total() / $month_salaries->perPage());
         return view('admin.salaries.index', [
             'month' => $month,
             'year' => $year,
+            'month_salaries' => $month_salaries,
         ]);
     }
 
-    public function api()
-    {
-        return DataTables::of(MonthSalary::query()->with('instructor')
-            ->get())
-            ->editColumn('name', fn($object) => $object->instructor->name)
-            ->editColumn('month', fn($object) => date('m/Y', strtotime($object->month)))
-            ->editColumn('status', fn($object) => SalaryStatusEnum::from($object->status)->name)
-            ->editColumn('created_at', fn($object) => $object->created_at)
-            ->addColumn('show', fn($object) => $object->id)
-            ->addColumn('approve', fn($object) => $object->status !== SalaryStatusEnum::APPROVED->value
-                ? $object->id
-                : null)
-            ->make(true);
-    }
+//    public function api()
+//    {
+//        return DataTables::of(MonthSalary::query()->with('instructor')
+//            ->get())
+//            ->editColumn('name', fn($object) => $object->instructor->name)
+//            ->editColumn('month', fn($object) => date('m/Y', strtotime($object->month)))
+//            ->editColumn('status', fn($object) => SalaryStatusEnum::from($object->status)->name)
+//            ->editColumn('created_at', fn($object) => $object->created_at)
+//            ->addColumn('show', fn($object) => $object->id)
+//            ->addColumn('approve', fn($object) => $object->status !== SalaryStatusEnum::APPROVED->value
+//                ? $object->id
+//                : null)
+//            ->make(true);
+//    }
 
 
     public function calculate(Request $request)
@@ -97,10 +99,6 @@ class SalaryController extends Controller
     public function show($id)
     {
         $info = SalariesAction::showSalary($id);
-        $info->lessons->map(function ($lesson) {
-            $lesson->report = !$lesson->report ? "Trống" : $lesson->report;
-            return $lesson;
-        });
         return view('admin.salaries.show', [
             'ins' => $info->ins,
             'lessons' => $info->lessons,
@@ -109,13 +107,17 @@ class SalaryController extends Controller
         ]);
     }
 
-    public function approve(MonthSalary $monthSalary, $id)
+    public function approve(Request $request, $id)
     {
-        MonthSalary::where('id', $id)
-            ->update([
-                'status' => SalaryStatusEnum::APPROVED->value,
+        $month_salary = MonthSalary::where('id', $id);
+        $month_salary->update([
+            'status' => SalaryStatusEnum::APPROVED->value,
+        ]);
+        if ($request->base && $request->total) {
+            $month_salary->update([
+                'total_salaries' => $request->total,
             ]);
-
+        }
         return redirect()->route('admin.salaries.index');
 
     }

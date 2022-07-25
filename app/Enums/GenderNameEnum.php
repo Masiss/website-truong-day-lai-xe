@@ -15,4 +15,24 @@ enum GenderNameEnum: int
             return "Nữ";
         }
     }
+
+    public static function TrueFalse($value)
+    {
+        switch ($value) {
+            case(self::Male->value):
+                return false;
+            case(self::Female->value):
+                return true;
+        }
+    }
+
+    public static function VNeseToValue($Vnese)
+    {
+        switch ($Vnese) {
+            case ("Nam"):
+                return self::Male->value;
+            case("Nữ"):
+                return self::Female->value;
+        }
+    }
 }

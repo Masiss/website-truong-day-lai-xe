@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\ActionForInstructor;
 use App\Enums\LevelEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInstructorRequest;
 use App\Models\Instructor;
+use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use Yajra\DataTables\DataTables;
 
 class InstructorControlller extends Controller
 {
@@ -28,18 +28,12 @@ class InstructorControlller extends Controller
 
     public function index()
     {
-        return view('admin.ins.index');
+        $instructors = Instructor::query()->paginate(15);
+        $instructors->totalPage = ceil($instructors->total() / $instructors->perPage());
+        return view('admin.ins.index', [
+            'instructors' => $instructors,
+        ]);
 
-    }
-
-    public function api(Request $request)
-    {
-        return DataTables::of(Instructor::query()->where('level', 1)->get())
-            ->editColumn('gender', fn($object) => $object->gender === 1 ? 'Nữ' : 'Nam')
-            ->editColumn('avatar', fn($object) => Storage::url($object->avatar))
-            ->addColumn('edit', fn($object) => $object->id)
-            ->addColumn('delete', fn($object) => $object->id)
-            ->make(true);
     }
 
     public function create()
@@ -52,7 +46,6 @@ class InstructorControlller extends Controller
         DB::beginTransaction();
         try {
             // Validate the value...
-            $path = Storage::disk('public')->put('avatar', $request->avatar);
             $password = Hash::make(Str::random(8));
             $id = Instructor::query()->create([
                 'name' => $request->name,
@@ -60,10 +53,9 @@ class InstructorControlller extends Controller
                 'phone_numbers' => $request->phone_numbers,
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
-                'avatar' => $path,
+                'avatar' => $request->avatar,
                 'password' => $password,
                 'level' => LevelEnum::INSTRUCTOR->value,
-
             ]);
             DB::commit();
             echo '1';
@@ -77,10 +69,8 @@ class InstructorControlller extends Controller
 
     public function edit(Instructor $instructor)
     {
-        $instructor->avatar = Storage::url($instructor->avatar);
-        $ins = $instructor;
         return view('admin.ins.edit', [
-            'ins' => $ins,
+            'instructor' => $instructor,
         ]);
     }
 
@@ -91,13 +81,8 @@ class InstructorControlller extends Controller
         $ins->update([
             'name' => $request->name,
             'phone_numbers' => $request->phone_numbers,
-            'birthdate' => $request->birthdate,
-            'gender' => $request->gender,
+            'avatar' => $request->avatar
         ]);
-        if ($request->avatar) {
-            $path = Storage::disk('public')->put('avatar', $request->avatar);
-            $ins->update(['avatar' => $path]);
-        }
         return redirect()->route('admin.instructors.index');
 
     }
@@ -106,7 +91,11 @@ class InstructorControlller extends Controller
     {
         DB::beginTransaction();
         try {
-            $ins = Instructor::find($id)->delete();
+            $new_ins = ActionForInstructor::GetInstructor();
+            Lesson::query()->where('ins_id', $id)->update([
+                'ins_id' => $new_ins
+            ]);
+            Instructor::query()->where('id', $id)->delete();
             DB::commit();
             return redirect()->route('admin.instructors.index');
         } catch (Throwable $e) {

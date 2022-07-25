@@ -132,27 +132,15 @@
                     <span class="menu-title text-truncate">Các buổi học</span>
                 </a>
             </li>
-            {{--            <li class=" nav-item">--}}
-            {{--                <a class="d-flex align-items-center" href="#">--}}
-            {{--                    <i--}}
-            {{--                        data-feather="book">--}}
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="/admin/config">
+                    <i
+                        data-feather="settings">
 
-            {{--                    </i>--}}
-            {{--                    <span class="menu-title text-truncate">Khóa học</span>--}}
-            {{--                </a>--}}
-            {{--                <ul class="menu-content">--}}
-            {{--                    <li>--}}
-            {{--                        <a class="d-flex align-items-center">--}}
-            {{--                            <i--}}
-            {{--                                data-feather="circle">--}}
-
-            {{--                            </i>--}}
-            {{--                            <span class="menu-item text-truncate">Buổi học</span>--}}
-            {{--                        </a>--}}
-
-            {{--                    </li>--}}
-            {{--                </ul>--}}
-            {{--            </li>--}}
+                    </i>
+                    <span class="menu-title text-truncate">Cài đặt website</span>
+                </a>
+            </li>
 
         </ul>
     </div>

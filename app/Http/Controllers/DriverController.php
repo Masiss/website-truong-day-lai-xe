@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Actions\CreateDriver;
 use App\Enums\LessonStatusEnum;
-use App\Models\Course;
 use App\Models\Driver;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use Yajra\DataTables\DataTables;
 
 class DriverController extends Controller
 {
@@ -28,18 +27,18 @@ class DriverController extends Controller
 
     public function index()
     {
-        $driver = Driver::query()->where('id', '=', auth()->guard('driver')->user()->id)->first();
-        $course = Course::query()->where('id', '=', $driver->course_id)->first();
-        $course->days_of_week = Course::FromDatabaseToString($course->days_of_week);
-
+        $driver = Driver::query()
+            ->where('id', $this->guard->user()->id)
+            ->with('course')
+            ->first();
         return view('driver.index', [
             'driver' => $driver,
-            'course' => $course,
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        DB::beginTransaction();
         try {
             // Validate the value...
             $arr = $request->only([
@@ -50,34 +49,54 @@ class DriverController extends Controller
                 'id_numbers',
                 'file',
             ]);
-            dd();
+            $driver = Driver::query()->where('id', '=', $this->guard->user()->id);
+            $driver->update([
+                'name' => $request->name,
+                'gender' => $request->gender,
+                'birthdate' => $request->birthdate,
+                'phone_numbers' => $request->phone_numbers,
+                'id_numbers' => $request->id_numbers,
+            ]);
+            if (isset($request->file)) {
+                $driver->update([
+                    'file' => $request->file,
+                ]);
+            }
+            DB::commit();
+            return Redirect::back();
         } catch (Throwable $e) {
             report($e);
-
+            DB::rollBack();
             return false;
         }
     }
 
     public function lessons()
     {
-        return view('driver.lessons');
-    }
-
-    public function api()
-    {
-        return DataTables::of(Lesson::query()
-            ->with('instructor:id,name,email,phone_numbers')
+        $lessons = Lesson::query()->with('instructor:id,name,email,phone_numbers')
             ->where('driver_id', $this->guard->user()->id)
-            ->get())
-            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
-            ->editColumn('status', fn($object) => LessonStatusEnum::StatusInVNese($object->status))
-            ->addColumn('name', fn($object) => $object->instructor->name)
-            ->addColumn('phone_numbers', fn($object) => $object->instructor->phone_numbers)
-            ->addColumn('email', fn($object) => $object->instructor->email)
-            ->addColumn('cancel', fn($object) => $object->status==LessonStatusEnum::CANCELED->value?null:$object->id)
-            ->make(true);
-
+            ->paginate(15);
+        $lessons->totalPage = ceil($lessons->total() / $lessons->perPage());
+        return view('driver.lessons', [
+            'lessons' => $lessons,
+        ]);
     }
+
+//    public function api()
+//    {
+//        return DataTables::of(Lesson::query()
+//            ->with('instructor:id,name,email,phone_numbers')
+//            ->where('driver_id', $this->guard->user()->id)
+//            ->get())
+//            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
+//            ->editColumn('status', fn($object) => LessonStatusEnum::StatusInVNese($object->status))
+//            ->addColumn('name', fn($object) => $object->instructor->name)
+//            ->addColumn('phone_numbers', fn($object) => $object->instructor->phone_numbers)
+//            ->addColumn('email', fn($object) => $object->instructor->email)
+//            ->addColumn('cancel', fn($object) => $object->status==LessonStatusEnum::CANCELED->value?null:$object->id)
+//            ->make(true);
+//
+//    }
 
     public function create()
     {

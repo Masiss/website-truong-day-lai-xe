@@ -9,16 +9,16 @@
             <div class="card">
                 <div class="d-flex">
                     <div>
-                        <button id="all" value="all" class="btn">Tất cả</button>
+                        <a href="?choose=all" id="all" value="all" class="btn">Tất cả</a>
                     </div>
                     <div>
-                        <button id="today" value="today" class="btn">Hôm nay</button>
+                        <a href="?choose=today" id="today" value="today" class="btn">Hôm nay</a>
                     </div>
                     <div>
-                        <button id="this_week" value="this_week" class="btn">Tuần này</button>
+                        <a href="?choose=this_week" id="this_week" value="this_week" class="btn">Tuần này</a>
                     </div>
                     <div>
-                        <button id="this_month" value="this_month" class="btn">Tháng này</button>
+                        <a href="?choose=this_month" id="this_month" value="this_month" class="btn">Tháng này</a>
                     </div>
 
                 </div>
@@ -38,9 +38,23 @@
                                 <th>Trạng thái</th>
                             </tr>
                             </thead>
-
+                            <tbody>
+                            @foreach($lessons as $lesson)
+                                <tr>
+                                    <td>{{$lesson->id}}</td>
+                                    <td>{{$lesson->driver->name}}</td>
+                                    <td>{{$lesson->instructor->name}}</td>
+                                    <td>{{$lesson->last}}</td>
+                                    <td>{{$lesson->start_at}}</td>
+                                    <td>{{$lesson->rating}}</td>
+                                    <td>{{$lesson->status}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
                         </table>
                     </div>
+                    <x-pagination :paginate="$lessons"/>
+
                 </div>
 
             </div>
@@ -64,29 +78,8 @@
                     this_month = document.getElementById('this_month'),
                     all = document.getElementById('all');
                 [today, this_week, this_month, all].map(element => element.addEventListener("click", function () {
-                    let table = $('#table-data').DataTable();
-                    table.destroy();
-                    $('#table-data').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: {
-                            "url": '{!! route('admin.lessons.api') !!}',
-                            "data": {
-                                limit: this.value,
-                            }
-                        },
-                        order: [[4, 'asc']],
-                        columns: [
-                            {data: 'id', name: 'id'},
-                            {data: 'driver_name', name: 'driver_name'},
-                            {data: 'ins_name', name: 'ins_name'},
-                            {data: 'last', name: 'last'},
-                            {data: 'date', name: 'date'},
-                            {data: 'rating', name: 'rating'},
-                            {data: 'status', name: 'status'},
 
-                        ]
-                    })
+
                 }))
             })
 

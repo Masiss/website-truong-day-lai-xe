@@ -31,7 +31,7 @@ class StoreInstructorRequest extends FormRequest
             'phone_numbers' => 'bail|required|size:10',
             'birthdate' => 'bail|required|before:'.now()->subYears(18)->toDateString(),
             'gender' => 'bail|required|boolean',
-            'avatar' => 'bail|required|file',
+            'avatar' => 'bail|file',
             'level' => new Enum(LevelEnum::class),
         ];
     }

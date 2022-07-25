@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->boolean('gender');
             $table->foreignId('course_id')->constrained('courses');
             $table->string('id_numbers', 12);
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('phone_numbers', 10);
             $table->date('birthdate');
             $table->string('file');

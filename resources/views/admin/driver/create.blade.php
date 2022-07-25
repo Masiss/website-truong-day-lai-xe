@@ -144,7 +144,7 @@
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Đăng ký buổi học</h4>
+                                <h4 class="card-title">Đăng ký khóa học</h4>
                                 <div class="heading-elements">
                                     <ul class="list-inline">
                                         <li>
@@ -153,9 +153,18 @@
                                     </ul>
                                 </div>
                             </div>
+
                             <div class="card-content collapse">
                                 <div class="card-body">
                                     <div class="row">
+                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
+                                            <label class="form-label" for="type">Loại bằng</label>
+                                            <select name="type" class="form-select" id="type">
+                                                <option value="0">B1</option>
+                                                <option value="1">B2</option>
+                                                <option value="2">C</option>
+                                            </select>
+                                        </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-1">
                                             <label class="form-label" class="d-block">Trọn gói</label>
                                             <div class="demo-inline-spacing">
@@ -181,7 +190,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-1">
+                                        <div class="col-md-4 mb-1">
                                             <label class="form-label" for="select2-limited">Chọn thứ</label>
                                             <select name="days_of_week"
                                                     class="max-length form-select form-control select2"

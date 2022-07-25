@@ -15,7 +15,7 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" action="{{route('admin.salaries.update',$ins->id)}}" method="POST"
+                <form enctype="multipart/form-data" action="{{route('admin.salaries.approve',$ins->id)}}" method="GET"
                       id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
@@ -30,13 +30,10 @@
                                     </ul>
                                 </div>
                             </div>
-
                             @csrf
-                            @method('PUT')
                             <div class="card-content collapse show">
 
                                 <div class="card-body">
-
                                     <div class="row">
                                         <input value="" name="id" hidden>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
@@ -116,21 +113,23 @@
                             </div>
                             <form>
                                 @csrf
-                                @method('PUT')
                                 <div class="row ms-2">
                                     <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                         <label>Lương ban đầu</label>
-                                        <input type="number" value="{{$detail_salary->base}}" disabled>
+                                        <input type="number" name="base" id="base" value="{{$detail_salary->base}}"
+                                               readonly="true">
+                                        <span class="bs-stepper-subtitle">Aloooo</span>
                                     </div>
                                     <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
 
                                         <label>Lương bị trừ</label>
-                                        <input type="number" value="{{$detail_salary->minus}}">
+                                        <input type="number" name="minus" id="minus" value="{{$detail_salary->minus}}">
                                     </div>
                                     <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
 
                                         <label>Lương tổng</label>
-                                        <input type="number" value="{{$detail_salary->total}}" disabled>
+                                        <input type="number" name="total" id="total" value="{{$detail_salary->total}}"
+                                               readonly="true">
                                     </div>
 
                                 </div>
@@ -146,12 +145,6 @@
     </div>
 
     @push('javascript')
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-        <script type="text/javascript"
-                src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.js"></script>
         // Page JS
         <script src={{asset('js/picker.js')}}></script>
         <script src={{asset('js/picker.date.js')}}></script>
@@ -163,7 +156,12 @@
         <script src={{asset('js/jquery.validate.min.js')}}></script>
         <script src={{asset('js/form-select2.min.js')}}></script>
         <script type="text/javascript">
-
+            let a = document.getElementById('base').value,
+                b = document.getElementById('minus'),
+                c = document.getElementById('total');
+            b.addEventListener('keyup', function () {
+                c.value = a - this.value;
+            })
         </script>
         <script src={{asset('js/form-validation.js')}}></script>
 

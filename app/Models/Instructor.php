@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\GenderNameEnum;
 use App\Enums\LevelEnum;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 //class Instructor extends Model
 class Instructor extends \Illuminate\Foundation\Auth\User
@@ -41,6 +45,36 @@ class Instructor extends \Illuminate\Foundation\Auth\User
 
     }
 
+    protected function birthdate(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => date('d/m/Y', strtotime($value)),
+//            set: fn($value) => date('Y/m/d', strtotime($value)),
+        );
+    }
+
+    protected function gender(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => GenderNameEnum::toVNese($value),
+        );
+    }
+
+    protected function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? Storage::url($value) : null,
+            set: fn($value) => $value ? Storage::disk('public')->put('avatar', $value) : null,
+        );
+    }
+
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => Hash::make($value),
+        );
+    }
+
     public function lessons()
     {
         return $this->hasMany(Lesson::class, 'ins_id', 'id');
@@ -48,7 +82,7 @@ class Instructor extends \Illuminate\Foundation\Auth\User
 
     public function month_salaries()
     {
-        return $this->hasMany(MonthSalary::class, 'ins_id','id');
+        return $this->hasMany(MonthSalary::class, 'ins_id', 'id');
     }
 
 }

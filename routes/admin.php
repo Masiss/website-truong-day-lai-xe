@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\InstructorControlller;
 use App\Http\Controllers\Admin\LessonController;
@@ -35,5 +36,14 @@ Route::resource('instructors', InstructorControlller::class)->except([
     'show',
 ]);
 Route::get('instructors/api', [InstructorControlller::class, 'api'])->name('instructors.api');
-Route::get('/lessons', [LessonController::class, 'index'])->name('lessons');
-Route::get('/lessons/api', [LessonController::class, 'api'])->name('lessons.api');
+Route::get('/lessons/{choose?}', [LessonController::class, 'index'])->name('lessons');
+
+Route::prefix('config')
+    ->controller(ConfigController::class)
+    ->name('config.')
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('store','store')->name('store');
+        Route::put('update','update')->name('update');
+        Route::delete('destroy','destroy')->name('destroy');
+    });

@@ -47,44 +47,44 @@ class="header-navbar navbar navbar-expand-lg align-items-center floating-nav nav
 
 <li class="nav-item dropdown dropdown-user">
     <a class="nav-link dropdown-toggle dropdown-user-link"
-    id="dropdown-user" href="#" data-bs-toggle="dropdown"
-    aria-haspopup="true" aria-expanded="false">
-    @if(auth()->guard('instructor')->check())
-    <div class="user-nav d-sm-flex d-none">
-        <span class="user-name fw-bolder">{{auth()->guard('instructor')->user()->name}}</span>
-        <span
-        class="user-status">{{\App\Enums\LevelEnum::from(auth()->guard('instructor')->user()->level)->name}}</span>
-    </div>
+       id="dropdown-user" href="#" data-bs-toggle="dropdown"
+       aria-haspopup="true" aria-expanded="false">
+        @if(auth()->guard('instructor')->check())
+            <div class="user-nav d-sm-flex d-none">
+                <span class="user-name fw-bolder">{{auth()->guard('instructor')->user()->name}}</span>
+                <span
+                    class="user-status">{{\App\Enums\LevelEnum::from(auth()->guard('instructor')->user()->level)->name}}</span>
+            </div>
 
-    <span class="avatar">
+            <span class="avatar">
         <img class="round"
-        src="{{\Illuminate\Support\Facades\Storage::url(auth()->guard('instructor')->user()->avatar)}}"
-        alt="avatar" height="40" width="40">
+             src="{{auth()->guard('instructor')->user()->avatar}}"
+             alt="avatar" height="40" width="40">
         <span
-        class="avatar-status-online">
+            class="avatar-status-online">
 
     </span>
 </span>
-@elseif(auth()->guard('driver')->check())
-<div class="user-nav d-sm-flex d-none">
-    <span class="user-name fw-bolder">{{auth()->guard('driver')->user()->name}}</span>
-    <span
-    class="user-status">DRIVER</span>
-</div>
+        @elseif(auth()->guard('driver')->check())
+            <div class="user-nav d-sm-flex d-none">
+                <span class="user-name fw-bolder">{{auth()->guard('driver')->user()->name}}</span>
+                <span
+                    class="user-status">DRIVER</span>
+            </div>
 
-<span class="avatar">
+            <span class="avatar">
     <img class="round"
-    src="{{\Illuminate\Support\Facades\Storage::url(auth()->guard('driver')->user()->file)}}"
-    alt="avatar" height="40" width="40">
+         src="{{auth()->guard('driver')->user()->file}}"
+         alt="avatar" height="40" width="40">
     <span
-    class="avatar-status-online">
+        class="avatar-status-online">
 
 </span>
 </span>
-@endif
+        @endif
 
-</a>
-<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
+    </a>
+    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
     <a class="dropdown-item"
     href="page-profile.html">
     <i

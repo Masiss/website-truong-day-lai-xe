@@ -15,7 +15,7 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" action="{{route('admin.instructors.update',$ins->id)}}" method="POST" id="form-data-1" class="needs-validation"
+                <form enctype="multipart/form-data" action="{{route('admin.instructors.update',$instructor->id)}}" method="POST" id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
                         <div class="card">
@@ -37,12 +37,12 @@
                                 <div class="card-body">
 
                                     <div class="row">
-                                        <input value="{{$ins->id}}" name="id" hidden>
+                                        <input value="{{$instructor->id}}" name="id" hidden>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="name">Tên</label>
 
                                             <input
-                                                value="{{$ins->name}}"
+                                                value="{{$instructor->name}}"
                                                 type="text"
                                                 id="name"
                                                 class="form-control"
@@ -55,34 +55,17 @@
                                         </div>
                                         <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
                                             <label class="form-label" class="d-block">Giới tính</label>
-                                            <div class="demo-inline-spacing">
-                                                <div class="form-check my-50">
-                                                    <input
-                                                        type="radio"
-                                                        value="0"
-                                                        name="gender"
-                                                        class="form-check-input"
-                                                        required
-                                                    @if($ins->gender===0)
-                                                        {{"checked"}}
-                                                        @endif
-                                                    />
-                                                    <label class="form-check-label" for="validationRadio3">Nam</label>
-                                                </div>
-                                                <div class="form-check my-50">
-                                                    <input
-                                                        type="radio"
-                                                        value="1"
-                                                        name="gender"
-                                                        class="form-check-input"
-                                                        required
-                                                    @if($ins->gender===1)
-                                                        {{"checked"}}
-                                                        @endif
-                                                    />
-                                                    <label class="form-check-label" for="validationRadio4">Nữ</label>
-                                                </div>
-                                            </div>
+                                            <input
+                                                value="{{$instructor->gender}}"
+
+                                                type="text"
+                                                id="gender"
+                                                class="form-control"
+                                                placeholder="Giới tính"
+                                                name="gender"
+                                                required
+                                                disabled
+                                            />
                                         </div>
                                         <div class="col-xl-4 col-md-6 mb-1">
                                             <label class="form-label" for="dob">
@@ -90,7 +73,7 @@
                                             </label>
 
                                             <input
-                                                value="{{$ins->birthdate}}"
+                                                value="{{$instructor->birthdate}}"
 
                                                 type="text"
                                                 name="birthdate"
@@ -98,6 +81,7 @@
                                                 class="form-control picker flatpickr-human-friendly "
                                                 placeholder=""
                                                 required
+                                                disabled
                                             />
                                             <div class="valid-feedback"></div>
                                             <div class="invalid-feedback">Please enter your name.</div>
@@ -106,7 +90,7 @@
                                             <label class="form-label" for="phone_numbers">Số điện thoại</label>
 
                                             <input
-                                                value="{{$ins->phone_numbers}}"
+                                                value="{{$instructor->phone_numbers}}"
 
                                                 type="number"
                                                 id="phone_numbers"
@@ -124,7 +108,7 @@
                                             <label for="customFile1" class="form-label">Avatar</label>
                                             <input value="" class="form-control" name="avatar"
                                                    type="file" id="Avatar"/>
-                                            <img class="rounded d-block" src="{{$ins->avatar}}"
+                                            <img class="rounded d-block" src="{{$instructor->avatar}}"
                                                  style="max-height: 20em;">
                                         </div>
                                         <div class="d-flex justify-content-center">

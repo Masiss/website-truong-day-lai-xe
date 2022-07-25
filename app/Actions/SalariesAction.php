@@ -16,12 +16,14 @@ class SalariesAction
     public static function showSalary($id, $ins_id = null)
     {
         $month_salary = MonthSalary::query()->where('id', $id)->first();
-        $month = date('n', strtotime($month_salary->month));
-        $year = date('Y', strtotime($month_salary->month));
+        $sub=explode('/',$month_salary->month);
+        $month=$sub[0];
+        $year=$sub[1];
         $ins = Instructor::query()
             ->where('id', '=', $month_salary->ins_id)
             ->first();
         $lessons = Lesson::query()->with('driver')
+            ->with('instructor')
             ->where('ins_id', '=', $month_salary->ins_id)
             ->whereMonth('date', '=', $month)
             ->whereYear('date', '=', $year)

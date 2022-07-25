@@ -17,12 +17,28 @@
                                 <th>Tổng lương</th>
                                 <th>Trạng thái</th>
                                 <th></th>
-                                <th></th>
-                                <th></th>
+
                             </tr>
                             </thead>
+                            <tbody>
+                            @foreach($salaries as $salary)
+                                <tr>
+                                    <td>{{$salary->month}}</td>
+                                    <td>{{$salary->total_lessons}}</td>
+                                    <td>{{$salary->total_hours}}</td>
+                                    <td>{{$salary->total_salaries}}</td>
+                                    <td>{{$salary->status}}</td>
+                                    <td>
+                                        <a href="salaries/show/{{$salary->id}}">Chi tiết</a>
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                            </tbody>
                         </table>
                     </div>
+                    <x-pagination :paginate="$salaries"/>
+
                 </div>
             </div>
 
@@ -39,33 +55,33 @@
                 src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.js"></script>
         <script type="text/javascript">
 
-            $(function () {
-                $('#table-data').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: '{!! route('instructors.salaries.api') !!}',
-                    columns:
-                        [
-                            {data: 'month', name: 'month'},
-                            {data: 'total_lessons', name: 'total_lessons'},
-                            {data: 'total_hours', name: 'total_hours'},
-                            {data: 'total_salaries', name: 'total_salaries'},
-                            {
-                                data: 'status',
-                                name: 'status',
-                            },
-                            {
-                                data: 'show',
-                                name: 'show',
-                                render: function (data) {
-                                    return `<a href="salaries/show/${data}">Chi tiết</a>`;
-                                }
-                            },
+            {{--$(function () {--}}
+            {{--    $('#table-data').DataTable({--}}
+            {{--        processing: true,--}}
+            {{--        serverSide: true,--}}
+            {{--        ajax: '{!! route('instructors.salaries.api') !!}',--}}
+            {{--        columns:--}}
+            {{--            [--}}
+            {{--                {data: 'month', name: 'month'},--}}
+            {{--                {data: 'total_lessons', name: 'total_lessons'},--}}
+            {{--                {data: 'total_hours', name: 'total_hours'},--}}
+            {{--                {data: 'total_salaries', name: 'total_salaries'},--}}
+            {{--                {--}}
+            {{--                    data: 'status',--}}
+            {{--                    name: 'status',--}}
+            {{--                },--}}
+            {{--                {--}}
+            {{--                    data: 'show',--}}
+            {{--                    name: 'show',--}}
+            {{--                    render: function (data) {--}}
+            {{--                        return `<a href="salaries/show/${data}">Chi tiết</a>`;--}}
+            {{--                    }--}}
+            {{--                },--}}
 
 
-                        ]
-                });
-            })
+            {{--            ]--}}
+            {{--    });--}}
+            {{--})--}}
 
 
         </script>

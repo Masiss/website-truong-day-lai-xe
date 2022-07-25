@@ -63,7 +63,7 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
-                                                    @if($driver->gender===0)
+                                                    @if(!\App\Enums\GenderNameEnum::TrueFalse($driver->gender))
                                                         {{"checked"}}
                                                         @endif
                                                     />
@@ -76,7 +76,7 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
-                                                    @if($driver->gender===1)
+                                                    @if(\App\Enums\GenderNameEnum::TrueFalse($driver->gender))
                                                         {{"checked"}}
                                                         @endif
                                                     />
@@ -189,7 +189,7 @@
                                         <div class="col-md-6 mb-1">
                                             <label class="form-label" for="">Ngày học</label>
                                             <input
-                                                value="{{$course['days_of_week']}}"
+                                                value="{{$driver->course->days_of_week}}"
                                                 type="text"
                                                 class="form-control"
                                                 required

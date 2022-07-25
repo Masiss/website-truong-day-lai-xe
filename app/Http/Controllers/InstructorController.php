@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Actions\SalariesAction;
 use App\Enums\LessonStatusEnum;
 use App\Enums\LevelEnum;
-use App\Enums\SalaryStatusEnum;
 use App\Models\Instructor;
 use App\Models\Lesson;
 use App\Models\MonthSalary;
@@ -32,7 +31,7 @@ class InstructorController extends Controller
 
     public function index()
     {
-        $ins = Auth::guard('instructor')->user();
+        $ins = $this->guard->user();
         return view('ins.index', [
             'ins' => $ins,
         ]);
@@ -40,29 +39,35 @@ class InstructorController extends Controller
 
     public function salaries()
     {
-        return view('ins.salaries');
-    }
-
-    public function api(Request $request)
-    {
-
-        return DataTables::of(MonthSalary::query()->with('instructor')
+        $salaries = MonthSalary::query()
+            ->with('instructor')
             ->where('ins_id', $this->guard->user()->id)
-            ->get())
-            ->editColumn('status',
-                function ($object) {
-                    return $object->status == SalaryStatusEnum::PENDING->value ? 'Đang chờ duyệt' :
-                        ($object->status == SalaryStatusEnum::APPROVED->value ? 'Đã duyệt' : ' ');
-                })
-            ->editColumn('month', fn($object) => date_format(new \DateTime($object->month), 'm/Y'))
-            ->addColumn('show', fn($object) => $object->id)
-            ->make(true);
+            ->paginate(15);
+        $salaries->totalPage = ceil($salaries->total() / $salaries->perPage());
+        return view('ins.salaries', [
+            'salaries' => $salaries,
+        ]);
     }
+
+//    public function api(Request $request)
+//    {
+//
+//        return DataTables::of(MonthSalary::query()->with('instructor')
+//            ->where('ins_id', $this->guard->user()->id)
+//            ->get())
+//            ->editColumn('status',
+//                function ($object) {
+//                    return $object->status == SalaryStatusEnum::PENDING->value ? 'Đang chờ duyệt' :
+//                        ($object->status == SalaryStatusEnum::APPROVED->value ? 'Đã duyệt' : ' ');
+//                })
+//            ->editColumn('month', fn($object) => date_format(new \DateTime($object->month), 'm/Y'))
+//            ->addColumn('show', fn($object) => $object->id)
+//            ->make(true);
+//    }
 
     public function show($id)
     {
         $info = SalariesAction::showSalary($id);
-
         return view('ins.show', [
             'lessons' => $info->lessons,
             'month_salary' => $info->month_salary,
@@ -70,25 +75,34 @@ class InstructorController extends Controller
         ]);
     }
 
-    public function checkinAPI(Request $request)
-    {
-        return DataTables::of(Lesson::query()->where('ins_id', auth()->guard('instructor')->user()->id)
-            ->with('driver')
-            ->where('status', LessonStatusEnum::PENDING->value)
-            ->select('*', 'lessons.id as lesson_id')
-            ->get())
-            ->editColumn('name', fn($object) => $object->driver->name)
-            ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)
-            ->editColumn('email', fn($object) => $object->driver->email)
-            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
-            ->editColumn('status', fn($object) => LessonStatusEnum::from($object->status)->name)
-            ->addColumn('checkin', fn($object) => $object->lesson_id)
-            ->make(true);
-    }
+//    public function checkinAPI(Request $request)
+//    {
+//        return DataTables::of(Lesson::query()->where('ins_id', $this->guard->user()->id)
+//            ->with('driver')
+//            ->where('status', LessonStatusEnum::PENDING->value)
+//            ->select('*', 'lessons.id as lesson_id')
+//            ->get())
+//            ->editColumn('name', fn($object) => $object->driver->name)
+//            ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)
+//            ->editColumn('email', fn($object) => $object->driver->email)
+//            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
+//            ->editColumn('status', fn($object) => LessonStatusEnum::from($object->status)->name)
+//            ->addColumn('checkin', fn($object) => $object->lesson_id)
+//            ->make(true);
+//    }
 
     public function checkin()
     {
-        return view('ins.checkin');
+        $lessons = Lesson::query()
+            ->where('ins_id', $this->guard->user()->id)
+            ->with('driver:id,name,email,phone_numbers')
+            ->where('status', LessonStatusEnum::PENDING->value)
+            ->paginate(15);
+        $lessons->totalPage = ceil($lessons->total() / $lessons->perPage());
+
+        return view('ins.checkin', [
+            'lessons' => $lessons,
+        ]);
     }
 
     public function updateStatus(Request $request, int $id)
@@ -96,9 +110,9 @@ class InstructorController extends Controller
         $lesson = Lesson::query()->where('id', $id)->get()->first();
         $lesson->date=date("Y/m/d",strtotime($lesson->date));
         if ($lesson->date == date('Y/m/d') || $lesson->date < date('Y/m/d')) {
-//            Lesson::query()->where('id', $id)->update([
-//                'status' => LessonStatusEnum::HAPPENED->value,
-//            ]);
+            Lesson::query()->where('id', $id)->update([
+                'status' => LessonStatusEnum::HAPPENED->value,
+            ]);
             return Redirect::back();
         } elseif ($lesson->date > date("Y/m/d")) {
             return Redirect::back()->withErrors([
@@ -114,7 +128,7 @@ class InstructorController extends Controller
         DB::beginTransaction();
         try {
             // Validate the value...
-            $get = Instructor::query()->where('id', auth()->guard('instructor')->user()->id)
+            $get = Instructor::query()->where('id', $this->guard->user()->id)
                 ->where('level', LevelEnum::INSTRUCTOR->value);
             if (isset($request->avatar)) {
                 $path = Storage::disk('public')->put('avatar', $request->avatar);
@@ -146,14 +160,20 @@ class InstructorController extends Controller
 
     public function lessons()
     {
-        return view('ins.lessons');
+        $lessons = Lesson::query()->where('ins_id', $this->guard->user()->id)
+            ->with('driver:id,name,email,phone_numbers')
+            ->orderBy('date')
+            ->orderBy('start_at')
+            ->paginate(15);
+        $lessons->totalPage = ceil($lessons->total() / $lessons->perPage());
+        return view('ins.lessons', [
+            'lessons' => $lessons,
+        ]);
     }
 
     public function getLessons()
     {
-        return DataTables::of(Lesson::query()->where('ins_id', $this->guard->user()->id)
-            ->with('driver:id,name,email,phone_numbers')
-            ->get())
+        return DataTables::of()
             ->editColumn('name', fn($object) => $object->driver->name)
             ->editColumn('email', fn($object) => $object->driver->email)
             ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)

@@ -20,4 +20,14 @@ enum LessonStatusEnum: int
 
         }
     }
+
+    public static function CanBeCancel($value)
+    {
+        switch ($value) {
+            case(self::StatusInVNese(self::PENDING->value)):
+                return true;
+            default:
+                return false;
+        }
+    }
 }

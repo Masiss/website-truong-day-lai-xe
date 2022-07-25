@@ -2,11 +2,10 @@
 
 namespace App\Actions;
 
+use App\Enums\CourseTypeEnums;
 use App\Enums\LessonStatusEnum;
 use App\Models\Course;
-use App\Models\Instructor;
 use App\Models\Lesson;
-use Illuminate\Support\Facades\DB;
 
 class CreateDriver
 {
@@ -24,6 +23,7 @@ class CreateDriver
             $request->merge(['price' => null]);
         }
         $course_id = Course::query()->create([
+            'type' => CourseTypeEnums::from($request->type)->value,
             'days_of_week' => json_encode($request->days_of_week),
             'price' => $request->price,
             'price_per_day' => $request->price_per_day,
@@ -48,17 +48,7 @@ class CreateDriver
             $lessons = ActionForLessons::getDates($request->lesson, $request->days_of_week);
         }
         //get instructor not exist in Lessons or have less day in Lessons
-        $sub = DB::table('lessons')
-            ->select('ins_id', DB::raw('count(ins_id) as less_ins'))
-            ->groupBy('ins_id')
-            ->orderBy('less_ins', 'ASC')
-            ->first();
-        $ins_id = Instructor::query()->whereNotIn('id', function ($query) {
-            $query->select('ins_id')->from('lessons');
-        })->orWhere('id', '=', $sub->ins_id)
-            ->first()->id;
-
-
+        $ins_id = ActionForInstructor::GetInstructor();
         if ($request->shift === 'AM') {
             $start_at = self::MorningStart;
         } elseif ($request->shift === 'PM') {

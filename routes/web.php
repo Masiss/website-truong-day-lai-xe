@@ -51,7 +51,7 @@ Route::prefix('drivers')->middleware(['driver'])
     ->group(function () {
         Route::get('api', 'api')->name('api');
         Route::get('lessons', 'lessons')->name('lessons');
-        Route::get('update', 'update')->name('update');
+        Route::put('update', 'update')->name('update');
         Route::get('lessons/create', 'create')->name('lessons.create');
         Route::post('lessons/', 'store')->name('lessons.store');
         Route::get('lessons/{id}/update', 'updateStatus')->name('lessons.update');

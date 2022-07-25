@@ -120,7 +120,7 @@
                                         </div>
                                         <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
                                             <label for="customFile1" class="form-label">File hình thẻ</label>
-                                            <input class="form-control" name="avatar" type="file" id="file" required/>
+                                            <input class="form-control" name="avatar" type="file" id="file" />
                                         </div>
                                         <div class="col-xl-1 center-layout">
                                             <button class="btn btn-primary " id="btn-submit">

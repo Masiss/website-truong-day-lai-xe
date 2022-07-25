@@ -17,9 +17,12 @@ class CourseFactory extends Factory
     public function definition()
     {
         return [
-            'days_of_week'=>json_encode($this->faker->randomElements(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])),
-            'price'=>$this->faker->numberBetween(1000000,10000000),
-            'price_per_day'=>$this->faker->numberBetween(200000,400000),
+            'type' => random_int(0, 2),
+            'days_of_week' => json_encode($this->faker->randomElements([
+                'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
+            ])),
+            'price' => $this->faker->numberBetween(1000000, 10000000),
+            'price_per_day' => $this->faker->numberBetween(200000, 400000),
 
         ];
     }

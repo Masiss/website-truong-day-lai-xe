@@ -15,7 +15,8 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" action="{{route('admin.drivers.update',$driver->id)}}" method="POST" id="form-data-1" class="needs-validation"
+                <form enctype="multipart/form-data" action="{{route('admin.drivers.update',$driver->id)}}" method="POST"
+                      id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
                         <div class="card">
@@ -54,41 +55,23 @@
                                             <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
                                         <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
-                                            <label class="form-label" class="d-block">Giới tính</label>
-                                            <div class="demo-inline-spacing">
-                                                <div class="form-check my-50">
-                                                    <input
-                                                        type="radio"
-                                                        value="0"
-                                                        name="gender"
-                                                        class="form-check-input"
-                                                        required
-                                                    @if($driver->gender===0)
-                                                        {{"checked"}}
-                                                        @endif
-                                                    />
-                                                    <label class="form-check-label" for="validationRadio3">Nam</label>
-                                                </div>
-                                                <div class="form-check my-50">
-                                                    <input
-                                                        type="radio"
-                                                        value="1"
-                                                        name="gender"
-                                                        class="form-check-input"
-                                                        required
-                                                    @if($driver->gender===1)
-                                                        {{"checked"}}
-                                                        @endif
-                                                    />
-                                                    <label class="form-check-label" for="validationRadio4">Nữ</label>
-                                                </div>
-                                            </div>
+                                            <label class="form-label">Giới tính</label>
+                                            <input
+                                                value="{{$driver->gender}}"
+
+                                                type="text"
+                                                name="gender"
+                                                id="gender"
+                                                class="form-control  "
+                                                placeholder=""
+                                                required
+                                                disabled
+                                            />
                                         </div>
                                         <div class="col-xl-4 col-md-6 mb-1">
                                             <label class="form-label" for="dob">
                                                 Ngày tháng năm sinh
                                             </label>
-
                                             <input
                                                 value="{{$driver->birthdate}}"
 
@@ -114,6 +97,7 @@
                                                 placeholder="Số điện thoại"
                                                 name="phone_numbers"
                                                 required
+                                                disabled
                                             />
                                             <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
@@ -129,6 +113,8 @@
                                                 placeholder="Căn cước công dân"
                                                 name="id_numbers"
                                                 required
+                                                disabled
+
                                             />
                                             <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
@@ -136,13 +122,13 @@
                                             <label class="form-label" for="email">Email</label>
                                             <input
                                                 value="{{$driver->email}}"
-
                                                 type="email"
                                                 id="email"
                                                 class="form-control"
                                                 placeholder="email"
                                                 name="email"
                                                 required
+                                                disabled
                                             />
                                             <div class="invalid-feedback">Please enter a valid email</div>
                                         </div>
@@ -153,6 +139,16 @@
                                                    type="file" id="file"/>
                                             <img class="rounded d-block" src="{{$driver->file}}"
                                                  style="max-height: 20em;">
+                                        </div>
+                                        <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
+                                            <label class="form-label" class="d-block">Trọn gói</label>
+                                            <input
+                                                value="{{$driver->is_full}}"
+                                                type="text"
+                                                class="form-control"
+                                                required
+                                                disabled
+                                            />
                                         </div>
 
                                     </div>
@@ -174,25 +170,21 @@
                             <div class="card-content collapse">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-1">
-                                            <label class="form-label" class="d-block">Trọn gói</label>
-                                            <div class="demo-inline-spacing">
-                                                <div class="form-check my-50">
-                                                    @if($driver->is_full)
-                                                        <label class="form-check-label"
-                                                               for="validationRadio3">Có</label>
-                                                    @else
-                                                        <label class="form-check-label"
-                                                               for="validationRadio4">Không</label>
-                                                    @endif
-                                                </div>
-
-                                            </div>
+                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
+                                            <label class="form-label" for="license">Loại bằng</label>
+                                            <input
+                                                value="{{$course->type}}"
+                                                type="text"
+                                                class="form-control"
+                                                required
+                                                disabled
+                                            />
                                         </div>
-                                        <div class="col-md-6 mb-1">
+
+                                        <div class="col-md-4 mb-1">
                                             <label class="form-label" for="">Ngày học</label>
                                             <input
-                                                value="{{$course['days_of_week']}}"
+                                                value="{{$course->days_of_week}}"
                                                 type="text"
                                                 class="form-control"
                                                 required
@@ -202,31 +194,74 @@
                                         <!-- Basic Select -->
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="last">Thời gian mỗi buổi</label>
-                                            <select name="last" class="form-select" id="last" disabled>
-                                                <option value="2">2 tiếng</option>
-                                                <option value="4">4 tiếng</option>
-                                            </select>
+                                            <input value="{{$lessons->first()->last}}"
+                                                   name="last" class="form-control" id="last"
+                                                   disabled>
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-12">
                                             <div class="mb-1">
                                                 <label class="form-label" for="disabledInput">Số buổi</label>
                                                 <input
-                                                    name="lesson" type="number" value="20" class="form-control"
+                                                    name="lesson" type="number"
+                                                    value="{{$lessons->count}}"
+                                                    class="form-control"
                                                     id="lesson"
                                                     disabled/>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center">
-                                            <button class="btn btn-primary " id="btn-submit">
-                                                Submit
-                                            </button>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
 
                         </div>
-
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Các buổi học</h4>
+                                <div class="heading-elements">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <a data-action="collapse"><i data-feather="chevron-down"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tên giáo viên</th>
+                                                <th>Thời gian học</th>
+                                                <th>Thời gian bắt đầu</th>
+                                                <th>Đánh giá</th>
+                                                <th>Trạng thái</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($lessons as $lesson)
+                                                <tr>
+                                                    <td>{{$lesson->id}}</td>
+                                                    <td>{{$lesson->instructor->name}}</td>
+                                                    <td>{{$lesson->last}}</td>
+                                                    <td>{{$lesson->start_at ." ". $lesson->date}}</td>
+                                                    <td>{{$lesson->report}}</td>
+                                                    <td>{{$lesson->status}}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-primary " id="btn-submit">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
                 <!-- /Bootstrap Validation -->

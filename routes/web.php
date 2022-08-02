@@ -49,12 +49,13 @@ Route::prefix('drivers')->middleware(['driver'])
     ->name('drivers.')
     ->controller(DriverController::class)
     ->group(function () {
-        Route::get('api', 'api')->name('api');
+        Route::get('api', 'newInsApi')->name('newInsApi');
         Route::get('lessons', 'lessons')->name('lessons');
         Route::put('update', 'update')->name('update');
         Route::get('lessons/create', 'create')->name('lessons.create');
         Route::post('lessons/', 'store')->name('lessons.store');
-        Route::get('lessons/{id}/update', 'updateStatus')->name('lessons.update');
+        Route::get('lessons/{id}/edit', 'edit')->name('lessons.edit');
+        Route::get('lessons/{id}/cancel', 'cancel')->name('lessons.cancel');
 
         Route::get('/', 'index')->name('index');
     });

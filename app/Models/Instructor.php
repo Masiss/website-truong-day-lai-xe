@@ -33,16 +33,37 @@ class Instructor extends \Illuminate\Foundation\Auth\User
         'updated_at'
     ];
 
-    public static function checkLevel()
-    {
-        if (auth()->guard('instructor')->user()->level == LevelEnum::INSTRUCTOR->value) {
-            return LevelEnum::INSTRUCTOR->name;
-        } elseif (auth()->guard('instructor')->user()->level == LevelEnum::ADMIN->value) {
-            return LevelEnum::ADMIN->name;
-        } else {
-            return redirect()->route('login');
-        }
+//    public static function checkLevel()
+//    {
+//        if (auth()->guard('instructor')->user()->level == LevelEnum::INSTRUCTOR->value) {
+//            return LevelEnum::INSTRUCTOR->name;
+//        } elseif (auth()->guard('instructor')->user()->level == LevelEnum::ADMIN->value) {
+//            return LevelEnum::ADMIN->name;
+//        } else {
+//            return redirect()->route('login');
+//        }
+//
+//    }
 
+    public static function isAdmin()
+    {
+        if (auth('instructor')->user()->level === LevelEnum::ADMIN->name) {
+            return true;
+        }
+        return false;
+
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if ($this->deleted_at) {
+                    return $value."<span class='alert-danger'> <Đã xóa></span> ";
+                }
+                return $value;
+            },
+        );
     }
 
     protected function birthdate(): Attribute
@@ -72,6 +93,13 @@ class Instructor extends \Illuminate\Foundation\Auth\User
     {
         return Attribute::make(
             set: fn($value) => Hash::make($value),
+        );
+    }
+
+    protected function level(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => LevelEnum::from($value)->name,
         );
     }
 

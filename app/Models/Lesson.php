@@ -28,6 +28,7 @@ class Lesson extends Model
     {
         return Attribute::make(
             get: fn($value) => LessonStatusEnum::StatusInVNese($value),
+//            set: fn() => LessonStatusEnum::PENDING->value,
         );
     }
 

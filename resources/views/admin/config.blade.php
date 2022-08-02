@@ -1,6 +1,7 @@
 @extends('layout.master')
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{asset('css/vertical-menu.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/form-validation.css')}}">
 @endpush
 @section('content')
     <div class="content-body">
@@ -8,15 +9,33 @@
             <div class="card">
                 <div class="col-md-12">
                     <div class="card">
-                        <form action="{{route('admin.config.store')}}" method="POST">
+                        <form class="needs-validation" action="{{route('admin.config.store')}}" method="POST"
+                              novalidate>
                             <div class="row demo-inline-spacing m-1">
-                                @csrf
-                                <input class="form-control col-xl-2" name="key" placeholder="Tên khóa">
-                                <input class="form-control col-xl-3" name="value" placeholder="Giá trị">
-                                <button class="btn col-xl-2">
-                                    <i data-feather="plus-circle"></i>
-                                    <span>Thêm</span>
-                                </button>
+                                <div class="d-flex  row">
+                                    @csrf
+                                    <div class="col-xl-3 mb-2">
+                                        <label for="key">Tên khóa</label>
+                                        <input class="form-control " name="key" placeholder="Tên khóa" required>
+                                        <div class="valid-feedback"></div>
+                                        <div class="invalid-feedback">Vui lòng không để trống.</div>
+                                    </div>
+                                    <div class="col-xl-3 mb-2">
+                                        <label for="key">Giá trị</label>
+                                        <input class="form-control " name="value" placeholder="Giá trị"
+                                               required>
+                                        <div class="valid-feedback"></div>
+                                        <div class="invalid-feedback">Vui lòng không để trống.</div>
+
+                                    </div>
+                                    <div class="col-xl-2 d-flex  align-items-center justify-content-center">
+                                        <button class="btn p-2">
+                                            <i data-feather="plus-circle"></i>
+                                            <span>Thêm</span>
+                                        </button>
+                                    </div>
+
+                                </div>
                             </div>
                         </form>
                         <table class="table" id="table-data">
@@ -39,14 +58,6 @@
                                                 type="button">Sửa
                                         </button>
                                     </td>
-                                    <td>
-                                        <form action="{{route('admin.config.destroy')}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="key" value="{{$config->key}}">
-                                            <button class="btn">Xóa</button>
-                                        </form>
-                                    </td>
                                 </tr>
                             @endforeach
                         </table>
@@ -61,13 +72,11 @@
     </div>
 
     @push('javascript')
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-        <script type="text/javascript"
-                src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.js"></script>
-        <script type="text/javascript">
+
+        <script src={{asset('js/jquery.validate.min.js')}}></script>
+        <script src={{asset('js/form-select2.min.js')}}></script>
+        <script src={{asset('js/form-validation.js')}}></script>
+        <script>
             document.getElementsByName('button1').forEach(e => e.addEventListener('click', function () {
                 let a = $(this).parents("tr").find("input[name='new_value']").val();
                 let b = $(this).data('key');

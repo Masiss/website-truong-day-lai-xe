@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DriversSeeder::class,
             InstructorsSeeder::class,
+            ConfigSeeder::class,
         ]);
         Lesson::factory(500)->create();
 

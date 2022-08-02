@@ -63,4 +63,9 @@ class MonthSalary extends Model
         return $this->belongsTo(Instructor::class, 'ins_id', 'id');
     }
 
+    public function instructorWithTrashed()
+    {
+        return $this->belongsTo(Instructor::class, 'ins_id', 'id')->withTrashed();
+    }
+
 }

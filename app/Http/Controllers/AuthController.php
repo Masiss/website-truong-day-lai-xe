@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\createCourse;
-use App\Actions\CreateDriver;
+use App\Actions\CreateDriverAction;
 use App\Actions\StoreDriver;
-use App\Enums\LevelEnum;
 use App\Http\Requests\StoreDriverRequest;
 use App\Models\Driver;
 use App\Models\Instructor;
@@ -16,7 +15,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Throwable;
 
 class AuthController extends Controller
@@ -47,7 +45,7 @@ class AuthController extends Controller
             $request->is_full = $request->boolean('is_full');
             $arr['password'] = Hash::make($request->password);
             //add Course
-            $course_id = CreateDriver::createCourse($request);
+            $course_id = CreateDriverAction::createCourse($request);
             $arr['file'] = Storage::disk('public')
                 ->put('file', $arr['file']);
             $driver_id = Driver::query()
@@ -64,7 +62,7 @@ class AuthController extends Controller
                     'password' => $arr['password'],
                 ])->id;
             //add lessons
-            CreateDriver::AddLessons($request, $driver_id);
+            CreateDriverAction::AddLessons($request, $driver_id);
             DB::commit();
             echo "1";
         } catch (Throwable $e) {
@@ -90,26 +88,29 @@ class AuthController extends Controller
             ]);
 
             $remember = $request->save_login ? true : false;
-            if (Auth::guard('driver')->attempt($credentials, $remember)) {
-                $user = Driver::where('email', '=', $credentials['email'])->first();
-                Auth::guard('driver')->login($user, $remember);
+            if (auth('driver')->attempt($credentials, $remember)) {
+                $user = Driver::query()
+                    ->where('email', '=', $credentials['email'])
+                    ->first();
+                auth('driver')->login($user, $remember);
                 return redirect()->route('drivers.index');
             }
-            if (Auth::guard('instructor')->attempt($credentials, $remember)) {
-                $user = Instructor::where('email', '=', $credentials['email'])->first();
-                $user->level = LevelEnum::from($user->level);
-                Auth::guard('instructor')->login($user, $remember);
-                if ($user->level == LevelEnum::from(0)) {
+            if (auth('instructor')->attempt($credentials, $remember)) {
+                $user = Instructor::query()
+                    ->where('email', '=', $credentials['email'])
+                    ->first();
+                auth('instructor')->login($user, $remember);
+                if (Instructor::isAdmin()) {
                     return redirect()->route('admin.index');
-                } elseif ($user->level == LevelEnum::from(1)) {
+                } elseif (!Instructor::isAdmin()) {
                     return redirect()->route('instructors.index');
 
                 }
+//                return redirect()->route("$level.index");
             }
             return Redirect::back()->withInput()->withErrors([
                 'message' => 'Email hoặc mật khẩu không đúng'
             ]);
-
 
         } catch (Throwable $e) {
             report($e);

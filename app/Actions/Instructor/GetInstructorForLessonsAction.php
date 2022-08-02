@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Instructor;
 
 use App\Models\Instructor;
 use Illuminate\Support\Facades\DB;
 
-class ActionForInstructor
+class GetInstructorForLessonsAction
 {
-    public static function GetInstructor()
+    public static function handle()
     {
         $sub = DB::table('lessons')
             ->select('ins_id', DB::raw('count(ins_id) as less_ins'))

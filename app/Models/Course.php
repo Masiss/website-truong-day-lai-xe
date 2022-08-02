@@ -34,7 +34,7 @@ class Course extends Model
     {
         return Attribute::make(
             get: fn($value) => self::FromDatabaseToString(json_decode($value)),
-//            set: fn($value) => json_encode(explode(',', $value)),
+            set: fn($value) => json_encode(explode(',', $value)),
         );
     }
 

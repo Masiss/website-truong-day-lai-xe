@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateDriver;
+use App\Actions\CreateDriverAction;
 use App\Enums\LessonStatusEnum;
+use App\Enums\LevelEnum;
 use App\Models\Driver;
+use App\Models\Instructor;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,22 +84,6 @@ class DriverController extends Controller
         ]);
     }
 
-//    public function api()
-//    {
-//        return DataTables::of(Lesson::query()
-//            ->with('instructor:id,name,email,phone_numbers')
-//            ->where('driver_id', $this->guard->user()->id)
-//            ->get())
-//            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
-//            ->editColumn('status', fn($object) => LessonStatusEnum::StatusInVNese($object->status))
-//            ->addColumn('name', fn($object) => $object->instructor->name)
-//            ->addColumn('phone_numbers', fn($object) => $object->instructor->phone_numbers)
-//            ->addColumn('email', fn($object) => $object->instructor->email)
-//            ->addColumn('cancel', fn($object) => $object->status==LessonStatusEnum::CANCELED->value?null:$object->id)
-//            ->make(true);
-//
-//    }
-
     public function create()
     {
 
@@ -108,18 +94,52 @@ class DriverController extends Controller
     public function store(Request $request)
     {
         $request->is_full = $request->boolean('is_full');
-        $dates = CreateDriver::AddLessons($request, $this->guard->user()->id);
+        $dates = CreateDriverAction::AddLessons($request, $this->guard->user()->id);
         return Redirect::route('drivers.lessons');
     }
 
-    public function updateStatus($id)
+    public function edit($id)
+    {
+        try {
+            // Validate the value...
+
+            $lesson_info = Lesson::query()
+                ->where('id', $id)
+                ->with('instructor:id,name,phone_numbers,email')
+                ->firstOrFail();
+            $ins = LessonStatusEnum::CanBeCancel($lesson_info->status) ?
+                Instructor::query()
+                    ->where('level', LevelEnum::INSTRUCTOR->value)
+                    ->get() : null;
+            return view('driver.edit', [
+                'lesson' => $lesson_info,
+                'instructors' => $ins,
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+            return Redirect::back()->withErrors([
+                'message' => 'Buổi học không tồn tại',
+            ]);
+        }
+
+    }
+
+    public function newInsApi(Request $request)
+    {
+        $instructor = Instructor::query()
+            ->where('id', $request->id)
+            ->first();
+        return $instructor;
+    }
+
+    public function cancel($id)
     {
         try {
             // Validate the value...
             $check = Lesson::query()->where('id', $id)->firstOrFail();
             if ($check->date < date('Y/m/d')) {
-                Lesson::query()->where('id',$id)->update([
-                    'status'=>LessonStatusEnum::CANCELED->value,
+                Lesson::query()->where('id', $id)->update([
+                    'status' => LessonStatusEnum::CANCELED->value,
                 ]);
             }
             return Redirect::back();

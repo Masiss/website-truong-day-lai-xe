@@ -48,6 +48,11 @@
 
                                     </li>
                                     <li class="mb-75">
+                                        <span class="fw-bolder me-25">Ngày sinh:</span>
+                                        <span>{{$instructor->birthdate}}</span>
+
+                                    </li>
+                                    <li class="mb-75">
                                         <span class="fw-bolder me-25">Email:</span>
                                         <span>{{$instructor->email}}</span>
 
@@ -58,58 +63,19 @@
 
                                     </li>
                                 </ul>
+
                             </div>
                         </div>
                     </div>
                     <!-- /User Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Chi tiết</h4>
-                            <small>
-                                <i>*Những dòng bên dưới không thể sửa*</i>
-                            </small>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-2 pb-50">
-                                        <h5>Tổng số buổi đã dạy</h5>
-                                        <input class="form-control-sm"
-                                               id="base"
-                                               value="{{$month_salary->total_lessons}}"
-                                               readonly
-                                        >
-                                    </div>
-                                    <div class="mb-2 pb-50">
-                                        <h5>Đánh giá trung bình</h5>
-                                        <input class="form-control-sm"
-                                               id="minus"
-                                               value="{{$detail_salary->rating}}"
-                                               readonly
-
-                                        >
-                                    </div>
-                                    <div class="mb-2 mb-md-1">
-                                        <h5>Lương cuối </h5>
-                                        <input class="form-control-sm"
-                                               id="total"
-                                               value="{{$detail_salary->total}}"
-                                               readonly
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!--/ User Sidebar -->
-
 
                 <!-- User Content -->
                 <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
                     <!-- Project table -->
                     <div class="card">
-                        <h4 class="card-header">Số buổi học: {{$month_salary->total_lessons}}</h4>
+                        <h4 class="card-header">Các buổi học</h4>
                         <div class="table-responsive">
                             <table class="table datatable-project">
                                 <thead>
@@ -138,69 +104,41 @@
                         </div>
                     </div>
                     <!-- /Project table -->
-                    <!-- current plan -->
+                    <!-- Invoice table -->
                     <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Lương</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <form action="./approve">
-                                    @if(!\App\Enums\SalaryStatusEnum::checkApproved($month_salary->status))
-                                        @csrf
-                                        @method('PUT')
-                                    @endif
-                                    <div class="col-md-6">
-                                        <div class="mb-2 pb-50">
-                                            <h5>Lương ban đầu</h5>
-                                            <input class="form-control"
-                                                   id="base"
-                                                   value="{{$detail_salary->base}}"
-                                                   required
-                                            >
-
-                                            <small>
-                                                <i>*Được tính bằng công thức: Lương = tổng buổi đã dạy x lương mỗi
-                                                    buổi</i>
-                                            </small>
-                                        </div>
-                                        <div class="mb-2 pb-50">
-                                            <h5>Lương bị trừ</h5>
-                                            <input class="form-control"
-                                                   id="minus"
-                                                   value="{{$detail_salary->minus}}"
-                                                   required
-                                            >
-                                            <small>
-                                                <i>*Được tính bằng công thức: Lương bị trừ = (5 - điểm đánh giá) x
-                                                    lương
-                                                    vi phạm</i>
-                                            </small>
-                                        </div>
-                                        <div class="mb-2 mb-md-1">
-                                            <h5>Lương cuối </h5>
-                                            <input class="form-control"
-                                                   id="total"
-                                                   value="{{$detail_salary->total}}"
-                                                   required
-                                            >
-                                        </div>
-                                    </div>
-                                    @if(!\App\Enums\SalaryStatusEnum::checkApproved($month_salary->status))
-
-                                        <div class="col-12">
-                                            <button class="btn btn-primary me-1 mt-1">
-                                                Duyệt
-                                            </button>
-                                        </div>
-                                    @endif
-
-                                </form>
-
+                        <div class="card-header pt-1 pb-25">
+                            <div class="head-label">
+                                <h4 class="card-title">
+                                    Bảng lương
+                                </h4>
                             </div>
                         </div>
+                        <table class="invoice-table table text-nowrap">
+                            <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Tháng</th>
+                                <th>Số buổi</th>
+                                <th>Số giờ</th>
+                                <th>Số tiền</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($month_salaries as $month_salary)
+                                <tr>
+                                    <td>{{$month_salary->id}}</td>
+                                    <td>{{$month_salary->month}}</td>
+                                    <td>{{$month_salary->total_lessons}}</td>
+                                    <td>{{$month_salary->total_hours}}</td>
+                                    <td>{{$month_salary->total_salaries}}</td>
+                                    <td>{{$month_salary->status}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- / current plan -->
+                    <!-- /Invoice table -->
                 </div>
                 <!--/ User Content -->
             </div>
@@ -218,14 +156,9 @@
         {{--        <script src={{asset('js/select2.full.min.js')}}></script>--}}
         {{--        <script src={{asset('js/jquery.validate.min.js')}}></script>--}}
         {{--        <script src={{asset('js/form-select2.min.js')}}></script>--}}
-        <script type="text/javascript">
-            let a = document.getElementById('base'),
-                b = document.getElementById('minus'),
-                c = document.getElementById('total');
-            [a, b].forEach(e => e.addEventListener('keyup', function () {
-                c.value = a.value - b.value;
-            }))
-        </script>
+        {{--        <script type="text/javascript">--}}
+
+        {{--        </script>--}}
         {{--        <script src={{asset('js/form-validation.js')}}></script>--}}
 
     @endpush

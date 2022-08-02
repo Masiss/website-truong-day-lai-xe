@@ -68,21 +68,4 @@ class ConfigController extends Controller
         }
     }
 
-    public function destroy(Request $request)
-    {
-        DB::beginTransaction();
-        try {
-            // Validate the value...
-            Config::query()
-                ->where('key', $request->key)
-                ->delete();
-            DB::commit();
-            return Redirect::back();
-        } catch (Throwable $e) {
-            report($e);
-            DB::rollBack();
-            return false;
-        }
-
-    }
 }

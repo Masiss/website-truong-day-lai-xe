@@ -220,21 +220,6 @@
             feather.replace({width: 14, height: 14});
         }
     })
-    // $(window).on('load', function () {
-    //     let a = $(".main-menu-content ul li a");
-    //     var path = window.location.pathname.split('/');
-    //     path = path.length < 4 ? path :
-    //         path.length > 4 ? path.slice(0, -2) :
-    //             path.slice(0, -1);
-    //     $(".main-menu-content ul li a").map(function (index, value) {
-    //         var $this = $(this);
-    //         if ($this.attr("href") === path.join("/")) {
-    //
-    //             $this.closest("li").addClass('active');
-    //         }
-    //     });
-    //
-    // })
 
 </script>
 </body>

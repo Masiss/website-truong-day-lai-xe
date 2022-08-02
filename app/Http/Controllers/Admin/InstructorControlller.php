@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\ActionForInstructor;
+use App\Actions\Instructor\GetInstructorForLessonsAction;
 use App\Enums\LevelEnum;
+use App\Enums\SalaryStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInstructorRequest;
 use App\Models\Instructor;
 use App\Models\Lesson;
+use App\Models\MonthSalary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -74,6 +77,23 @@ class InstructorControlller extends Controller
         ]);
     }
 
+    public function show(Instructor $instructor)
+    {
+        $month_salaries = MonthSalary::query()
+            ->where('id', $instructor->id)
+            ->get();
+        $lessons = Lesson::query()
+            ->where('ins_id', $instructor->id)
+            ->with('driver')
+            ->paginate(7);
+        $lessons->totalPage = ceil($lessons->total() / $lessons->perPage());
+        return view('admin.ins.show', [
+            'instructor' => $instructor,
+            'month_salaries' => $month_salaries,
+            'lessons' => $lessons,
+        ]);
+    }
+
     public function update(Request $request, $id)
     {
         $ins = Instructor::query()->where('id', $id)
@@ -91,7 +111,17 @@ class InstructorControlller extends Controller
     {
         DB::beginTransaction();
         try {
-            $new_ins = ActionForInstructor::GetInstructor();
+            $getPendingSalaries = MonthSalary::query()
+                ->where('ins_id', $id)
+                ->where('status', SalaryStatusEnum::PENDING->value)
+                ->first();
+            if ($getPendingSalaries) {
+                return redirect()->route('admin.instructors.index')
+                    ->withErrors([
+                        'message' => "Còn lương chưa duyệt, không thể xóa giáo viên này",
+                    ]);
+            }
+            $new_ins = GetInstructorForLessonsAction::handle();
             Lesson::query()->where('ins_id', $id)->update([
                 'ins_id' => $new_ins
             ]);

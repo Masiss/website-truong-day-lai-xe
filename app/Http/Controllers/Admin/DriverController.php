@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Actions\CreateDriver;
-use App\Enums\GenderNameEnum;
+use App\Actions\CreateDriverAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDriverRequest;
 use App\Models\Course;
@@ -30,7 +29,9 @@ class DriverController extends Controller
 
     public function index()
     {
-        $drivers = Driver::query()->with('course')->paginate(15);
+        $drivers = Driver::query()
+            ->with('course')
+            ->paginate(15);
         $drivers->totalPage = ceil($drivers->total() / $drivers->perPage());
         return view('admin.driver.index', [
             'drivers' => $drivers,
@@ -43,12 +44,15 @@ class DriverController extends Controller
     {
         return view('admin.driver.create');
     }
+    private const TotalHour = 40;
 
     public function store(StoreDriverRequest $request)
     {
         DB::beginTransaction();
         try {
-            $arr = $request->only([
+            $request->lesson = self::TotalHour / $request->last;
+            $request->is_full = $request->boolean('is_full');
+            $driverArr = $request->only([
                 'name',
                 'gender',
                 'birthdate',
@@ -58,25 +62,27 @@ class DriverController extends Controller
                 'file',
                 'is_full',
             ]);
-            $request->is_full = $request->boolean('is_full');
-            $password = Hash::make(Str::random(8));
+            $courseArr = $request->only([
+                'days_of_week',
+                'type',
+                'lesson',
+            ]);
+            $lessonArr=$request->only([
+                'days_of_week',
+                'lesson',
+                'shift',
+                'last',
+            ]);
+            $driverArr['password'] = Hash::make(Str::random(8));
             //add Course
-            $course_id = CreateDriver::createCourse($request);
+            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full']);
             $driver_id = Driver::query()
-                ->create([
-                    'name' => $arr['name'],
-                    'gender' => $arr['gender'],
-                    'course_id' => $course_id,
-                    'birthdate' => $arr['birthdate'],
-                    'phone_numbers' => $arr['phone_numbers'],
-                    'id_numbers' => $arr['id_numbers'],
-                    'email' => $arr['email'],
-                    'file' => $arr['file'],
-                    'is_full' => $arr['is_full'],
-                    'password' => $password,
-                ])->id;
+                ->create($driverArr)
+                ->id;
+            $lessonArr['driver_id'] = $driver_id;
             //add lessons
-            CreateDriver::AddLessons($request, $driver_id);
+            CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
+
             DB::commit();
             echo "1";
         } catch (Throwable $e) {
@@ -86,32 +92,22 @@ class DriverController extends Controller
         }
     }
 
-    public function edit(Driver $driver)
+    public function show(Driver $driver)
     {
-        $course = Course::query()->where('id', $driver->course_id)->first();
-        $lessons = Lesson::query()->with('driver')->with('instructor')
-            ->where('driver_id', $driver->id)->get();
-        $lessons->count = $lessons->count();
-//        $lessons->count=
-        return view('admin.driver.edit', [
+        $course = Course::query()
+            ->where('id', $driver->course_id)
+            ->first();
+        $lessons = Lesson::query()
+            ->with('driver')
+            ->with('instructor')
+            ->where('driver_id', $driver->id)->paginate(7);
+        $lessons->totalPage = ceil($lessons->total() / $lessons->perPage());
+        return view('admin.driver.show', [
                 'driver' => $driver,
                 'course' => $course,
                 'lessons' => $lessons,
             ]
         );
-    }
-
-    public function update(Request $request, $id)
-    {
-        Driver::query()->where('id', $id)
-            ->update([
-                'name' => $request->name,
-                'birthdate' => $request->birthdate,
-            ]);
-        if ($request->file) {
-            Driver::where('id', $id)->update(['file' => $request->file]);
-        }
-        return redirect()->route('admin.drivers.index');
     }
 
     public function destroy(Request $request, $id)

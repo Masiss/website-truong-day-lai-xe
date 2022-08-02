@@ -46,7 +46,7 @@
                                             <img src="{{$driver->file}}" width="100px" height="100px">
                                         </td>
                                         <td>
-                                            <a class="form-control" href="drivers/{{$driver->id}}/edit">Sửa</a>
+                                            <a class="form-control" href="drivers/{{$driver->id}}/">Chi tiết</a>
                                         </td>
                                         <td>
                                             <form action="drivers/{{$driver->id}}" method="POST">

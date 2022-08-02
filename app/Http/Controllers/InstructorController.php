@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Instructor\GetLessonForCheckinAction;
 use App\Actions\SalariesAction;
 use App\Enums\LessonStatusEnum;
 use App\Enums\LevelEnum;
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
-use Yajra\DataTables\DataTables;
 
 class InstructorController extends Controller
 {
@@ -49,22 +49,6 @@ class InstructorController extends Controller
         ]);
     }
 
-//    public function api(Request $request)
-//    {
-//
-//        return DataTables::of(MonthSalary::query()->with('instructor')
-//            ->where('ins_id', $this->guard->user()->id)
-//            ->get())
-//            ->editColumn('status',
-//                function ($object) {
-//                    return $object->status == SalaryStatusEnum::PENDING->value ? 'Đang chờ duyệt' :
-//                        ($object->status == SalaryStatusEnum::APPROVED->value ? 'Đã duyệt' : ' ');
-//                })
-//            ->editColumn('month', fn($object) => date_format(new \DateTime($object->month), 'm/Y'))
-//            ->addColumn('show', fn($object) => $object->id)
-//            ->make(true);
-//    }
-
     public function show($id)
     {
         $info = SalariesAction::showSalary($id);
@@ -75,31 +59,19 @@ class InstructorController extends Controller
         ]);
     }
 
-//    public function checkinAPI(Request $request)
-//    {
-//        return DataTables::of(Lesson::query()->where('ins_id', $this->guard->user()->id)
-//            ->with('driver')
-//            ->where('status', LessonStatusEnum::PENDING->value)
-//            ->select('*', 'lessons.id as lesson_id')
-//            ->get())
-//            ->editColumn('name', fn($object) => $object->driver->name)
-//            ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)
-//            ->editColumn('email', fn($object) => $object->driver->email)
-//            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
-//            ->editColumn('status', fn($object) => LessonStatusEnum::from($object->status)->name)
-//            ->addColumn('checkin', fn($object) => $object->lesson_id)
-//            ->make(true);
-//    }
-
     public function checkin()
     {
-        $lessons = Lesson::query()
-            ->where('ins_id', $this->guard->user()->id)
-            ->with('driver:id,name,email,phone_numbers')
-            ->where('status', LessonStatusEnum::PENDING->value)
-            ->paginate(15);
+        $hour = date('H');
+//        $lessons = Lesson::query()
+//            ->where('ins_id', $this->guard->user()->id)
+//            ->with('driver:id,name,email,phone_numbers')
+//            ->where('status', LessonStatusEnum::PENDING->value)
+//            ->where('date', date('Y/m/d'));
+//        if ($hour > 6 && $hour <= 12) {
+//           $lessons->where('start_at', '<=', 12);
+//        }
+        $lessons = GetLessonForCheckinAction::handle($hour);
         $lessons->totalPage = ceil($lessons->total() / $lessons->perPage());
-
         return view('ins.checkin', [
             'lessons' => $lessons,
         ]);
@@ -171,20 +143,20 @@ class InstructorController extends Controller
         ]);
     }
 
-    public function getLessons()
-    {
-        return DataTables::of()
-            ->editColumn('name', fn($object) => $object->driver->name)
-            ->editColumn('email', fn($object) => $object->driver->email)
-            ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)
-            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
-            ->editColumn('status', fn($object) => $object->status == LessonStatusEnum::PENDING->value ? "Chưa đến" :
-                ($object->status == LessonStatusEnum::HAPPENED->value ? "Đã xong" :
-                    ($object->status == LessonStatusEnum::CANCELED->value ? "Đã hủy" :
-                        " ")))
-            ->make(true);
-
-    }
+//    public function getLessons()
+//    {
+//        return DataTables::of()
+//            ->editColumn('name', fn($object) => $object->driver->name)
+//            ->editColumn('email', fn($object) => $object->driver->email)
+//            ->editColumn('phone_numbers', fn($object) => $object->driver->phone_numbers)
+//            ->editColumn('date', fn($object) => date('d/m/Y', strtotime($object->date)))
+//            ->editColumn('status', fn($object) => $object->status == LessonStatusEnum::PENDING->value ? "Chưa đến" :
+//                ($object->status == LessonStatusEnum::HAPPENED->value ? "Đã xong" :
+//                    ($object->status == LessonStatusEnum::CANCELED->value ? "Đã hủy" :
+//                        " ")))
+//            ->make(true);
+//
+//    }
 
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Instructor;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,14 +18,14 @@ class CheckLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard('instructor')->viaRemember() || Auth::guard('instructor')->check()) {
-            if (Auth::guard('instructor')->user()->level == 0) {
+        if (auth('instructor')->viaRemember() || auth('instructor')->check()) {
+            if (Instructor::isAdmin()) {
                 return redirect()->route('admin.index');
-            } elseif (Auth::guard('instructor')->user()->level == 1) {
+            } elseif (!Instructor::isAdmin()) {
                 return redirect()->route('instructors.index');
             }
         }
-        if (Auth::guard('driver')->viaRemember() || Auth::guard('driver')->check()) {
+        if (auth('driver')->viaRemember() || auth('driver')->check()) {
             return redirect()->route('drivers.index');
         }
         return $next($request);

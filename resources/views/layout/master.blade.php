@@ -51,9 +51,9 @@
 {{--SIDE-BAR--}}
 @if(auth()->guard('driver')->check())
     @include('layout.driver_sidebar')
-@elseif(\App\Models\Instructor::checkLevel()==\App\Enums\LevelEnum::INSTRUCTOR->name)
+@elseif(!\App\Models\Instructor::isAdmin())
     @include('layout.ins_sidebar')
-@elseif(\App\Models\Instructor::checkLevel()==\App\Enums\LevelEnum::ADMIN->name)
+@elseif(\App\Models\Instructor::isAdmin())
     @include('layout.sidebar')
 @endif
 <!-- BEGIN: Content-->
@@ -100,19 +100,16 @@
     $(window).on('load', function () {
         let a = $(".main-menu-content ul li a");
         var path = window.location.pathname.split('/');
-        path = path.length < 4 ? path :
+        path = path.length <= 4 ? path :
             path.length > 4 ? path.slice(0, -2) :
                 path.slice(0, -1);
         $(".main-menu-content ul li a").map(function (index, value) {
             var $this = $(this);
             if ($this.attr("href") === path.join("/")) {
-
                 $this.closest("li").addClass('active');
             }
         });
-
     })
-
 </script>
 
 </body>

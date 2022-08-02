@@ -55,9 +55,10 @@
                         <input type="text" style=" background: #DFDADAAB;" class="form-control m-1 w-auto" name="email"
                                placeholder="Email">
                     </div>
-                    <div class="w-auto">
+                    <div class="d-flex col justify-content-center align-items-center"
+                         style="position: relative;left: 0;">
                         <label style="color: #FFFFFF">Thời gian có thể nhận tư vấn</label>
-                        <select>
+                        <select class="form-select m-1 w-auto" style="background:#DFDADAAB; ">
                             @for($i=6;$i<24;$i++)
                                 <option value="{{$i}}">{{$i}}</option>
                             @endfor

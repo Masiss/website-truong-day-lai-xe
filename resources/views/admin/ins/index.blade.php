@@ -8,18 +8,25 @@
             <div class="card">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="m-1">
-                            <a href="{{route('admin.instructors.create')}}">
-                                <i data-feather="plus-circle"></i>
-                                <span>Thêm</span>
-                            </a>
+                        <div class="d-flex">
+                            <div class="col-md-1 m-1">
+                                <a href="{{route('admin.instructors.create')}}">
+                                    <i data-feather="plus-circle"></i>
+                                    <span>Thêm</span>
+                                </a>
+                            </div>
+                            @error('message')
+                            <div class="col-md-6 m-2">
+                                <span class="alert-danger">{{$message}}</span>
+                            </div>
+                            @enderror
                         </div>
+
                         <table class="table" id="table-data">
                             <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Tên</th>
-                                <th>Giới tính</th>
                                 <th>Email</th>
                                 <th>Số điện thoại</th>
                                 <th>Lương</th>
@@ -32,12 +39,11 @@
                                 <tr>
                                     <td>{{$instructor->id}}</td>
                                     <td>{{$instructor->name}}</td>
-                                    <td>{{$instructor->gender}}</td>
                                     <td>{{$instructor->email}}</td>
                                     <td>{{$instructor->phone_numbers}}</td>
                                     <td>{{$instructor->salary}}</td>
                                     <td>
-                                        <a href="instructors/{{$instructor->id}}/edit">Sửa</a>
+                                        <a href="instructors/{{$instructor->id}}/">Chi tiết</a>
                                     </td>
                                     <td>
                                         <form action="instructors/{{$instructor->id}}" method="POST">

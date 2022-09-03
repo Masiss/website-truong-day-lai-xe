@@ -9,15 +9,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Kyslik\ColumnSortable\Sortable;
+use Laravel\Scout\Searchable;
 
 //class Driver extends Model
 class Driver extends \Illuminate\Foundation\Auth\User
 
 {
+    use Searchable;
+    use Sortable;
     use HasFactory;
     use SoftDeletes;
     use Authenticatable;
 
+    public $sortable = [
+        'id',
+        'name',
+    ];
     protected $fillable = [
         'name',
         'gender',
@@ -36,6 +44,27 @@ class Driver extends \Illuminate\Foundation\Auth\User
     protected $cast = [
         'birthdate' => 'date:d-m-Y',
     ];
+
+//    protected $dateFormat = 'd-m-Y';
+
+//    protected function serializeDate($date)
+//    {
+//        return $date->format('d-m-Y');
+//    }
+    public function course()
+    {
+        return $this->hasOne(Course::class, 'id', 'course_id');
+    }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class, 'driver_id', 'id');
+    }
+
+    public function birthdateForEditing()
+    {
+        return date('Y-m-d', strtotime($this->birthdate));
+    }
 
     protected function gender(): Attribute
     {
@@ -56,15 +85,15 @@ class Driver extends \Illuminate\Foundation\Auth\User
     {
         return Attribute::make(
             get: fn($value) => Storage::url($value),
-            set: fn($value) => Storage::disk('public')->put('file', $value),
+//            set: fn($value) => Storage::disk('public')->putFileAs('file', $value),
         );
     }
 
     protected function birthdate(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => date('d/m/Y', strtotime($value)),
-//            set: fn($value) => date('Y/m/d', $value),
+            get: fn($value) => date('d-m-Y', strtotime($value)),
+//            set: fn($value) => date('Y-m-d', strtotime($value)),
         );
     }
 
@@ -75,16 +104,6 @@ class Driver extends \Illuminate\Foundation\Auth\User
                 ($value == 0 ? "Không"
                     : ""),
         );
-    }
-
-    public function course()
-    {
-        return $this->hasOne(Course::class, 'id', 'course_id');
-    }
-
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class, 'driver_id', 'id');
     }
 
 

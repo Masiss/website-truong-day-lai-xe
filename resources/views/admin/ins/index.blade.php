@@ -25,7 +25,7 @@
                         <table class="table" id="table-data">
                             <thead>
                             <tr>
-                                <th>#</th>
+                                <th>@sortablelink('id')</th>
                                 <th>Tên</th>
                                 <th>Email</th>
                                 <th>Số điện thoại</th>

@@ -1,0 +1,44 @@
+{
+    "menu": [
+        {
+            "url": "instructors",
+            "name": "Trang chủ",
+            "icon": "home",
+            "slug": "instructors.index"
+        },
+        {
+            "url": "instructors/salaries",
+            "name": "Bảng lương",
+            "icon": "dollar-sign",
+            "slug": "instructors.salaries"
+        },
+        {
+            "url": "instructors/checkin",
+            "name": "Điểm danh",
+            "icon": "calendar",
+            "slug": "instructors.checkin"
+        },
+        {
+            "name": "Các buổi dạy",
+            "icon": "book",
+            "slug": "",
+            "submenu": [
+                {
+                    "url": "instructors/lessons",
+                    "name": "Dạng danh sách",
+                    "icon": "circle",
+                    "slug": "instructors.lessons"
+                },
+                {
+                    "url": "calendar",
+                    "name": "Dạng lịch",
+                    "icon": "circle",
+                    "slug": "calendar"
+                }
+
+            ]
+        }
+    ]
+}
+
+

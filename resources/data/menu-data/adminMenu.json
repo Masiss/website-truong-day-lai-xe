@@ -1,0 +1,69 @@
+{
+    "menu": [
+        {
+            "url": "admin",
+            "name": "Trang chủ",
+            "icon": "home",
+            "slug": "admin.index"
+        },
+        {
+            "url": "admin/drivers",
+            "name": "Học viên",
+            "icon": "users",
+            "slug": "admin.drivers.index"
+        },
+        {
+            "url": "admin/instructors",
+            "name": "Giáo viên",
+            "icon": "user",
+            "slug": "admin.instructors.index"
+        },
+        {
+            "name": "Bảng lương",
+            "icon": "dollar-sign",
+            "slug": "",
+            "submenu": [
+                {
+                    "url": "admin/salaries/pending",
+                    "name": "Đang chờ",
+                    "icon": "circle",
+                    "slug": "admin.salaries.pending"
+                },
+                {
+                    "url": "admin/salaries/approved",
+                    "name": "Đã duyệt",
+                    "icon": "circle",
+                    "slug": "admin.salaries.approved"
+                }
+            ]
+        },
+        {
+            "name": "Các buổi học",
+            "icon": "calendar",
+            "slug": "",
+            "submenu": [
+                {
+                    "url": "admin/lessons",
+                    "name": "Dạng danh sách",
+                    "icon": "circle",
+                    "slug": "admin.lessons"
+                },
+                {
+                    "url": "calendar",
+                    "name": "Dạng lịch",
+                    "icon": "circle",
+                    "slug": "calendar"
+                }
+
+            ]
+        },
+        {
+            "url": "admin/config",
+            "name": "Thiết lập",
+            "icon": "settings",
+            "slug": "admin.config.index"
+        }
+    ]
+}
+
+

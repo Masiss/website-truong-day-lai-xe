@@ -58,6 +58,11 @@
 
                                     </li>
                                     <li class="mb-75">
+                                        <span class="fw-bolder me-25">Ngày sinh:</span>
+                                        <span>{{$driver->birthdate}}</span>
+
+                                    </li>
+                                    <li class="mb-75">
                                         <span class="fw-bolder me-25">Đăng ký khóa học:</span>
                                         <span>@if($driver->is_full)
                                                 {{"Trọn gói"}}

@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use Kyslik\ColumnSortable\Sortable;
 
 class Course extends Model
 {
+    use Sortable;
     use HasFactory;
     use SoftDeletes;
 
@@ -20,6 +22,10 @@ class Course extends Model
         'days_of_week',
         'price',
         'price_per_day',
+    ];
+
+    public $sortable = [
+        'type',
     ];
 
     protected function type(): Attribute
@@ -34,7 +40,7 @@ class Course extends Model
     {
         return Attribute::make(
             get: fn($value) => self::FromDatabaseToString(json_decode($value)),
-            set: fn($value) => json_encode(explode(',', $value)),
+            set: fn($value) => json_encode($value),
         );
     }
 

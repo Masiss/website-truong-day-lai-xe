@@ -10,10 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Kyslik\ColumnSortable\Sortable;
+use Laravel\Scout\Searchable;
 
 //class Instructor extends Model
 class Instructor extends \Illuminate\Foundation\Auth\User
 {
+    use Searchable;
+    use Sortable;
     use HasFactory;
     use SoftDeletes;
     use Authenticatable;
@@ -33,6 +37,9 @@ class Instructor extends \Illuminate\Foundation\Auth\User
         'updated_at'
     ];
 
+    public $sortable=[
+        'id',
+    ];
 //    public static function checkLevel()
 //    {
 //        if (auth()->guard('instructor')->user()->level == LevelEnum::INSTRUCTOR->value) {

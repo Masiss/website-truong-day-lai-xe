@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\LevelEnum;
 use App\Models\Instructor;
 use Closure;
 use Illuminate\Http\Request;
@@ -18,10 +17,12 @@ class InstructorMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Instructor::isAdmin()){
+        if (auth('instructor')->check()) {
+            $user = auth('instructor')->user();
+            if (!Instructor::isAdmin()) {
                 return $next($request);
+            }
         }
-
-        return redirect()->route('index');
+        return redirect()->route('login');
     }
 }

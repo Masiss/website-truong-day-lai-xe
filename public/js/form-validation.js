@@ -31,15 +31,15 @@ $(function () {
 
     // Picker
     if (picker.length) {
-        let now = new Date(),
-            currY = now.getFullYear(),
-            currM = now.getMonth(),
-            currD = now.getDate(),
-            max = currY - 18,
-            min = currY - 70;
+        // let now = new Date(),
+        //     currY = now.getFullYear(),
+        //     currM = now.getMonth(),
+        //     currD = now.getDate(),
+        //     max = currY - 18,
+        //     min = currY - 70;
         picker.flatpickr({
-            maxDate: new Date(max, currM, currD),
-            minDate: new Date(min, currM, currD),
+            // maxDate: new Date(max, currM, currD),
+            // minDate: new Date(min, currM, currD),
             allowInput: true,
             onReady: function (selectedDates, dateStr, instance) {
                 if (instance.isMobile) {

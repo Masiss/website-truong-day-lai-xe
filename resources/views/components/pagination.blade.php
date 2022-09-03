@@ -5,6 +5,12 @@
     <ul class="pagination justify-content-end mt-3">
         <li class="page-item">
             <a class="page-link"
+               href="{{$paginate->url(1)}}">
+                {{"First"}}
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
                href="{{$paginate->previousPageUrl()}}"
                aria-label="Previous">
                 <span aria-hidden="true">&laquo; Prev</span>
@@ -34,6 +40,12 @@
                href="{{$paginate->nextPageUrl()}}"
                aria-label="Next">
                 <span aria-hidden="true">Next &raquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+               href="{{$paginate->url($paginate->lastPage())}}">
+                {{"Last"}}
             </a>
         </li>
     </ul>

@@ -1,7 +1,9 @@
-<!DOCTYPE html>
+@php use App\Models\Instructor; @endphp
+    <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
 <!-- BEGIN: Head-->
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
@@ -49,13 +51,14 @@
 {{--NAV-BAR--}}
 @include('layout.nav-bar')
 {{--SIDE-BAR--}}
-@if(auth()->guard('driver')->check())
-    @include('layout.driver_sidebar')
-@elseif(!\App\Models\Instructor::isAdmin())
-    @include('layout.ins_sidebar')
-@elseif(\App\Models\Instructor::isAdmin())
-    @include('layout.sidebar')
-@endif
+{{--@if(auth('driver')->check())--}}
+{{--    @include('layout.driver_sidebar')--}}
+{{--@elseif(!Instructor::isAdmin())--}}
+{{--    @include('layout.ins_sidebar')--}}
+{{--@elseif(Instructor::isAdmin())--}}
+{{--    @include('layout.sidebar')--}}
+{{--@endif--}}
+@include('layout.sidebar')
 <!-- BEGIN: Content-->
 <div class="app-content content ">
     <div class="content-overlay">
@@ -100,14 +103,20 @@
     $(window).on('load', function () {
         let a = $(".main-menu-content ul li a");
         var path = window.location.pathname.split('/');
-        path = path.length <= 4 ? path :
+        path = path.length < 4 ? path :
             path.length > 4 ? path.slice(0, -2) :
                 path.slice(0, -1);
         $(".main-menu-content ul li a").map(function (index, value) {
             var $this = $(this);
-            if ($this.attr("href") === path.join("/")) {
+            if ($this.attr("href") === window.location.pathname) {
                 $this.closest("li").addClass('active');
+                return;
+            } else {
+                if ($this.attr("href") === path.join("/")) {
+                    $this.closest("li").addClass('active');
+                }
             }
+
         });
     })
 </script>

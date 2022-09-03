@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Actions\SalariesAction;
 use App\Enums\SalaryStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApproveSalaryRequest;
 use App\Models\Instructor;
 use App\Models\MonthSalary;
 use Illuminate\Http\Request;
@@ -116,18 +117,34 @@ class SalaryController extends Controller
         ]);
     }
 
-    public function approve(Request $request, $id)
+    public function approve(ApproveSalaryRequest $request, $id)
     {
-        $month_salary = MonthSalary::where('id', $id);
-        $month_salary->update([
-            'status' => SalaryStatusEnum::APPROVED->value,
-        ]);
-        if ($request->base && $request->total) {
+        DB::beginTransaction();
+        try {
+            // Validate the value...
+            $month_salary = MonthSalary::where('id', $id);
             $month_salary->update([
-                'total_salaries' => $request->total,
+                'status' => SalaryStatusEnum::APPROVED->value,
             ]);
+            if ($request->base && $request->total) {
+                $month_salary->update([
+                    'total_salaries' => $request->total,
+                ]);
+            }
+            DB::commit();
+            $salary = MonthSalary::query()->where('id', $id)
+                ->with('instructor')
+                ->first();
+            return redirect()->route('admin.salaries.pending')
+                ->with('status', 'Đã duyệt lương cho '.$salary->instructor->name.' với mức lương '.$salary->total_salaries);
+
+        } catch (Throwable $e) {
+            report($e);
+            DB::rollBack();
+            return redirect()
+                ->with('status', 'Đã xảy ra lỗi, xem xét lại mức lương')
+                ->back();
         }
-        return redirect()->route('admin.salaries.pending');
 
     }
 }

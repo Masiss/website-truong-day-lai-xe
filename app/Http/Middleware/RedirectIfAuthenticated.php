@@ -25,14 +25,7 @@ class RedirectIfAuthenticated
                 return redirect(RouteServiceProvider::HOME);
             }
         }
-//        $credentials= $request->only('email','password');
-//        if(Auth::guard('driver')->attempt($credentials)){
-//            return redirect()->route('index');
-//        }
-//        if(Auth::guard('instructor')->attempt($credentials)){
-//            return redirect()->route('instructors.index');
-//        }
+                return $next($request);
 
-        return $next($request);
     }
 }

@@ -11,8 +11,24 @@
             </span>
 </a>
 <div class="dropdown-menu dropdown-menu-end font-small-3" aria-labelledby="dropdown-user">
-    <a class="dropdown-item " href="#">
-        <i class="me-50" data-feather="user"> </i> Thông tin cá nhân</a>
+    <a class="dropdown-item "
+       href="{{route('index')}}">
+        <i class="me-50" data-feather="home"> </i>
+        Về trang chủ
+    </a>
+    <a class="dropdown-item "
+       href="
+       @admin
+       {{route('admin.index')}}
+       @else @instructor
+       {{route('instructors.index')}}
+       @endinstructor
+       @endadmin
+       ">
+        <i class="me-50" data-feather="user"> </i>
+        Thông tin cá nhân
+    </a>
+
     {{--                    <a class="dropdown-item" href="app-email.html">--}}
     {{--                        <i class="me-50" data-feather="mail"> </i>--}}
     {{--                        Inbox--}}
@@ -42,7 +58,7 @@
     {{--                    </a>--}}
     <a class="dropdown-item" href="{{route('logout')}}">
         <i class="me-50" data-feather="power"> </i>
-        Logout
+        Đăng xuất
     </a>
 </div>
 

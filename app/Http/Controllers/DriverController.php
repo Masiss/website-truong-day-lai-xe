@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 
 class DriverController extends Controller
@@ -38,45 +39,11 @@ class DriverController extends Controller
         ]);
     }
 
-    public function update(Request $request)
-    {
-        DB::beginTransaction();
-        try {
-            // Validate the value...
-            $arr = $request->only([
-                'name',
-                'gender',
-                'birthdate',
-                'phone_numbers',
-                'id_numbers',
-                'file',
-            ]);
-            $driver = Driver::query()->where('id', '=', $this->guard->user()->id);
-            $driver->update([
-                'name' => $request->name,
-                'gender' => $request->gender,
-                'birthdate' => $request->birthdate,
-                'phone_numbers' => $request->phone_numbers,
-                'id_numbers' => $request->id_numbers,
-            ]);
-            if (isset($request->file)) {
-                $driver->update([
-                    'file' => $request->file,
-                ]);
-            }
-            DB::commit();
-            return Redirect::back();
-        } catch (Throwable $e) {
-            report($e);
-            DB::rollBack();
-            return false;
-        }
-    }
-
     public function lessons()
     {
         $lessons = Lesson::query()->with('instructor:id,name,email,phone_numbers')
             ->where('driver_id', $this->guard->user()->id)
+            ->sortable()
             ->paginate(15);
         $lessons->totalPage = ceil($lessons->total() / $lessons->perPage());
         return view('driver.lessons', [
@@ -93,9 +60,16 @@ class DriverController extends Controller
 
     public function store(Request $request)
     {
-        $request->is_full = $request->boolean('is_full');
-        $dates = CreateDriverAction::AddLessons($request, $this->guard->user()->id);
-        return Redirect::route('drivers.lessons');
+        $is_full = $request->boolean('is_full');
+        $lessonArr = $request->only([
+            'days_of_week',
+            'last',
+            'shift',
+        ]);
+        $lessonArr['driver_id'] = auth('driver')->user()->id;
+        $dates = CreateDriverAction::AddLessons($lessonArr, $is_full);
+        return redirect()->route('drivers.lessons')
+            ->with('status', 'Đăng kí buổi học thành công');
     }
 
     public function edit($id)
@@ -105,9 +79,9 @@ class DriverController extends Controller
 
             $lesson_info = Lesson::query()
                 ->where('id', $id)
-                ->with('instructor:id,name,phone_numbers,email')
+                ->with('instructor:id,name,phone_numbers,email,level')
                 ->firstOrFail();
-            $ins = LessonStatusEnum::CanBeCancel($lesson_info->status) ?
+            $ins = LessonStatusEnum::CanBeCancelled($lesson_info->status) ?
                 Instructor::query()
                     ->where('level', LevelEnum::INSTRUCTOR->value)
                     ->get() : null;
@@ -117,7 +91,7 @@ class DriverController extends Controller
             ]);
         } catch (Throwable $e) {
             report($e);
-            return Redirect::back()->withErrors([
+            return redirect()->back()->withErrors([
                 'message' => 'Buổi học không tồn tại',
             ]);
         }
@@ -129,24 +103,123 @@ class DriverController extends Controller
         $instructor = Instructor::query()
             ->where('id', $request->id)
             ->first();
-        return $instructor;
+        return response()
+            ->json([
+                'name' => $instructor->name,
+                'email' => $instructor->email,
+                'phone_numbers' => $instructor->phone_numbers,
+            ]);
     }
 
     public function cancel($id)
     {
         try {
             // Validate the value...
-            $check = Lesson::query()->where('id', $id)->firstOrFail();
+            $lesson = Lesson::query()->where('id', $id);
+            $check = $lesson->firstOrFail();
             if ($check->date < date('Y/m/d')) {
-                Lesson::query()->where('id', $id)->update([
+                $lesson->update([
                     'status' => LessonStatusEnum::CANCELED->value,
                 ]);
             }
+            $lesson = $lesson->first();
+            return redirect()->back()
+                ->with('status', 'Đã hủy buổi học '.$lesson->start_at.' '.$lesson->date);
+        } catch (Throwable $e) {
+            report($e);
+            return redirect()->back()
+                ->withErrors([
+                    'message' => 'Đã xảy ra lỗi, vui lòng thử lại',
+                ]);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        DB::beginTransaction();
+        DB::enableQueryLog();
+        try {
+            // Validate the value...
+            $arr = $request->only([
+                'name',
+                'gender',
+                'birthdate',
+                'phone_numbers',
+                'id_numbers',
+                'file',
+            ]);
+            $driver = Driver::query()->where('id', '=', $this->guard->user()->id);
+            $driver->update([
+                'name' => $arr['name'],
+                'gender' => $arr['gender'],
+                'birthdate' => $arr['birthdate'],
+                'phone_numbers' => $arr['phone_numbers'],
+                'id_numbers' => $arr['id_numbers'],
+            ]);
+            if (isset($request->file)) {
+                Storage::disk('public')->delete($driver->first()->file);
+                $path = Storage::disk('public')->
+                putFileAs('file', $arr['file'], auth('driver')->user()->id);
+                $driver->update([
+                    'file' => $path,
+                ]);
+            }
+            DB::commit();
             return Redirect::back();
         } catch (Throwable $e) {
             report($e);
+            DB::rollBack();
+            return false;
+        }
+    }
 
-            return Redirect::back();
+    public function getRating(Lesson $id)
+    {
+        return response()
+            ->json($id->rating);
+    }
+
+    public function updateLesson(Lesson $lesson, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Validate the value...
+            if (isset($request->rating)) {
+                $request->validate([
+                    'rating' => 'between:0,5'
+                ]);
+                $lessonArr = $request->only([
+                    'rating',
+                ]);
+            } else {
+                $request->validate([
+                    'date' =>
+                        'date_format:Y-m-d',
+                    'start_at' =>
+                        'int' | 'between:6,16'
+
+                ]);
+                $lessonArr = $request->only([
+                    'start_at',
+                    'date',
+                    'rating',
+                ]);
+                $lessonArr['start_at'] = preg_replace("/[^0-9]/", "", $lessonArr['start_at']);
+
+            }
+            Lesson::query()
+                ->where('id', $lesson->id)
+                ->update($lessonArr);
+            DB::commit();
+            return response()
+                ->json(['status' => 'Cập nhật thành công']);
+        } catch (Throwable $e) {
+            report($e);
+            DB::rollBack();
+            return response()
+                ->json([
+                    'status' => 'Đã xảy ra lỗi, vui lòng kiểm tra lại thông tin đã chọn',
+                ]);
         }
     }
 }

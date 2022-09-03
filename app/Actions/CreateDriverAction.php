@@ -35,17 +35,15 @@ class CreateDriverAction
 
     public static function AddLessons(array $lessonArr, bool $is_full)
     {
-        $lessonArr['days_of_week'] = explode(',', $lessonArr['days_of_week']);
         $lessonArr['status'] = LessonStatusEnum::PENDING->value;
 
         if ($is_full) {
-            $dates = GetDatesAction::handle(count($lessonArr['days_of_week']), $lessonArr['days_of_week']);
-
-        } else {
             $dates = GetDatesAction::handle($lessonArr['lesson'], $lessonArr['days_of_week']);
+        } else {
+            $dates = GetDatesAction::handle(count($lessonArr['days_of_week']), $lessonArr['days_of_week']);
         }
         //get instructor not exist in Lessons or have less day in Lessons
-        $ins_id = GetInstructorForLessonsAction::handle();
+        $lessonArr['ins_id'] = GetInstructorForLessonsAction::handle();
         if ($lessonArr['shift'] === 'AM') {
             $lessonArr['start_at'] = self::MorningStart;
         } elseif ($lessonArr['shift'] === 'PM') {

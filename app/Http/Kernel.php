@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
 
         ],
         'instructor' => [
+            RedirectIfAuthenticated::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -69,6 +70,8 @@ class Kernel extends HttpKernel
             InstructorMiddleware::class,
         ],
         'driver' => [
+            RedirectIfAuthenticated::class,
+
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,

@@ -1,0 +1,32 @@
+{
+    "menu": [
+        {
+            "url": "drivers",
+            "name": "Trang chủ",
+            "icon": "home",
+            "slug": "drivers.index"
+        },
+        {
+            "name": "Các buổi học",
+            "icon": "calendar",
+            "slug": "",
+            "submenu": [
+                {
+                    "url": "drivers/lessons",
+                    "name": "Dạng danh sách",
+                    "icon": "circle",
+                    "slug": "drivers.lessons"
+                },
+                {
+                    "url": "calendar",
+                    "name": "Dạng lịch",
+                    "icon": "circle",
+                    "slug": "calendar"
+                }
+
+            ]
+        }
+    ]
+}
+
+

@@ -28,13 +28,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
         Blade::if('admin', function () {
-            return auth('instructor')->user()->level === LevelEnum::ADMIN->value;
+            return auth('instructor')->user()->level === LevelEnum::ADMIN->name;
         });
         Blade::if('instructor', function () {
-            return auth('instructor')->user()->level === LevelEnum::INSTRUCTOR->value;
+            return auth('instructor')->user()->level === LevelEnum::INSTRUCTOR->name;
         });
-        Blade::if('driver', function ($value) {
-            return auth('driver')->user()->check();
+        Blade::if('driver', function () {
+            return auth('driver')->check();
         });
     }
 }

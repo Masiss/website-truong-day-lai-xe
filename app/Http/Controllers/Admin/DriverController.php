@@ -31,6 +31,7 @@ class DriverController extends Controller
     {
         $drivers = Driver::query()
             ->with('course')
+            ->sortable()
             ->paginate(15);
         $drivers->totalPage = ceil($drivers->total() / $drivers->perPage());
         return view('admin.driver.index', [
@@ -44,14 +45,14 @@ class DriverController extends Controller
     {
         return view('admin.driver.create');
     }
+
     private const TotalHour = 40;
 
     public function store(StoreDriverRequest $request)
     {
         DB::beginTransaction();
         try {
-            $request->lesson = self::TotalHour / $request->last;
-            $request->is_full = $request->boolean('is_full');
+//            $request=$request->validated();
             $driverArr = $request->only([
                 'name',
                 'gender',
@@ -62,17 +63,21 @@ class DriverController extends Controller
                 'file',
                 'is_full',
             ]);
+            $driverArr['is_full'] = $request->boolean('is_full');
             $courseArr = $request->only([
                 'days_of_week',
                 'type',
                 'lesson',
             ]);
-            $lessonArr=$request->only([
+            $lessonArr = $request->only([
                 'days_of_week',
                 'lesson',
                 'shift',
                 'last',
             ]);
+            $courseArr['lesson'] = self::TotalHour / $request->last;
+            $lessonArr['lesson'] = $courseArr['lesson'];
+
             $driverArr['password'] = Hash::make(Str::random(8));
             //add Course
             $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full']);
@@ -84,11 +89,14 @@ class DriverController extends Controller
             CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
 
             DB::commit();
-            echo "1";
+            return redirect()
+                ->route('admin.drivers.index')
+                ->with('status', 'Thêm thành công');
         } catch (Throwable $e) {
             DB::rollBack();
-
-            return false;
+            return redirect()
+                ->with(['status' => 'Xem lại thông tin'])
+                ->withInput();
         }
     }
 
@@ -114,12 +122,14 @@ class DriverController extends Controller
     {
         DB::beginTransaction();
         try {
-            Driver::query()->where('id',$id)
+            Driver::query()->where('id', $id)
                 ->with('course')
                 ->with('lessons')
                 ->delete();
+            $name = Driver::query()->where('id', $id)->withTrashed()->first()->name;
             DB::commit();
-            return redirect()->route('admin.drivers.index');
+            return redirect()->route('admin.drivers.index')
+                ->with('status', 'Đã xóa thành công học viên ' . $name);
         } catch (Throwable $e) {
             report($e);
             DB::rollBack();

@@ -18,8 +18,9 @@ enum GenderNameEnum: int
 
     public static function TrueFalse($value)
     {
+        $value=self::VNeseToValue($value);
         switch ($value) {
-            case(self::Male->value):
+            case((self::Male->value)):
                 return false;
             case(self::Female->value):
                 return true;

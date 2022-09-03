@@ -7,13 +7,23 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kyslik\ColumnSortable\Sortable;
 
 class MonthSalary extends Model
 {
+    use Sortable;
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
+        'ins_id',
+        'month',
+        'total_lessons',
+        'total_hours',
+        'total_salaries',
+        'status',
+    ];
+    public $sortable = [
         'ins_id',
         'month',
         'total_lessons',

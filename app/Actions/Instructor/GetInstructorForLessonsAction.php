@@ -16,7 +16,7 @@ class GetInstructorForLessonsAction
             ->first();
         $ins_id = Instructor::query()->whereNotIn('id', function ($query) {
             $query->select('ins_id')->from('lessons');
-        })->orWhere('id', '=', $sub->ins_id)
+        })->orWhere('id', $sub->ins_id)
             ->first()->id;
         return $ins_id;
     }

@@ -31,7 +31,9 @@ class InstructorControlller extends Controller
 
     public function index()
     {
-        $instructors = Instructor::query()->paginate(15);
+        $instructors = Instructor::query()
+            ->sortable()
+            ->paginate(15);
         $instructors->totalPage = ceil($instructors->total() / $instructors->perPage());
         return view('admin.ins.index', [
             'instructors' => $instructors,

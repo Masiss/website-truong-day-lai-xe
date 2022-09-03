@@ -1,3 +1,4 @@
+@php use App\Enums\GenderNameEnum; @endphp
 @extends('layout.master')
 @push('vendor')
     <link rel="stylesheet" type="text/css" href="{{asset('css/pickadate.css')}}">
@@ -15,7 +16,8 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" action="{{route('drivers.update',auth('driver')->user()->id)}}" method="POST" id="form-data-1" class="needs-validation"
+                <form enctype="multipart/form-data" action="{{route('drivers.update')}}" method="POST" id="form-data-1"
+                      class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
                         <div class="card">
@@ -63,7 +65,7 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
-                                                    @if(!\App\Enums\GenderNameEnum::TrueFalse($driver->gender))
+                                                    @if(!GenderNameEnum::TrueFalse($driver->gender))
                                                         {{"checked"}}
                                                         @endif
                                                     />
@@ -76,7 +78,7 @@
                                                         name="gender"
                                                         class="form-check-input"
                                                         required
-                                                    @if(\App\Enums\GenderNameEnum::TrueFalse($driver->gender))
+                                                    @if(GenderNameEnum::TrueFalse($driver->gender))
                                                         {{"checked"}}
                                                         @endif
                                                     />
@@ -90,8 +92,7 @@
                                             </label>
 
                                             <input
-                                                value="{{$driver->birthdate}}"
-
+                                                value="{{$driver->birthdateForEditing()}}"
                                                 type="text"
                                                 name="birthdate"
                                                 id="fp-human-friendly"

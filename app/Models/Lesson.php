@@ -2,17 +2,27 @@
 
 namespace App\Models;
 
+use App\Actions\SetLessonForCalendarAction;
 use App\Enums\LessonStatusEnum;
+use App\Enums\LevelEnum;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kyslik\ColumnSortable\Sortable;
 
 class Lesson extends Model
 {
+    use Sortable;
     use HasFactory;
     use SoftDeletes;
 
+    public $sortable = [
+        'last',
+        'rating',
+        'status',
+    ];
     protected $fillable = [
         'driver_id',
         'ins_id',
@@ -23,6 +33,52 @@ class Lesson extends Model
         'rating',
         'status',
     ];
+
+    static public function lessonsCalendar()
+    {
+        if (auth('instructor')->check()) {
+            if (LevelEnum::isAdmin()) {
+                $data = Lesson::query()
+                    ->with('driver')
+                    ->get();
+
+            } else {
+                $data = Lesson::query()
+                    ->with('driver')
+                    ->where('ins_id', auth('instructor')->user()->id)
+                    ->orderBy('date', 'DESC')
+                    ->orderBy('start_at', 'ASC')
+                    ->get();
+            }
+        } elseif (auth('driver')->check()) {
+            $data = Lesson::query()
+                ->with('instructor')
+                ->where('driver_id', auth('driver')->user()->id)
+                ->get();
+        }
+        $calendar = SetLessonForCalendarAction::handle($data);
+        return $calendar;
+    }
+
+    public function dateForEditing()
+    {
+        return date('Y-m-d', strtotime($this->date));
+    }
+
+    public function timeForProcressing()
+    {
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class, 'ins_id', 'id');
+
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_id', 'id');
+    }
 
     protected function status(): Attribute
     {
@@ -56,20 +112,8 @@ class Lesson extends Model
     protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => date('d/m/Y', strtotime($value)),
+            get: fn($value) => date('d-m-Y', strtotime($value)),
         );
     }
-
-    public function instructor()
-    {
-        return $this->belongsTo(Instructor::class, 'ins_id', 'id');
-
-    }
-
-    public function driver()
-    {
-        return $this->belongsTo(Driver::class, 'driver_id', 'id');
-    }
-
 
 }

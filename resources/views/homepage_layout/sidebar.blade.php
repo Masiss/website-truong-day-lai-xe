@@ -7,13 +7,13 @@
     <div class="main-menu-content mt-5 me-1">
         <ul class="navigation navigation-main list-group" id="main-menu-navigation" data-menu="menu-navigation">
             <li>
-                <a class="sidebar-list">
+                <a class="sidebar-list" href="{{route('index')}}">
                     <i data-feather="grid"></i>
                     <span>Trang chủ</span>
                 </a>
             </li>
             <li>
-                <a class="sidebar-list">
+                <a class="sidebar-list" href="{{route('contact')}}">
                     <i data-feather="message-square"></i>
                     <span>Liên hệ</span>
                 </a>

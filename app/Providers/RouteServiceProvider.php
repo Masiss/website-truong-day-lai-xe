@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\DriverController;
+use App\Http\Controllers\InstructorController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -41,6 +43,19 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware('admin',)
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
+
+            Route::prefix('drivers')
+                ->middleware('driver',)
+                ->name('drivers.')
+                ->controller(DriverController::class)
+                ->group(base_path('routes/driver.php'));
+
+            Route::prefix('instructors')
+                ->middleware('instructor',)
+                ->name('instructors.')
+                ->controller(InstructorController::class)
+                ->group(base_path('routes/instructor.php'));
+
         });
     }
 

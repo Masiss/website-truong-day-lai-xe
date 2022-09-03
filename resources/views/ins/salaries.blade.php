@@ -11,13 +11,12 @@
                         <table class="table" id="table-data">
                             <thead>
                             <tr>
-                                <th>Tháng</th>
-                                <th>Tổng buổi dạy</th>
-                                <th>Tổng giờ dạy</th>
-                                <th>Tổng lương</th>
-                                <th>Trạng thái</th>
+                                <th>@sortablelink('month','Tháng')</th>
+                                <th>@sortablelink('total_lessons','Tổng buổi dạy')</th>
+                                <th>@sortablelink('total_hours','Tổng giờ dạy')</th>
+                                <th>@sortablelink('total_salaries','Tổng lương')</th>
+                                <th>@sortablelink('status','Trạng thái')</th>
                                 <th></th>
-
                             </tr>
                             </thead>
                             <tbody>

@@ -8,33 +8,36 @@
             <div class="card">
                 <div class="col-md-12">
                     <div class="card">
-                        <table class="table" id="table-data">
-                            <thead>
-                            <tr>
-                                <th>Ngày</th>
-                                <th>Giờ</th>
-                                <th>Tên học viên</th>
-                                <th>Thời gian dạy</th>
-                                <th>Số điện thoại</th>
-                                <th>Email</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($lessons as $lesson)
+                        <div class="mt-1">
+
+                            <table class="table" id="table-data">
+                                <thead>
                                 <tr>
-                                    <td>{{$lesson->date}}</td>
-                                    <td>{{$lesson->start_at}}</td>
-                                    <td>{{$lesson->driver->name}}</td>
-                                    <td>{{$lesson->last}}</td>
-                                    <td>{{$lesson->driver->phone_numbers}}</td>
-                                    <td>{{$lesson->driver->email}}</td>
-                                    <td>{{$lesson->status}}</td>
+                                    <th>@sortablelink('date','Ngày')</th>
+                                    <th>@sortablelink('start_at','Giờ')</th>
+                                    <th>@sortablelink('driver.name','Tên học viên')</th>
+                                    <th>Thời gian dạy</th>
+                                    <th>Số điện thoại</th>
+{{--                                    <th>Email</th>--}}
+                                    <th>@sortablelink('status','Trạng thái')</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($lessons as $lesson)
+                                    <tr>
+                                        <td>{{$lesson->date}}</td>
+                                        <td>{{$lesson->start_at}}</td>
+                                        <td>{{$lesson->driver->name}}</td>
+                                        <td>{{$lesson->last}}</td>
+                                        <td>{{$lesson->driver->phone_numbers}}</td>
+{{--                                        <td>{{$lesson->driver->email}}</td>--}}
+                                        <td>{{$lesson->status}}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                     <x-pagination :paginate="$lessons"/>
 
@@ -46,41 +49,6 @@
     </div>
 
     @push('javascript')
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-        <script type="text/javascript"
-                src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.js"></script>
-        <script type="text/javascript">
-
-            {{--$(function () {--}}
-            {{--    $('#table-data').DataTable({--}}
-            {{--        processing: true,--}}
-            {{--        serverSide: true,--}}
-            {{--        ajax: '{!! route('instructors.getLessons') !!}',--}}
-            {{--        order: [[0, 'asc'], [1, 'asc']],--}}
-            {{--        columns:--}}
-            {{--            [--}}
-            {{--                {data: 'date', name: 'date'},--}}
-            {{--                {data: 'start_at', name: 'start_at'},--}}
-            {{--                {data: 'name', name: 'name'},--}}
-            {{--                {data: 'last', name: 'last'},--}}
-            {{--                {data: 'phone_numbers', name: 'phone_numbers'},--}}
-            {{--                {data: 'email', name: 'email'},--}}
-            {{--                {--}}
-            {{--                    data: 'status',--}}
-            {{--                    name: 'status',--}}
-            {{--                },--}}
-
-
-
-            {{--            ]--}}
-            {{--    });--}}
-            {{--})--}}
-
-
-        </script>
     @endpush
 @endsection
 

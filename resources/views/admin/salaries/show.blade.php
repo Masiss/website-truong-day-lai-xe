@@ -75,7 +75,6 @@
                                     <div class="mb-2 pb-50">
                                         <h5>Tổng số buổi đã dạy</h5>
                                         <input class="form-control-sm"
-                                               id="base"
                                                value="{{$month_salary->total_lessons}}"
                                                readonly
                                         >
@@ -83,7 +82,6 @@
                                     <div class="mb-2 pb-50">
                                         <h5>Đánh giá trung bình</h5>
                                         <input class="form-control-sm"
-                                               id="minus"
                                                value="{{$detail_salary->rating}}"
                                                readonly
 
@@ -92,7 +90,6 @@
                                     <div class="mb-2 mb-md-1">
                                         <h5>Lương cuối </h5>
                                         <input class="form-control-sm"
-                                               id="total"
                                                value="{{$detail_salary->total}}"
                                                readonly
                                         >
@@ -154,6 +151,7 @@
                                         <div class="mb-2 pb-50">
                                             <h5>Lương ban đầu</h5>
                                             <input class="form-control"
+                                                   name="base"
                                                    id="base"
                                                    value="{{$detail_salary->base}}"
                                                    required
@@ -168,6 +166,7 @@
                                             <h5>Lương bị trừ</h5>
                                             <input class="form-control"
                                                    id="minus"
+                                                   name="minus"
                                                    value="{{$detail_salary->minus}}"
                                                    required
                                             >
@@ -181,6 +180,7 @@
                                             <h5>Lương cuối </h5>
                                             <input class="form-control"
                                                    id="total"
+                                                   name="total"
                                                    value="{{$detail_salary->total}}"
                                                    required
                                             >
@@ -194,7 +194,9 @@
                                             </button>
                                         </div>
                                     @endif
-
+                                    @foreach($errors->all() as $message)
+                                        <span class="alert alert-danger">{{$message}}</span>
+                                    @endforeach
                                 </form>
 
                             </div>
@@ -213,7 +215,7 @@
         {{--        <script src={{asset('js/picker.date.js')}}></script>--}}
         {{--        <script src={{asset('js/picker.time.js')}}></script>--}}
         {{--        <script src={{asset('js/legacy.js')}}></script>--}}
-        {{--        <script src={{asset('js/flatpickr.min.js')}}></script>--}}
+        {{--                <script src={{asset('js/flatpickr.min.js')}}></script>--}}
         {{--        <script src={{asset('js/form-pickers.min.js')}}></script>--}}
         {{--        <script src={{asset('js/select2.full.min.js')}}></script>--}}
         {{--        <script src={{asset('js/jquery.validate.min.js')}}></script>--}}
@@ -222,6 +224,7 @@
             let a = document.getElementById('base'),
                 b = document.getElementById('minus'),
                 c = document.getElementById('total');
+            console.log(a);
             [a, b].forEach(e => e.addEventListener('keyup', function () {
                 c.value = a.value - b.value;
             }))

@@ -15,7 +15,8 @@
     <div class="content-body">
         <section class="bs-validation">
             <div class="row">
-                <form enctype="multipart/form-data" id="form-data-1" class="needs-validation"
+                <form action="{{route('admin.drivers.store')}}" method="POST"
+                      enctype="multipart/form-data" id="form-data-1" class="needs-validation"
                       name="form1" novalidate>
                     <div class="col-md-12 ">
                         <div class="card">
@@ -29,7 +30,6 @@
                                     </ul>
                                 </div>
                             </div>
-
                             @csrf
 
                             <div class="card-content collapse show">
@@ -38,7 +38,8 @@
 
                                     <div class="row">
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
-                                            <label class="form-label" for="name">Tên</label>
+                                            <label class="form-label" for="name"
+                                            >Tên</label>
 
                                             <input
                                                 type="text"
@@ -46,10 +47,15 @@
                                                 class="form-control"
                                                 placeholder="Họ và tên"
                                                 name="name"
+                                                value="{{old('name')}}"
                                                 required
                                             />
                                             <div class="valid-feedback"></div>
                                             <div class="invalid-feedback">Vui lòng điền tên.</div>
+                                            @error('name')
+                                            <span class="alert alert-danger m-1">
+                                                {{$message}}
+                                            </span> @enderror
                                         </div>
                                         <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
                                             <label class="form-label" class="d-block">Giới tính</label>
@@ -75,6 +81,11 @@
                                                     <label class="form-check-label" for="validationRadio4">Nữ</label>
                                                 </div>
                                             </div>
+                                            @error('gender')
+                                            <span class="alert alert-danger m-1">
+                                                {{$message}}
+                                            </span>
+                                            @enderror
                                         </div>
                                         <div class="col-xl-4 col-md-6 mb-1">
                                             <label class="form-label" for="dob">
@@ -88,9 +99,15 @@
                                                 class="form-control picker flatpickr-human-friendly "
                                                 placeholder=""
                                                 required
+                                                value="{{old('birthdate')}}"
                                             />
                                             <div class="valid-feedback"></div>
                                             <div class="invalid-feedback">Vui lòng chọn ngày tháng năm sinh.</div>
+                                            @error('birthdate')
+                                            <span class="alert alert-danger m-1">
+                                                {{$message}}
+                                            </span>
+                                            @enderror
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="phone_numbers">Số điện thoại</label>
@@ -101,9 +118,14 @@
                                                 class="form-control"
                                                 placeholder="Số điện thoại"
                                                 name="phone_numbers"
+                                                value="{{old('phone_numbers')}}"
                                                 required
                                             />
                                             <div class="invalid-feedback">Vui lòng nhập số điện thoại.</div>
+                                            @error('phone_numbers')
+                                            <span class="alert alert-danger m-1">
+                                                {{$message}}
+                                            </span> @enderror
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="id_numbers">CCCD/CMND</label>
@@ -115,9 +137,14 @@
                                                 class="form-control"
                                                 placeholder="Căn cước công dân"
                                                 name="id_numbers"
+                                                value="{{old('id_numbers')}}"
                                                 required
                                             />
                                             <div class="invalid-feedback">Vui lòng nhập CCCD/CMND.</div>
+                                            @error('id_numbers')
+                                            <span class="alert alert-danger m-1">
+                                                {{$message}}
+                                            </span> @enderror
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="email">Email</label>
@@ -127,9 +154,15 @@
                                                 class="form-control"
                                                 placeholder="email"
                                                 name="email"
+                                                value="{{old('email')}}"
                                                 required
                                             />
                                             <div class="invalid-feedback">Vui lòng nhập email.</div>
+                                            @error('email')
+                                            <span class="alert alert-danger m-1">
+                                                {{$message}}
+                                            </span>
+                                            @enderror
                                         </div>
 
                                         <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
@@ -188,11 +221,15 @@
                                                     />
                                                     <label class="form-check-label" for="validationRadio4">Không</label>
                                                 </div>
+                                                @error('is_full')
+                                                <span class="alert alert-danger m-1">
+                                                {{$message}}
+                                            </span> @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-4 mb-1">
                                             <label class="form-label" for="select2-limited">Chọn thứ</label>
-                                            <select name="days_of_week"
+                                            <select name="days_of_week[]"
                                                     class="max-length form-select form-control select2"
                                                     id="select2-limited" multiple required>
                                                 <optgroup label="Thứ">
@@ -233,6 +270,11 @@
                                                 Submit
                                             </button>
                                         </div>
+
+                                        <span class="alert alert-danger m-1">
+                                           {{session()->get('status')}}
+                                        </span>
+
                                     </div>
                                 </div>
                             </div>
@@ -274,44 +316,48 @@
                         document.getElementById("lesson").value = 10;
                     }
                 });
-                $("#btn-submit").click(function (event) {
-                    //validate
-                    var form = document.getElementById('form-data-1');
-                    form.dispatchEvent(new Event('submit'));
-                    // Form data
-                    let dow = $("select#select2-limited").val();
-                    var form1 = new FormData(document.getElementById('form-data-1'));
-                    var day = $('input[name="lesson"]').val();
-                    var last = $('select[name="last"]').val();
-                    form1.append('lesson', day);
-                    form1.set('days_of_week', dow);
-                    event.preventDefault();
-                    //ajax
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        url: '{{route('admin.drivers.store')}}',
-                        type: 'POST',
-                        dataType: "JSON",
-                        data: form1,
-                        // "'X-CSRF-TOKEN'": data1,
+                {{--$("#btn-submit").click(function (event) {--}}
+                {{--    //validate--}}
+                {{--    var form = document.getElementById('form-data-1');--}}
+                {{--    form.dispatchEvent(new Event('submit'));--}}
+                {{--    // Form data--}}
+                {{--    let dow = $("select#select2-limited").val();--}}
+                {{--    var form1 = new FormData(document.getElementById('form-data-1'));--}}
+                {{--    var day = $('input[name="lesson"]').val();--}}
+                {{--    var last = $('select[name="last"]').val();--}}
+                {{--    form1.append('lesson', day);--}}
+                {{--    form1.set('days_of_week', dow);--}}
+                {{--    event.preventDefault();--}}
+                {{--    //ajax--}}
+                {{--    $.ajax({--}}
+                {{--        headers: {--}}
+                {{--            'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
+                {{--        },--}}
+                {{--        url: '{{route('admin.drivers.store')}}',--}}
+                {{--        type: 'POST',--}}
+                {{--        dataType: "JSON",--}}
+                {{--        data: form1,--}}
+                {{--        // "'X-CSRF-TOKEN'": data1,--}}
 
-                        contentType: false,
-                        processData: false,
-                        success: function (event) {
-                            if (event == "1") {
-                                window.location = "{{route('admin.drivers.store')}}";
-                            } else {
-                                console.log(0);
-                            }
-                        },
-                        error: function () {
-                            console.log(0);
-                        },
+                {{--        contentType: false,--}}
+                {{--        processData: false,--}}
+                {{--        success: function (event) {--}}
+                {{--            if (event) {--}}
+                {{--                setTimeout(function () {--}}
+                {{--                    window.location = "{{route('admin.drivers.store')}}";--}}
+                {{--                }, 3000);--}}
+                {{--            } else {--}}
+                {{--                // document.getElementById('error').innerHTML = "Đã xảy ra lỗi, hãy xem lại thông tin cần điền";--}}
+                {{--            }--}}
+                {{--        },--}}
+                {{--        error: function (event) {--}}
+                {{--            alo = event.responseJSON.errors;--}}
+                {{--           console.log(alo);--}}
+                {{--            document.getElementById('error').innerHTML = "Đã xảy ra lỗi, hãy xem lại thông tin cần điền";--}}
+                {{--        },--}}
 
-                    });
-                })
+                {{--    });--}}
+                {{--})--}}
             });
         </script>
         <script src={{asset('js/form-validation.js')}}></script>

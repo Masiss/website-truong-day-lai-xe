@@ -42,6 +42,7 @@ class InstructorController extends Controller
         $salaries = MonthSalary::query()
             ->with('instructor')
             ->where('ins_id', $this->guard->user()->id)
+            ->sortable()
             ->paginate(15);
         $salaries->totalPage = ceil($salaries->total() / $salaries->perPage());
         return view('ins.salaries', [
@@ -134,6 +135,7 @@ class InstructorController extends Controller
     {
         $lessons = Lesson::query()->where('ins_id', $this->guard->user()->id)
             ->with('driver:id,name,email,phone_numbers')
+            ->sortable()
             ->orderBy('date')
             ->orderBy('start_at')
             ->paginate(15);

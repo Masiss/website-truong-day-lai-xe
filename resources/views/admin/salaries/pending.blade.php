@@ -37,7 +37,7 @@
                                 </div>
                             </form>
                         </div>
-
+                        <span class="alert alert-success">{{session()->get('status')}}</span>
                         <table class="table" id="table-data">
                             <thead>
                             <tr>

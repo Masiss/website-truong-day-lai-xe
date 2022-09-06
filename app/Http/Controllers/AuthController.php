@@ -46,8 +46,8 @@ class AuthController extends Controller
             $arr['password'] = Hash::make($request->password);
             //add Course
             $course_id = CreateDriverAction::createCourse($request);
-            $arr['file'] = Storage::disk('public')
-                ->put('file', $arr['file']);
+//            $arr['file'] = Storage::disk('public')
+//                ->put('file', $arr['file']);
             $driver_id = Driver::query()
                 ->create([
                     'name' => $arr['name'],

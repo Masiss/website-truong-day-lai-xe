@@ -1,7 +1,7 @@
 <table class="table" id="table-data" data-table="instructor">
     <thead>
     <tr>
-        <th>@sortablelink('id')</th>
+        <th>#</th>
         <th>Tên</th>
         <th>Email</th>
         <th>Số điện thoại</th>

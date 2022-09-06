@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Kyslik\ColumnSortable\Sortable;
 use Laravel\Scout\Searchable;
 
@@ -87,7 +88,8 @@ class Driver extends \Illuminate\Foundation\Auth\User
     {
         return Attribute::make(
             get: fn($value) => Storage::url($value),
-//            set: fn($value) => Storage::disk('public')->putFileAs('file', $value),
+            set: fn($value) => Storage::disk('public')
+                ->put('file', $value),
         );
     }
 

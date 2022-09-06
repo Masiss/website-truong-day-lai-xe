@@ -36,6 +36,7 @@ class ConfigController extends Controller
         DB::beginTransaction();
         try {
             // Validate the value...
+
             Config::query()->create([
                 'key' => $request->key,
                 'value' => $request->value,

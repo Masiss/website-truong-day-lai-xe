@@ -42,14 +42,13 @@
                                             <td>Báo cáo học viên</td>
                                             <td>Đánh giá của học viên</td>
                                             <td></td>
-                                            <td></td>
-                                        </tr>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                         @foreach($lessons as $lesson)
                                             <tr>
                                                 <td>{{$lesson->driver->name}}</td>
-                                                <td>{{$lesson->last}} tiếng</td>
+                                                <td>{{$lesson->last}}</td>
                                                 <td>{{$lesson->date}}</td>
                                                 <td>{{$lesson->report}}</td>
                                                 <td>{{$lesson->rating}}</td>

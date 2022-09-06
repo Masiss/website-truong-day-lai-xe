@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\HomePageController;
 use App\Http\Middleware\CheckLogin;
 use App\Models\Lesson;
 use Illuminate\Support\Facades\Route;
@@ -20,9 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('index', function () {
-    return view('index');
-})->name('index');
+Route::get('index', [HomePageController::class,'index'])->name('index');
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('registering', [AuthController::class, 'registering'])->name('registering');

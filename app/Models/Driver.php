@@ -45,12 +45,14 @@ class Driver extends \Illuminate\Foundation\Auth\User
         'birthdate' => 'date:d-m-Y',
     ];
 
+
 //    protected $dateFormat = 'd-m-Y';
 
 //    protected function serializeDate($date)
 //    {
 //        return $date->format('d-m-Y');
 //    }
+
     public function course()
     {
         return $this->hasOne(Course::class, 'id', 'course_id');

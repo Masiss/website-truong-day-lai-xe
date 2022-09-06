@@ -1,6 +1,3 @@
-{{--<div>--}}
-{{--    <!-- The only way to do great work is to love what you do. - Steve Jobs -->--}}
-{{--</div>--}}
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-end mt-3">
         <li class="page-item">

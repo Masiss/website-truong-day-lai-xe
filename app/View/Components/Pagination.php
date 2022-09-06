@@ -25,6 +25,7 @@ class Pagination extends Component
      */
     public function render()
     {
+        $this->paginate->totalPage=ceil($this->paginate->total() / $this->paginate->perPage());
         return view('components.pagination');
     }
 }

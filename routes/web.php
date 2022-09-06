@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Controller;
 use App\Http\Middleware\CheckLogin;
 use App\Models\Lesson;
 use Illuminate\Support\Facades\Route;
@@ -29,17 +30,8 @@ Route::get('login', [AuthController::class, 'login'])->name('login')->middleware
 Route::post('login_processing', [AuthController::class, 'login_processing'])->name('login_processing');
 
 Route::get('/contact', fn() => view('homepage.contact'))->name('contact');
-//Route::get('/calendar', function () {
-//    return view('apps.calendar',[
-//        'pageName'=>'Calendar',
-//        'breadCrumb'=>['Calendar'],
-//    ]);
-//})->name('calendar');
-//Route::get('/calendar/api', function () {
-//    $events = Lesson::lessonsCalendar();
-//    return response()->json($events);
-//})->name('calendarAPI');
-Route::get('/calendar/api',[\App\Http\Controllers\Controller::class,'calendarAPI'])->name('calendarAPI');
-Route::get('/calendar',[\App\Http\Controllers\Controller::class,'calendar'])->name('calendar');
-Route::get('/search',[\App\Http\Controllers\TestController::class,'search'])->name('search');
+
+Route::get('/calendar/api',[Controller::class,'calendarAPI'])->name('calendarAPI');
+Route::get('/calendar',[Controller::class,'calendar'])->name('calendar');
+Route::get('/search',[Controller::class,'search'])->name('search');
 

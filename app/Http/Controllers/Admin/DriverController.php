@@ -126,6 +126,13 @@ class DriverController extends Controller
                 ->with('course')
                 ->with('lessons')
                 ->delete();
+
+            Lesson::query()
+                ->where('driver_id',$id)
+                ->delete();
+            Course::query()
+                ->where('driver_id',$id)
+                ->delete();
             $name = Driver::query()->where('id', $id)->withTrashed()->first()->name;
             DB::commit();
             return redirect()->route('admin.drivers.index')

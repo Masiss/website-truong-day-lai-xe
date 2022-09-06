@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Driver;
 use App\Models\Instructor;
-use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -22,19 +21,6 @@ class TestController extends Controller
 
 
 
-    public function search(Request $request)
-    {
-        $table=$request->table;
-        $input=$request->input;
-        switch ($table) {
-            case ('drivers'):
-                return Driver::search($input)
-                    ->get();
-            case('instructor'):
-                return Instructor::search($input)
-                    ->get();
-            default:
-                return null;
-        }
-    }
+
+
 }

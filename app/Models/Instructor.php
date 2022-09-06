@@ -61,17 +61,17 @@ class Instructor extends \Illuminate\Foundation\Auth\User
 
     }
 
-    protected function name(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                if ($this->deleted_at) {
-                    return $value."<span class='alert-danger'> <Đã xóa></span> ";
-                }
-                return $value;
-            },
-        );
-    }
+//    protected function name(): Attribute
+//    {
+//        return Attribute::make(
+//            get: function ($value) {
+//                if ($this->deleted_at) {
+//                    return $value."<span class='alert-danger'> <Đã xóa></span> ";
+//                }
+//                return $value;
+//            },
+//        );
+//    }
 
     protected function birthdate(): Attribute
     {

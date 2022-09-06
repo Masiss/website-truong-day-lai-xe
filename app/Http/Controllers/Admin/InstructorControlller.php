@@ -41,11 +41,6 @@ class InstructorControlller extends Controller
 
     }
 
-    public function create()
-    {
-        return view('admin.ins.create');
-    }
-
     public function store(StoreInstructorRequest $request)
     {
         DB::beginTransaction();
@@ -72,6 +67,11 @@ class InstructorControlller extends Controller
 
     }
 
+    public function create()
+    {
+        return view('admin.ins.create');
+    }
+
     public function edit(Instructor $instructor)
     {
         return view('admin.ins.edit', [
@@ -96,19 +96,6 @@ class InstructorControlller extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
-    {
-        $ins = Instructor::query()->where('id', $id)
-            ->where('level', '=', LevelEnum::INSTRUCTOR->value);
-        $ins->update([
-            'name' => $request->name,
-            'phone_numbers' => $request->phone_numbers,
-            'avatar' => $request->avatar
-        ]);
-        return redirect()->route('admin.instructors.index');
-
-    }
-
     public function destroy(Request $request, $id)
     {
         DB::beginTransaction();
@@ -128,12 +115,31 @@ class InstructorControlller extends Controller
                 'ins_id' => $new_ins
             ]);
             Instructor::query()->where('id', $id)->delete();
+            $name = Instructor::query()
+                ->where('id', $id)
+                ->withTrashed()
+                ->first()
+                ->name;
             DB::commit();
-            return redirect()->route('admin.instructors.index');
+            return redirect()->route('admin.instructors.index')
+                ->with('status', 'Đã xóa thành công giáo viên '.$name);
         } catch (Throwable $e) {
             report($e);
             DB::rollBack();
             return false;
         }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $ins = Instructor::query()->where('id', $id)
+            ->where('level', '=', LevelEnum::INSTRUCTOR->value);
+        $ins->update([
+            'name' => $request->name,
+            'phone_numbers' => $request->phone_numbers,
+            'avatar' => $request->avatar
+        ]);
+        return redirect()->route('admin.instructors.index');
+
     }
 }

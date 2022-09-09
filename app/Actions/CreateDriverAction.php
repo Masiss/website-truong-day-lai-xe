@@ -12,9 +12,11 @@ class CreateDriverAction
 {
     private const PricePerDay = 200000;
     private const PriceFullCourse = 3500000;
+    private const TotalHour = 40;
 
-    public static function createCourse(array $courseArr, bool $is_full)
+    public static function createCourse(array $courseArr, bool $is_full,$last)
     {
+        $courseArr['lesson'] = self::TotalHour / $last;
         if ($is_full) {
             $courseArr['price_per_day'] = null;
             $courseArr['price'] = self::PriceFullCourse;
@@ -22,6 +24,7 @@ class CreateDriverAction
             $courseArr['price_per_day'] = $courseArr['lesson'] * self::PricePerDay;
             $courseArr['price'] = null;
         }
+
         $course_id = Course::query()->create($courseArr)
             ->id;
         return $course_id;

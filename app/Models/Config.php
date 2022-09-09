@@ -14,4 +14,13 @@ class Config extends Model
         'key',
         'value',
     ];
+
+    public static function isImg($key)
+    {
+        $arr = ['banner_1', 'banner_2', 'banner_bottom', 'logo'];
+        if (in_array($key, $arr, true)) {
+            return true;
+        }
+        return false;
+    }
 }

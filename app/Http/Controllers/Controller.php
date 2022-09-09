@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LevelEnum;
 use App\Models\Driver;
 use App\Models\Instructor;
 use App\Models\Lesson;
@@ -18,11 +19,26 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     public function __construct()
     {
+        if (auth('driver')->check()) {
+            $title = 'Học viên';
+        } elseif (auth('instructor')->check()) {
+            switch (auth('instructor')->user()->level) {
+                case (LevelEnum::ADMIN->name):
+                    $title = 'Admin';
+                    break;
+                case (LevelEnum::INSTRUCTOR->name):
+                    $title = 'Giáo viên';
+                    break;
+            }
+        } else {
+            $title = "";
+        }
         $route = Route::currentRouteName();
         $breadCrumb = explode('.', $route);
         $pageName = last($breadCrumb);
         View::share('pageName', ucfirst($pageName));
         View::share('breadCrumb', $breadCrumb);
+        View::share('title', $title);
     }
     public function calendar()
     {

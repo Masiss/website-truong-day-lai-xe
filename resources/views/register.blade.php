@@ -37,7 +37,7 @@
 <div class="content-body">
     <section class="bs-validation m-3">
         <div class="row">
-            <form enctype="multipart/form-data" id="form-data-1"
+            <form enctype="multipart/form-data" id="form-data-1" action="{{route('registering')}}" method="POST"
                   class="needs-validation"
                   name="form1" novalidate>
                 <div class="col-md-12 ">
@@ -165,7 +165,7 @@
                                             name="id_numbers"
                                             required
                                         />
-                                        <div class="invalid-feedback">Vui lòng nhập CCCD/CMND.</div>
+                                        <div class="invalid-feedback w-100">Vui lòng nhập CCCD/CMND.</div>
                                     </div>
                                     @error('email')
                                     <div class="alert alert-danger">{{$message}}</div>
@@ -230,7 +230,7 @@
 
                                     <div class="col-md-4 mb-1">
                                         <label class="form-label" for="select2-limited">Chọn thứ</label>
-                                        <select name="days_of_week"
+                                        <select name="days_of_week[]"
                                                 class="max-length form-select form-control select2 required"
                                                 id="select2-limited" multiple required>
                                             <optgroup label="Thứ">
@@ -263,14 +263,14 @@
                                             <label class="form-label" for="disabledInput">Số buổi</label>
                                             <input name="lesson" type="number" value="20" class="form-control"
                                                    id="lesson"
-                                                   disabled/>
+                                                   readonly/>
                                         </div>
                                     </div>
                                     @error('is_full')
                                     <div class="alert alert-danger">{{$message}}</div>
                                     @enderror
-                                    <div class="col-xl-4 col-md-6 col-sm-12 mb-1">
-                                        <label class="form-label" class="d-block">Trọn gói</label>
+                                    <div class="col-xl-2 col-md-3 col-sm-12 mb-1">
+                                        <label class="form-label">Trọn gói</label>
                                         <div class="demo-inline-spacing">
                                             <div class="form-check my-50">
                                                 <input
@@ -294,6 +294,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-xl-2 col-md-6 col-sm-12">
+                                        <label class="form-label">Loại bằng</label>
+                                        <select name="type" class="form-select">
+                                            <option value="0">B1</option>
+                                            <option value="1">B2</option>
+                                            <option value="2">C</option>
+                                        </select>
+                                    </div>
                                     <div class="col-xl-4 col-md-6 col-12">
                                         <div class="mb-1">
                                             <label class="form-label" for="disabledInput">Tổng tiền</label>
@@ -307,7 +315,6 @@
                                             Submit
                                         </button>
                                     </div>
-
                                 </div>
                             </div>
 
@@ -384,47 +391,43 @@
                 }
             })
         }
-        $("#btn-submit").click(function (event) {
-            //validate
-            console.log($("select#select2-limited").length);
-            var form = document.getElementById('form-data-1');
-            form.dispatchEvent(new Event('submit'));
-            event.preventDefault();
+        {{--$("#btn-submit").click(function (event) {--}}
+        {{--    //validate--}}
+        {{--    console.log($("select#select2-limited").length);--}}
+        {{--    var form = document.getElementById('form-data-1');--}}
+        {{--    form.dispatchEvent(new Event('submit'));--}}
+        {{--    event.preventDefault();--}}
 
-            // Form data
-            let dow = $("select#select2-limited").val();
-            var form1 = new FormData(document.getElementById('form-data-1'));
-            var day = $('input[name="lesson"]').val();
-            var last = $('select[name="last"]').val();
-            form1.append('lesson', day);
-            form1.set('days_of_week', dow);
-            //ajax
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                url: '{{route('registering')}}',
-                type: 'POST',
-                dataType: "JSON",
-                data: form1,
-                // "'X-CSRF-TOKEN'": data1,
+        {{--    // Form data--}}
+        {{--    let dow = $("select#select2-limited").val();--}}
+        {{--    var form1 = new FormData(document.getElementById('form-data-1'));--}}
+        {{--    var day = $('input[name="lesson"]').val();--}}
+        {{--    var last = $('select[name="last"]').val();--}}
+        {{--    form1.append('lesson', day);--}}
+        {{--    form1.set('days_of_week', dow);--}}
+        {{--    //ajax--}}
+        {{--    $.ajax({--}}
+        {{--        headers: {--}}
+        {{--            'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
+        {{--        },--}}
+        {{--        url: '{{route('registering')}}',--}}
+        {{--        type: 'POST',--}}
+        {{--        dataType: "JSON",--}}
+        {{--        data: form1,--}}
+        {{--        // "'X-CSRF-TOKEN'": data1,--}}
 
-                contentType: false,
-                processData: false,
-                success: function (event) {
-                    if (event == "1") {
-                        window.location = "{{route('index')}}";
-                    } else {
-                        console.log(0);
-                    }
-                },
-                error: function () {
-                    console.log(1);
+        {{--        contentType: false,--}}
+        {{--        processData: false,--}}
+        {{--        success: function (event) {--}}
+        {{--            if (event == "1") {--}}
+        {{--                window.location = "{{route('index')}}";--}}
+        {{--            } else {--}}
+        {{--                console.log(0);--}}
+        {{--            }--}}
+        {{--        },--}}
 
-                },
-
-            });
-        })
+        {{--    });--}}
+        {{--})--}}
     });
 </script>
 <script src={{asset('js/form-validation.js')}}></script>

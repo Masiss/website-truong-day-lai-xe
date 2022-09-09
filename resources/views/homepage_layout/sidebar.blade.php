@@ -1,10 +1,10 @@
-<div class="main-menu  menu-accordion " data-scroll-to-active="true" style="width: 25%">
+<div class="d-block menu-accordion w-25" data-scroll-to-active="true" style="">
     <div class="navbar-header m-3">
         <a class="navbar-brand" href="/index">
             <img src="{{asset('logo.svg')}}" width="" class="logo">
         </a>
     </div>
-    <div class="main-menu-content mt-5 me-1">
+    <div class="main-menu-content me-1">
         <ul class="navigation navigation-main list-group" id="main-menu-navigation" data-menu="menu-navigation">
             <li>
                 <a class="sidebar-list" href="{{route('index')}}">

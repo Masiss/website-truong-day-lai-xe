@@ -4,20 +4,21 @@
         <div class="content-header-left col-md-9 col-12 mb-2">
 
         </div>
-
     </div>
-    <div class="content-body">
+    <div class="content-body w-75 mt-5">
         <section>
             <div class="d-flex row">
                 <div class="col-6 ">
                     <div class="card ">
-                        <img class="card-img" src="{{asset('homepage1.png')}}">
+                        @php
+                            @endphp
+                        <img class="card-img" src="{{$configs->get('banner_1')->value}}">
                     </div>
 
                 </div>
                 <div class="col-6">
                     <div class="card ">
-                        <img class="card-img" src="{{asset('homepage2.png')}}">
+                        <img class="card-img" src="{{$configs->get('banner_2')->value}}">
                     </div>
                 </div>
             </div>

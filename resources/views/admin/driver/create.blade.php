@@ -262,7 +262,7 @@
                                                 <label class="form-label" for="disabledInput">Số buổi</label>
                                                 <input name="lesson" type="number" value="20" class="form-control"
                                                        id="lesson"
-                                                       disabled/>
+                                                       readonly/>
                                             </div>
                                         </div>
                                         <div class="col-xl-1 center-layout">

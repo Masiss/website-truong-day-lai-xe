@@ -15,11 +15,11 @@ class LessonController extends Controller
     public function __construct()
     {
         $this->model = Lesson::query();
-        $route = Route::currentRouteName();
-        $breadCrumb = explode('.', $route);
-        $pageName = last($breadCrumb);
-        View::share('pageName', ucfirst($pageName));
-        View::share('breadCrumb', $breadCrumb);
+//        $route = Route::currentRouteName();
+//        $breadCrumb = explode('.', $route);
+//        $pageName = last($breadCrumb);
+//        View::share('pageName', ucfirst($pageName));
+//        View::share('breadCrumb', $breadCrumb);
     }
 
     public function index(Request $request)

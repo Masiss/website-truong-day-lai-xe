@@ -28,7 +28,7 @@ Route::post('registering', [AuthController::class, 'registering'])->name('regist
 Route::get('login', [AuthController::class, 'login'])->name('login')->middleware(CheckLogin::class);
 Route::post('login_processing', [AuthController::class, 'login_processing'])->name('login_processing');
 
-Route::get('/contact', fn() => view('homepage.contact'))->name('contact');
+Route::get('/contact', [HomePageController::class,'contact'])->name('contact');
 
 Route::get('/calendar/api',[Controller::class,'calendarAPI'])->name('calendarAPI');
 Route::get('/calendar',[Controller::class,'calendar'])->name('calendar');

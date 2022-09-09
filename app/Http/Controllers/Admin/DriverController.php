@@ -21,11 +21,11 @@ class DriverController extends Controller
     public function __construct()
     {
         $this->model = Driver::query();
-        $route = Route::currentRouteName();
-        $breadCrumb = explode('.', $route);
-        $pageName = last($breadCrumb);
-        View::share('pageName', ucfirst($pageName));
-        View::share('breadCrumb', $breadCrumb);
+//        $route = Route::currentRouteName();
+//        $breadCrumb = explode('.', $route);
+//        $pageName = last($breadCrumb);
+//        View::share('pageName', ucfirst($pageName));
+//        View::share('breadCrumb', $breadCrumb);
     }
 
     public function index()
@@ -47,7 +47,6 @@ class DriverController extends Controller
         return view('admin.driver.create');
     }
 
-    private const TotalHour = 40;
 
     public function store(StoreDriverRequest $request)
     {
@@ -65,23 +64,23 @@ class DriverController extends Controller
                 'is_full',
             ]);
             $driverArr['is_full'] = $request->boolean('is_full');
-            $courseArr = $request->only([
-                'days_of_week',
-                'type',
-                'lesson',
-            ]);
+
             $lessonArr = $request->only([
                 'days_of_week',
                 'lesson',
                 'shift',
                 'last',
             ]);
-            $courseArr['lesson'] = self::TotalHour / $request->last;
+            $courseArr = $request->only([
+                'days_of_week',
+                'type',
+                'lesson',
+            ]);
             $lessonArr['lesson'] = $courseArr['lesson'];
 
             $driverArr['password'] = Hash::make(Str::random(8));
             //add Course
-            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full']);
+            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'],$lessonArr['last']);
             $driver_id = Driver::query()
                 ->create($driverArr)
                 ->id;

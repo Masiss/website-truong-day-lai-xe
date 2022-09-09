@@ -17,11 +17,11 @@ class SalaryController extends Controller
 {
     public function __construct()
     {
-        $route = Route::currentRouteName();
-        $breadCrumb = explode('.', $route);
-        $pageName = last($breadCrumb);
-        View::share('pageName', ucfirst($pageName));
-        View::share('breadCrumb', $breadCrumb);
+//        $route = Route::currentRouteName();
+//        $breadCrumb = explode('.', $route);
+//        $pageName = last($breadCrumb);
+//        View::share('pageName', ucfirst($pageName));
+//        View::share('breadCrumb', $breadCrumb);
     }
 
     public function pending()

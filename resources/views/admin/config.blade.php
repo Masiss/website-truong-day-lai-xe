@@ -1,3 +1,4 @@
+@php use App\Models\Config; @endphp
 @extends('layout.master')
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{asset('css/vertical-menu.min.css')}}">
@@ -9,35 +10,12 @@
             <div class="card">
                 <div class="col-md-12">
                     <div class="card">
-                        <form class="needs-validation" action="{{route('admin.config.store')}}" method="POST"
-                              novalidate>
-                            <div class="row demo-inline-spacing m-1">
-                                <div class="d-flex  row">
-                                    @csrf
-                                    <div class="col-xl-3 mb-2">
-                                        <label for="key">Tên khóa</label>
-                                        <input class="form-control " name="key" placeholder="Tên khóa" required>
-                                        <div class="valid-feedback"></div>
-                                        <div class="invalid-feedback">Vui lòng không để trống.</div>
-                                    </div>
-                                    <div class="col-xl-3 mb-2">
-                                        <label for="key">Giá trị</label>
-                                        <input class="form-control " name="value" placeholder="Giá trị"
-                                               required>
-                                        <div class="valid-feedback"></div>
-                                        <div class="invalid-feedback">Vui lòng không để trống.</div>
-
-                                    </div>
-                                    <div class="col-xl-2 d-flex  align-items-center justify-content-center">
-                                        <button class="btn p-2">
-                                            <i data-feather="plus-circle"></i>
-                                            <span>Thêm</span>
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </form>
+                        <div class="m-1">
+                            <span id="success" class="alert alert-success">{{session()->get('status')}}</span>
+                        </div>
+                        <div class="m-1">
+                            <span id="error" class="alert alert-danger"></span>
+                        </div>
                         <table class="table" id="table-data">
                             <thead>
                             <tr>
@@ -50,19 +28,32 @@
                             </thead>
                             @foreach($configs as $config)
                                 <tr>
-                                    <td>{{$config->key}}</td>
-                                    <td>{{$config->value}}</td>
-                                    <td><input class="form-control" name="new_value"></td>
-                                    <td>
-                                        <button data-key="{{$config->key}}" class="btn button1" name="button1"
-                                                type="button">Sửa
-                                        </button>
-                                    </td>
+                                    <form action="./config/update" method="POST" enctype="multipart/form-data">
+
+                                        @csrf
+                                        @method('PUT')
+                                        <td>{{$config->key}}</td>
+
+                                        @if(in_array($config->key,$arr_banner))
+                                            <td><img class="w-50 h-50" src="{{$config->value}}"></td>
+                                            <td><input class="form-control" type="file" accept="image/*"
+                                                       name="new_value">
+                                            </td>
+                                        @else
+                                            <td>{{$config->value}}</td>
+                                            <td><input class="form-control" name="new_value"></td>
+                                        @endif
+                                        <td>
+                                            <button name="key" value="{{$config->key}}" data-key="{{$config->key}}" class="btn button1"
+                                                    type="submit">Sửa
+                                            </button>
+                                        </td>
+                                    </form>
+
                                 </tr>
                             @endforeach
                         </table>
                     </div>
-                    <x-pagination :paginate="$configs"/>
 
                 </div>
             </div>
@@ -74,31 +65,36 @@
     @push('javascript')
 
         <script src={{asset('js/jquery.validate.min.js')}}></script>
-        <script src={{asset('js/form-select2.min.js')}}></script>
+        {{--        <script src={{asset('js/form-select2.min.js')}}></script>--}}
         <script src={{asset('js/form-validation.js')}}></script>
         <script>
-            document.getElementsByName('button1').forEach(e => e.addEventListener('click', function () {
-                let a = $(this).parents("tr").find("input[name='new_value']").val();
-                let b = $(this).data('key');
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    url: "{{route('admin.config.update')}}",
-                    method: "PUT",
-                    data: {
-                        'new_value': a,
-                        'key': b,
-                    },
-                    success: function (event) {
-                        if (event == 1) {
-                            $(this).parents("tr").find("input[name='new_value']").innerHTML = a;
-                        }
+            {{--document.getElementsByName('button1').forEach(e => e.addEventListener('click', function () {--}}
+            {{--    let a = $(this).parents("tr").find("input[name='new_value']").val();--}}
+            {{--    let b = $(this).data('key');--}}
+            {{--    var form_data = new FormData();--}}
+            {{--    form_data.append('new_value', a);--}}
+            {{--    form_data.append('key', b);--}}
+            {{--    $.ajax({--}}
+            {{--        headers: {--}}
+            {{--            'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
+            {{--        },--}}
+            {{--        url: "{{route('admin.config.update')}}",--}}
+            {{--        method: "PUT",--}}
+            {{--        data: form_data,--}}
+            {{--        cache: false,--}}
+            {{--        contentType: false,--}}
+            {{--        processData: false,--}}
+            {{--        dataType: "JSON",--}}
+            {{--        success: function (event) {--}}
+            {{--            $('#success').html(event.status);--}}
+            {{--        },--}}
+            {{--        error: function (event) {--}}
+            {{--            $('#error').html(event.status);--}}
+            {{--        },--}}
 
-                    }
-                });
+            {{--    });--}}
 
-            }))
+            {{--}))--}}
 
         </script>
     @endpush

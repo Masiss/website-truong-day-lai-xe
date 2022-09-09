@@ -26,7 +26,7 @@ class DriversSeeder extends Seeder
                 'is_full'=>0,
                 'email' => 'john@example.com',
                 'phone_numbers'=>'0123456789',
-                'file'=>'file/cha.jpg',
+                'file'=>'file/avt',
                 'password' => Hash::make(123),
             ]
         );

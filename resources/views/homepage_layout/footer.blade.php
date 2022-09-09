@@ -1,11 +1,11 @@
-<footer class=" footer-static " style="background: #6F88E1B8;width: 100%; padding: 30px;color: #FFFFFF;">
+<footer class=" footer-static d-block " style="background: #6F88E1B8;width: 100%; padding: 30px;color: #FFFFFF;">
     <p class="clearfix" style="color: #FFFFFF;">
     <h3> TRUNG TÂM ĐÀO TẠO LÁI XE </h3>
     <p style="color: #FFFFFF" class="d-flex row">
-    <h4>Trụ sở chính: 105/3 Bình Quới, Phường 27, Bình Thạnh, Thành phố Hồ Chí Minh </h4>
+    <h4>Trụ sở chính: {{$configs->get('address')->value}} </h4>
 
-    <h4> Điện thoại: +84... </h4>
-    <h4> Email:...@gmail.com </h4>
+    <h4> Điện thoại: {{$configs->get('phone_numbers')->value}} </h4>
+    <h4> Email:{{$configs->get('email')->value}} </h4>
 
     </p>
 
@@ -21,8 +21,3 @@
         </a>
     </div>
 </footer>
-<button class="btn btn-primary btn-icon scroll-top" type="button">
-    <i data-feather="arrow-up">
-
-    </i>
-</button>

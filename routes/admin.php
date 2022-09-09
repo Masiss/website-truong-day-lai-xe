@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Enums\LevelEnum;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\InstructorControlller;
@@ -12,9 +13,24 @@ Route::get('/', function () {
     $route = Route::currentRouteName();
     $breadCrumb = explode('.', $route);
     $pageName = last($breadCrumb);
+    if (auth('driver')->check()) {
+        $title = 'Học viên';
+    } elseif (auth('instructor')->check()) {
+        switch (auth('instructor')->user()->level) {
+            case (LevelEnum::ADMIN->name):
+                $title = 'Admin';
+                break;
+            case (LevelEnum::INSTRUCTOR->name):
+                $title = 'Giáo viên';
+                break;
+        }
+    } else {
+        $title = "";
+    }
     return view('admin.index', [
         'pageName' => $pageName,
         'breadCrumb' => $breadCrumb,
+        'title'=>$title,
     ]);
 }
 )->name('index');

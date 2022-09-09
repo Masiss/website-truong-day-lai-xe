@@ -11,10 +11,8 @@ use App\Models\Instructor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class AuthController extends Controller
@@ -30,7 +28,7 @@ class AuthController extends Controller
         DB::beginTransaction();
         try {
 
-            $arr = $request->only([
+            $driverArr = $request->only([
                 'name',
                 'gender',
                 'birthdate',
@@ -39,35 +37,38 @@ class AuthController extends Controller
                 'email',
                 'file',
                 'is_full',
-                'password',
+                'password'
             ]);
+            $driverArr['is_full'] = $request->boolean('is_full');
 
-            $request->is_full = $request->boolean('is_full');
-            $arr['password'] = Hash::make($request->password);
+            $lessonArr = $request->only([
+                'days_of_week',
+                'lesson',
+                'shift',
+                'last',
+            ]);
+            $courseArr = $request->only([
+                'days_of_week',
+                'type',
+                'lesson',
+            ]);
+            $lessonArr['lesson'] = $courseArr['lesson'];
+
             //add Course
-            $course_id = CreateDriverAction::createCourse($request);
-//            $arr['file'] = Storage::disk('public')
-//                ->put('file', $arr['file']);
-            $driver_id = Driver::query()
-                ->create([
-                    'name' => $arr['name'],
-                    'gender' => $arr['gender'],
-                    'course_id' => $course_id,
-                    'birthdate' => $arr['birthdate'],
-                    'phone_numbers' => $arr['phone_numbers'],
-                    'id_numbers' => $arr['id_numbers'],
-                    'email' => $arr['email'],
-                    'file' => $arr['file'],
-                    'is_full' => $arr['is_full'],
-                    'password' => $arr['password'],
-                ])->id;
+            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'],
+                $lessonArr['last']);
+            $driver = Driver::query()
+                ->create($driverArr);
+            $driver_id = $driver->id;
+            $lessonArr['driver_id'] = $driver_id;
             //add lessons
-            CreateDriverAction::AddLessons($request, $driver_id);
+            CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
             DB::commit();
-            echo "1";
+            auth('driver')->login($driver);
+            return \redirect('./login');
         } catch (Throwable $e) {
             DB::rollBack();
-
+            echo $e;
             return false;
         }
     }
@@ -76,7 +77,6 @@ class AuthController extends Controller
     {
         return view('login');
     }
-
 
     public function login_processing(Request $request)
     {

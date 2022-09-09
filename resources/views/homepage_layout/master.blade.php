@@ -9,7 +9,7 @@
     <meta name="keywords"
           content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Layout Empty - Vuexy - Bootstrap HTML admin template</title>
+    <title>Bao Đậu - Trường dạy thi bằng lái ô tô cao cấp</title>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.css"/>
     {{--    <link rel="apple-touch-icon" href="{{asset('apple-touch-icon.png')}}">--}}
@@ -50,7 +50,7 @@
     }
 
     a {
-        color:black
+        color: black
     }
 
     .main-menu {
@@ -124,18 +124,19 @@
 @include('homepage_layout.nav_bar')
 <!-- END: Header-->
 <!-- BEGIN: Main Menu-->
-@include('homepage_layout.sidebar')
 <!-- END: Main Menu-->
 
 <!-- BEGIN: Content-->
-<div class="app-content content " style="margin-left: 25%">
+<div class="w-100 p-3 " style="">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
-    <div class="content-wrapper container-xxl p-0">
+    <div class="content-wrapper container-xxl p-0 d-flex">
+@include('homepage_layout.sidebar')
         @yield('content')
     </div>
 </div>
 <!-- END: Content-->
+</body>
 
 <!-- BEGIN: Footer-->
 @include('homepage_layout.footer')
@@ -155,5 +156,4 @@
     })
 
 </script>
-</body>
 </html>

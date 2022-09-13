@@ -30,8 +30,11 @@ Route::get('login', [AuthController::class, 'login'])->name('login')->middleware
 Route::post('login_processing', [AuthController::class, 'login_processing'])->name('login_processing');
 
 Route::get('/contact', [HomePageController::class,'contact'])->name('contact');
-
 Route::post('/contact', [HomePageController::class,'contactForm'])->name('contact.create');
+
+Route::get('courses',[HomePageController::class,'courses'])->name('courses');
+
+Route::get('document',[HomePageController::class,'document'])->name('document');
 
 Route::get('/calendar/api',[Controller::class,'calendarAPI'])->name('calendarAPI');
 Route::get('/calendar',[Controller::class,'calendar'])->name('calendar');

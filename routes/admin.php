@@ -1,9 +1,9 @@
 <?php
 
 
-use App\Enums\LevelEnum;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\InstructorControlller;
 use App\Http\Controllers\Admin\LessonController;
@@ -57,17 +57,28 @@ Route::prefix('config')
     ->name('config.')
     ->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::post('store','store')->name('store');
-        Route::put('update','update')->name('update');
+        Route::post('store', 'store')->name('store');
+        Route::put('update', 'update')->name('update');
     });
 Route::prefix('contact')
     ->controller(ContactController::class)
     ->name('contact.')
-    ->group(function(){
-       Route::get('/','index')->name('index');
-       Route::get('/api','api')->name('api');
-       Route::get('/{id}','show')->name('show');
-       Route::post('/{contact}/reply','reply')->name('reply');
-       Route::delete('/{contact}','destroy')->name('destroy');
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/api', 'api')->name('api');
+        Route::get('/{id}', 'show')->name('show');
+        Route::post('/{contact}/reply', 'reply')->name('reply');
+        Route::delete('/{contact}', 'destroy')->name('destroy');
 
+    });
+Route::prefix('documents')
+    ->controller(DocumentController::class)
+    ->name('document.')
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('create', 'create')->name('create');
+        Route::get('api', 'api')->name('api');
+        Route::post('store', 'store')->name('store');
+        Route::get('/{id}/show', 'show')->name('show');
+        Route::delete('destroy', 'destroy')->name('destroy');
     });

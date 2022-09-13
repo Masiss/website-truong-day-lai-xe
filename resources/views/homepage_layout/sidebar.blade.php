@@ -19,13 +19,13 @@
                 </a>
             </li>
             <li>
-                <a class="sidebar-list">
+                <a class="sidebar-list" href="{{route('courses')}}">
                     <i data-feather="calendar"></i>
                     <span>Các khóa học</span>
                 </a>
             </li>
             <li>
-                <a class="sidebar-list">
+                <a class="sidebar-list" href="{{route('document')}}">
                     <i data-feather="book"></i>
                     <span>Tài liệu</span>
                 </a>

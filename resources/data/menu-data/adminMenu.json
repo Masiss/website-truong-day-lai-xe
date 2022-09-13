@@ -68,6 +68,12 @@
             "name": "Các câu hỏi",
             "icon": "help-circle",
             "slug": "admin.contact.index"
+        },
+        {
+            "url": "admin/documents",
+            "name": "Tài liệu",
+            "icon": "book-open",
+            "slug": "admin.document.index"
         }
     ]
 }

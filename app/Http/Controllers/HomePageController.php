@@ -48,6 +48,7 @@ class HomePageController extends Controller
     {
         return view('homepage.contact');
     }
+
     public function contactForm(ContactFormRequest $request)
     {
         DB::beginTransaction();
@@ -67,7 +68,17 @@ class HomePageController extends Controller
             return back()->with('success', 'Thành công');
         } catch (Throwable $e) {
             DB::rollBack();
-            return back()->with('error','Đã xảy ra lỗi,vui lòng thử lại');
+            return back()->with('error', 'Đã xảy ra lỗi,vui lòng thử lại');
         }
+    }
+
+    public function courses()
+    {
+        return view('homepage.courses');
+    }
+
+    public function document()
+    {
+        return view('homepage.document');
     }
 }

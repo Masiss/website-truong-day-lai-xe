@@ -61,15 +61,15 @@ return new class extends Migration {
                 ],
                 [
                     'key' => 'B1',
-                    'value' => '14.000.000',
+                    'value' => '23.000.000',
                 ],
                 [
                     'key' => 'B2',
-                    'value' => '14.000.000',
+                    'value' => '25.000.000',
                 ],
                 [
                     'key' => 'C',
-                    'value' => '16.000.000',
+                    'value' => '28.000.000',
                 ],
                 [
                     'key' => 'email',

@@ -16,7 +16,6 @@ use Laravel\Scout\Searchable;
 //class Instructor extends Model
 class Instructor extends \Illuminate\Foundation\Auth\User
 {
-    use Searchable;
     use Sortable;
     use HasFactory;
     use SoftDeletes;
@@ -92,7 +91,7 @@ class Instructor extends \Illuminate\Foundation\Auth\User
     {
         return Attribute::make(
             get: fn($value) => $value ? Storage::url($value) : null,
-            set: fn($value) => $value ? Storage::disk('public')->put('avatar', $value) : null,
+            set: fn($value) => $value ? Storage::disk('public')->put('avatar', $value.'.jpg') : null,
         );
     }
 

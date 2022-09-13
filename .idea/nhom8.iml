@@ -118,8 +118,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/maximebf/debugbar" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nunomaduro/termwind" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/kyslik/column-sortable" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/scout" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/algolia/algoliasearch-client-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -15,11 +15,6 @@ class ConfigController extends Controller
     public function __construct()
     {
         $this->model = Config::query();
-//        $route = Route::currentRouteName();
-//        $breadCrumb = explode('.', $route);
-//        $pageName = last($breadCrumb);
-//        View::share('pageName', ucfirst($pageName));
-//        View::share('breadCrumb', $breadCrumb);
     }
 
     public function index()
@@ -37,32 +32,15 @@ class ConfigController extends Controller
         ]);
     }
 
-//    public function store(Request $request)
-//    {
-//        DB::beginTransaction();
-//        try {
-//            // Validate the value...
-//
-//            Config::query()->create([
-//                'key' => $request->key,
-//                'value' => $request->value,
-//            ]);
-//            DB::commit();
-//            return Redirect::back();
-//        } catch (Throwable $e) {
-//            report($e);
-//            DB::rollBack();
-//            return false;
-//        }
-//
-//    }
-
     public function update(Request $request)
     {
         DB::beginTransaction();
         try {
             if (Config::isImg($request->key)) {
-                $path = $request->file('new_value')->store('homepage/'.$request->key, 'public');
+                $path = $request->file('new_value')->storeAs(
+                    'homepage',
+                    $request->key.'.jpg',
+                    'public');
                 Config::query()->where('key', $request->key)
                     ->update([
                         'value' => $path,
@@ -73,7 +51,6 @@ class ConfigController extends Controller
                         'value' => $request->new_value,
                     ]);
             }
-
             DB::commit();
             return back()->with(
                 'status', 'Cập nhật thành công',

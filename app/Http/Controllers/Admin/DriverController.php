@@ -21,11 +21,6 @@ class DriverController extends Controller
     public function __construct()
     {
         $this->model = Driver::query();
-//        $route = Route::currentRouteName();
-//        $breadCrumb = explode('.', $route);
-//        $pageName = last($breadCrumb);
-//        View::share('pageName', ucfirst($pageName));
-//        View::share('breadCrumb', $breadCrumb);
     }
 
     public function index()
@@ -80,10 +75,18 @@ class DriverController extends Controller
 
             $driverArr['password'] = Hash::make(Str::random(8));
             //add Course
-            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'],$lessonArr['last']);
+            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'], $lessonArr['last']);
+
             $driver_id = Driver::query()
                 ->create($driverArr)
                 ->id;
+            //store img
+            $path = Storage::disk('public')
+                ->putFileAs('file', $driverArr['file'], $driver_id . '.jpg');
+            Driver::where('id', $driver_id)->update([
+                'file' => $path,
+            ]);
+
             $lessonArr['driver_id'] = $driver_id;
             //add lessons
             CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
@@ -126,14 +129,15 @@ class DriverController extends Controller
                 ->with('course')
                 ->with('lessons')
                 ->delete();
-
+            $driver = Driver::where('id', $id)->withTrashed()->first();
+            $course_id = $driver->course_id;
             Lesson::query()
-                ->where('driver_id',$id)
+                ->where('driver_id', $id)
                 ->delete();
             Course::query()
-                ->where('driver_id',$id)
+                ->where('id', $course_id)
                 ->delete();
-            $name = Driver::query()->where('id', $id)->withTrashed()->first()->name;
+            $name = $driver->name;
             DB::commit();
             return redirect()->route('admin.drivers.index')
                 ->with('status', 'Đã xóa thành công học viên ' . $name);

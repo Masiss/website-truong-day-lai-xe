@@ -24,12 +24,10 @@ class DriverFactory extends Factory
             'id_numbers'=>$this->faker->unique()->randomNumber(),
             'email'=>$this->faker->email(),
             'phone_numbers'=>$this->faker->unique()->numberBetween(1111111111,9999999999),
-            'birthdate'=>$this->faker->dateTimeBetween('-70 years','-18 years'),
+            'birthdate'=>$this->faker->date('Y-m-d'),
             'file'=>$this->faker->imageUrl(),
             'is_full'=>$this->faker->boolean(),
             'password'=>$this->faker->password(),
-
-
         ];
     }
 }

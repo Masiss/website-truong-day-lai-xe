@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -54,11 +53,11 @@ return new class extends Migration
                 ],
                 [
                     'key' => 'phone_numbers',
-                    'value' => '0',
+                    'value' => '0123456789',
                 ],
                 [
                     'key' => 'address',
-                    'value' => '0',
+                    'value' => '105/3 Bình Quới, Bình Thạnh, TP.HCM',
                 ],
                 [
                     'key' => 'B1',
@@ -74,7 +73,7 @@ return new class extends Migration
                 ],
                 [
                     'key' => 'email',
-                    'value' => '0',
+                    'value' => 'hopelessornohope@gmail.com',
                 ],
                 [
                     'key' => 'banner_1',
@@ -83,18 +82,25 @@ return new class extends Migration
                 [
                     'key' => 'banner_2',
                     'value' => null,
-
                 ],
                 [
                     'key' => 'banner_bottom',
                     'value' => null,
-
                 ],
                 [
                     'key' => 'logo',
                     'value' => null,
 
-                ]
+                ],
+                [
+                    'key' => 'fb',
+                    'value' => 'fb.com/100011090085352',
+                ],
+                [
+                    'key' => 'ig',
+                    'value' => 'instagr.am/binhnguyen.03',
+                ],
+
 
             ],
 

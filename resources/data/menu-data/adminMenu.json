@@ -62,6 +62,12 @@
             "name": "Thiết lập",
             "icon": "settings",
             "slug": "admin.config.index"
+        },
+        {
+            "url": "admin/contact",
+            "name": "Các câu hỏi",
+            "icon": "help-circle",
+            "slug": "admin.contact.index"
         }
     ]
 }

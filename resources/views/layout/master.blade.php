@@ -13,7 +13,7 @@
     <meta name="keywords"
           content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Trang thông tin cho {{$title}} - {{$pageName}}</title>
+    <title>{{$pageName}} - Trang thông tin cho {{$title}} </title>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.css"/>
     <link rel="apple-touch-icon" href="{{asset('apple-touch-icon.png')}}">
@@ -69,6 +69,11 @@
     </div>
     @include('layout.header')
     <div class="content-wrapper container-xxl p-0">
+        <div class="sidebar-left">
+            <div class="sidebar">
+                @yield('content-sidebar')
+            </div>
+        </div>
         @yield('content')
 
     </div>
@@ -86,6 +91,7 @@
 
 {{--Vendor JS--}}
 <script src="{{asset('js/vendors.min.js')}}"></script>
+@stack('vendors-js')
 <!-- BEGIN: Theme JS-->
 <script src="{{asset('js/app-menu.min.js')}}"></script>
 <script src="{{asset('js/app.min.js')}}"></script>

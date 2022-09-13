@@ -22,11 +22,7 @@ class InstructorController extends Controller
     public function __construct()
     {
         $this->guard = Auth::guard('instructor');
-        $route = Route::currentRouteName();
-        $breadCrumb = explode('.', $route);
-        $pageName = last($breadCrumb);
-        View::share('pageName', ucfirst($pageName));
-        View::share('breadCrumb', $breadCrumb);
+
     }
 
     public function index()

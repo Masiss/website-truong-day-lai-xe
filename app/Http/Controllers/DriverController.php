@@ -21,11 +21,7 @@ class DriverController extends Controller
     public function __construct()
     {
         $this->guard = Auth::guard('driver');
-        $route = Route::currentRouteName();
-        $breadCrumb = explode('.', $route);
-        $pageName = last($breadCrumb);
-        View::share('pageName', ucfirst($pageName));
-        View::share('breadCrumb', $breadCrumb);
+
     }
 
     public function index()
@@ -159,7 +155,7 @@ class DriverController extends Controller
             if (isset($request->file)) {
                 Storage::disk('public')->delete($driver->first()->file);
                 $path = Storage::disk('public')->
-                putFileAs('file', $arr['file'], auth('driver')->user()->id);
+                putFileAs('file', $arr['file'], auth('driver')->user()->id.'.jpg');
                 $driver->update([
                     'file' => $path,
                 ]);

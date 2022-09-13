@@ -19,7 +19,7 @@ class InstructorFactory extends Factory
         return [
             'name'=>$this->faker->name(),
             'email'=>$this->faker->email(),
-            'birthdate'=>$this->faker->dateTimeBetween('-70 years','-18 years'),
+            'birthdate'=>$this->faker->date('Y-m-d'),
             'phone_numbers'=>$this->faker->unique()->numberBetween(1111111111,9999999999),
             'gender'=>$this->faker->boolean(),
             'salary'=>$this->faker->numberBetween(3000000,5000000),

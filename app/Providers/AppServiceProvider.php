@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Actions\GetTitleForUserAction;
 use App\Enums\LevelEnum;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,5 +39,15 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('driver', function () {
             return auth('driver')->check();
         });
+        View::composer('*',function($view){
+            $title = GetTitleForUserAction::handle();
+            $route = Route::currentRouteName();
+            $breadCrumb = explode('.', $route);
+            $pageName = last($breadCrumb);
+            View::share('pageName', ucfirst($pageName));
+            View::share('breadCrumb', $breadCrumb);
+            View::share('title', $title);
+        });
+
     }
 }

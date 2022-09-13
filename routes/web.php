@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomePageController;
 use App\Http\Middleware\CheckLogin;
@@ -30,7 +31,10 @@ Route::post('login_processing', [AuthController::class, 'login_processing'])->na
 
 Route::get('/contact', [HomePageController::class,'contact'])->name('contact');
 
+Route::post('/contact', [HomePageController::class,'contactForm'])->name('contact.create');
+
 Route::get('/calendar/api',[Controller::class,'calendarAPI'])->name('calendarAPI');
 Route::get('/calendar',[Controller::class,'calendar'])->name('calendar');
 Route::get('/search',[Controller::class,'search'])->name('search');
 
+Route::get('/test',fn()=>view('test'));

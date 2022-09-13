@@ -11,13 +11,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Kyslik\ColumnSortable\Sortable;
-use Laravel\Scout\Searchable;
 
 //class Driver extends Model
 class Driver extends \Illuminate\Foundation\Auth\User
 
 {
-    use Searchable;
     use Sortable;
     use HasFactory;
     use SoftDeletes;
@@ -89,7 +87,7 @@ class Driver extends \Illuminate\Foundation\Auth\User
         return Attribute::make(
             get: fn($value) => Storage::url($value),
             set: fn($value) => Storage::disk('public')
-                ->put('file', $value),
+                ->put('file', $value.'.jpg'),
         );
     }
 

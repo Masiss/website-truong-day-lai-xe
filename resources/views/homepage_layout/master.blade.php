@@ -9,7 +9,7 @@
     <meta name="keywords"
           content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Bao Đậu - Trường dạy thi bằng lái ô tô cao cấp</title>
+    <title>Bao Đậu - Trường dạy lái ô tô cao cấp</title>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.css"/>
     {{--    <link rel="apple-touch-icon" href="{{asset('apple-touch-icon.png')}}">--}}
@@ -35,7 +35,7 @@
     {{--    <link rel="stylesheet" type="text/css" href="{{asset('css/form-validation.css')}}">--}}
     {{--    <link rel="stylesheet" type="text/css" href="{{asset('css/form-flat-pickr.min.css')}}">--}}
     {{--    <link rel="stylesheet" type="text/css" href="{{asset('css/form-pickadate.min.css')}}">--}}
-
+    @stack('css')
     <title>Home</title>
 </head>
 <style>
@@ -105,10 +105,10 @@
 
     }
 
-    .btn {
-        background: linear-gradient(90deg, #C72E2E 50%, rgba(242, 28, 28, 0.79) 100%);
+    /*.btn {*/
+    /*    background: linear-gradient(90deg, #C72E2E 50%, rgba(242, 28, 28, 0.79) 100%);*/
 
-    }
+    /*}*/
 
 
     .form-control::placeholder {
@@ -131,10 +131,38 @@
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper container-xxl p-0 d-flex">
-@include('homepage_layout.sidebar')
+        @include('homepage_layout.sidebar')
         @yield('content')
     </div>
 </div>
+{{--modal--}}
+<div class="d-inline-block">
+    <div
+        class="modal fade text-start modal-success"
+        id="success"
+        tabindex="-1"
+        aria-labelledby="myModalLabel110"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel110">Thông báo thành công</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Chúng tôi đã nhận được câu hỏi của bạn. Chúng tôi sẽ phản hồi cho bạn trong thời gian sớm nhất
+                    thông qua các liên hệ bạn đã để lại.
+                    Xin cảm ơn.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- END: Content-->
 </body>
 
@@ -147,7 +175,7 @@
 <script src="{{asset('js/app-menu.min.js')}}"></script>
 <script src="{{asset('js/app.min.js')}}"></script>
 <script src="{{asset('js/customizer.min.js')}}"></script>
-
+@stack('js')
 <script>
     $(window).on('load', function () {
         if (feather) {
@@ -156,4 +184,12 @@
     })
 
 </script>
+@if(!empty(session()->get('success')))
+    <script>
+        var myModal = new bootstrap.Modal(document.getElementById('success'), {
+            keyboard: false
+        })
+        myModal.show();
+    </script>
+@endif
 </html>

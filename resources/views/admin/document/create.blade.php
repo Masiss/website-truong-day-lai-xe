@@ -3,6 +3,8 @@
 @endpush
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{asset('css/vertical-menu.min.css')}}">
+    {{--    <link rel="stylesheet" type="text/css" href="{{asset('css/ck-content.css')}}">--}}
+    <link rel="stylesheet" type="text/css" href="{{asset('css/simple-image.css')}}">
 @endpush
 @section('content')
 
@@ -13,29 +15,16 @@
             <div class="col-xl-13 ">
                 <!-- Project table -->
                 <div class="card">
+                    <span id="alert" class="alert alert-danger"></span>
                     <h4 class="card-header">Thêm tài liệu</h4>
-                    <form class="mx-3 mb-1" method="POST" action="{{route('admin.document.store')}}"
+                    <form class="mx-3 mb-1"
+{{--                          method="POST"--}}
+{{--                          action="{{route('admin.document.store',['_token'=>csrf_token()])}}"--}}
                           enctype="multipart/form-data">
                         @csrf
-                        <div class="mb-75">
-                            <label class="form-label" for="title">Tiêu đề</label>
-                            <input name="title" class="form-control" type="text" required>
-                        </div>
-                        <div class="mb-75">
-                            <label class="form-label" for="image">Ảnh đính kèm</label>
-                            <input type="file" accept="image/*" name="image" class="form-control">
-                        </div>
-                        <div class="mb-75">
-                            <label class="form-label" for="content">Nội dung</label>
-                            <textarea name="content" class="form-control" required></textarea>
-                        </div>
-                        <div class="mb-75">
-                            <label class="form-label" for="attachment">File đính kèm</label>
-                            <input name="attachment" type="file" class="form-control">
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <span>Gửi</span>
-                        </button>
+                        <div id="editorjs" name="text"></div>
+                        <button id="save-button">Save</button>
+                        <pre id="output"></pre>
                     </form>
                 </div>
                 <!-- /Project table -->
@@ -48,6 +37,79 @@
     @push('javascript')
         // Page JS
 
+        {{--        <script src="{{asset('js/editor.js')}}"></script>--}}
+        {{--        <script src="{{asset('js/simple-image.js')}}"></script>--}}
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@2.3.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.8.0/dist/bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/underline@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@editorjs/attaches@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.browser.js"></script>
+        <script>
+            const ImageTool = window.ImageTool;
+            const editor = new EditorJS({
+                placeholder: 'Let`s write an awesome story!',
+                autofocus: true,
+                tools: {
+                    attaches: {
+                        class: AttachesTool,
+                        config: {
+                            endpoint: '{{route('admin.document.upload-file',['_token'=>csrf_token()])}}'
+                        }
+                    },
+                    Marker: {
+                        class: Marker,
+                        shortcut: 'CMD+SHIFT+M',
+                    },
+                    underline: Underline,
+                    paragraph: {
+                        class: Paragraph,
+                        inlineToolbar: true,
+                    },
+                    header: {
+                        class: Header,
+                        config: {
+                            placeholder: 'Enter a header',
+                            levels: [1, 2, 3, 4],
+                            defaultLevel: 3
+                        }
+                    },
+                    image: {
+                        class: ImageTool,
+                        inlineToolbar: true,
+                        config: {
+                            endpoints: {
+                                byFile: '{{route('admin.document.upload-image',['_token'=>csrf_token()])}}', // Your backend file uploader endpoint
+                            }
+                        }
+                    }
+                },
+            });
 
+            document.getElementById('save-button').addEventListener('click', function (event) {
+                event.preventDefault();
+                editor.save().then((outputData) => {
+
+                    // console.log('Article data: ', outputData.blocks)
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url:'{{route('admin.document.store')}}',
+                        data:outputData,
+                        method:'POST',
+                        success:function(html){
+                            window.location=html.location;
+                        }
+                    })
+                }).catch((error) => {
+                    document.getElementById('alert').innerHTML = error;
+                });
+            })
+
+        </script>
     @endpush
 @endsection

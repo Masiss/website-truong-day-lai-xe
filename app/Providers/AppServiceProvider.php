@@ -31,15 +31,15 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
         Blade::if('admin', function () {
-            return auth('instructor')->user()->level === LevelEnum::ADMIN->name;
+            return (auth('instructor')->check() && auth('instructor')->user()->level === LevelEnum::ADMIN->name);
         });
         Blade::if('instructor', function () {
-            return auth('instructor')->user()->level === LevelEnum::INSTRUCTOR->name;
+            return (auth('instructor')->check() && auth('instructor')->user()->level === LevelEnum::INSTRUCTOR->name);
         });
         Blade::if('driver', function () {
             return auth('driver')->check();
         });
-        View::composer('*',function($view){
+        View::composer('*', function ($view) {
             $title = GetTitleForUserAction::handle();
             $route = Route::currentRouteName();
             $breadCrumb = explode('.', $route);

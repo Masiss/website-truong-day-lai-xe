@@ -16,23 +16,27 @@
     </section>
 
     @push('javascript')
+            <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.browser.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/editorjs-parser@1/build/Parser.browser.min.js"></script>
         <script>
             window.onload = callAPI();
-
             function callAPI() {
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: '{{route('admin.document.api')}}',
+                    url: '{{route('documentAPI')}}',
                     success: function (data) {
+                        // const edjsParser = edjsHTML();
+                        //
+                        // let html = edjsParser.parse(data);
+                        // console.log(html);
                         document.getElementById('list').innerHTML = data;
                         feather.replace();
                         destroy();
                     }
                 })
             }
-
             function destroy() {
                 document.getElementsByName('btn-delete').forEach(e => e.addEventListener('click', function () {
                     var id = this.getAttribute('data-id');
@@ -56,7 +60,9 @@
                     })
                 }));
             }
-
+            function customParser(block){
+                return `<custom-tag> ${block.data.text} </custom-tag>`;
+            }
 
         </script>
     @endpush

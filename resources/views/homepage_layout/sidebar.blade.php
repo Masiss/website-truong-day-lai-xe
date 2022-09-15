@@ -30,13 +30,6 @@
                     <span>Tài liệu</span>
                 </a>
             </li>
-            <li>
-                <a class="sidebar-list">
-                    <i data-feather="info"></i>
-                    <span>Blog</span>
-                </a>
-            </li>
-
         </ul>
         <form class="form-control p-0" method="POST" action="{{route('contact.create')}}">
             @csrf

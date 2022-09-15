@@ -77,8 +77,9 @@ Route::prefix('documents')
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('create', 'create')->name('create');
-        Route::get('api', 'api')->name('api');
         Route::post('store', 'store')->name('store');
         Route::get('/{id}/show', 'show')->name('show');
         Route::delete('destroy', 'destroy')->name('destroy');
+        Route::post('/upload-image','storeImageFromUploaded')->name('upload-image');
+        Route::post('/upload-file','storeAttachmentFromUploaded')->name('upload-file');
     });

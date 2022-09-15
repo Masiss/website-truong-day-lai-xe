@@ -6,6 +6,7 @@ use App\Enums\TypeContactEnums;
 use App\Http\Requests\ContactFormRequest;
 use App\Models\Config;
 use App\Models\Contact;
+use App\Models\Document;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -26,22 +27,7 @@ class HomePageController extends Controller
 
     public function index()
     {
-//        $configs = Config::query()
-//            ->get()->keyBy('key');
-//        foreach ($configs as $config) {
-//            $config->value = Config::isImg($config->key) ?
-//                Storage::url($config->value) :
-//                $config->value;
-//        }
-//        $banner_1=$configs->get('banner_1');
-//        $banner_2=$configs->get('banner_2');
-//        $banner_bottom=$configs->get('banner_bottom');
-//        $phone_numbers=$configs->get('phone_numbers');
-//        $address=$configs->get('address');
-//        $email=$configs->get('email');
-        return view('index', [
-//            'configs' => $configs,
-        ]);
+        return view('index');
     }
 
     public function contact()
@@ -81,4 +67,15 @@ class HomePageController extends Controller
     {
         return view('homepage.document');
     }
+
+    public function show($id)
+    {
+        $document = Document::query()->where('id', $id)
+            ->first();
+        return view('homepage.documentShow', [
+            'document' => $document,
+        ]);
+    }
+
+
 }

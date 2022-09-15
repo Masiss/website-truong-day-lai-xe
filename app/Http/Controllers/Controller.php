@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\GetOverviewDocumentAction;
 use App\Enums\LevelEnum;
+use App\Models\Document;
 use App\Models\Driver;
 use App\Models\Instructor;
 use App\Models\Lesson;
@@ -56,5 +58,20 @@ class Controller extends BaseController
             default:
                 return null;
         }
+    }
+    public function documentAPI()
+    {
+        $documents = Document::query()->get();
+        $documents=GetOverviewDocumentAction::handle($documents);
+        return view('apps.document-list', [
+            'documents' => $documents,
+        ]);
+    }
+    public function documentShowAPI(Request $request)
+    {
+        $content = Document::query()
+            ->where('id', $request->id)
+            ->first()->content;
+        return $content;
     }
 }

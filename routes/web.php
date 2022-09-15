@@ -35,7 +35,11 @@ Route::post('/contact', [HomePageController::class,'contactForm'])->name('contac
 Route::get('courses',[HomePageController::class,'courses'])->name('courses');
 
 Route::get('document',[HomePageController::class,'document'])->name('document');
+Route::get('document/{id}/show', [HomePageController::class,'show'])->name('document.show');
 
+
+Route::get('document/api',[Controller::class,'documentAPI'])->name('documentAPI');
+Route::get('document/show',[Controller::class,'documentShowAPI'])->name('document.show.api');
 Route::get('/calendar/api',[Controller::class,'calendarAPI'])->name('calendarAPI');
 Route::get('/calendar',[Controller::class,'calendar'])->name('calendar');
 Route::get('/search',[Controller::class,'search'])->name('search');

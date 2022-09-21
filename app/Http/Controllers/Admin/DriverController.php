@@ -11,9 +11,7 @@ use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
 class DriverController extends Controller
@@ -25,6 +23,7 @@ class DriverController extends Controller
 
     public function index()
     {
+
         $drivers = Driver::query()
             ->with('course')
             ->sortable()
@@ -57,26 +56,28 @@ class DriverController extends Controller
                 'email',
                 'file',
                 'is_full',
-            ]);
-            $driverArr['is_full'] = $request->boolean('is_full');
+                'days_of_week',
 
+            ]);
             $lessonArr = $request->only([
                 'days_of_week',
-                'lesson',
                 'shift',
                 'last',
             ]);
+            $driverArr['is_full'] = $request->boolean('is_full');
+
+
             $courseArr = $request->only([
-                'days_of_week',
                 'type',
-                'lesson',
             ]);
-            $lessonArr['lesson'] = $courseArr['lesson'];
 
             $driverArr['password'] = Hash::make(Str::random(8));
             //add Course
-            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'], $lessonArr['last']);
-
+//            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'], $lessonArr['last']);
+            $driverArr['course_id'] = Course::query()
+                ->where('type', $courseArr['type'])
+                ->first()
+                ->id;
             $driver_id = Driver::query()
                 ->create($driverArr)
                 ->id;
@@ -89,8 +90,8 @@ class DriverController extends Controller
 
             $lessonArr['driver_id'] = $driver_id;
             //add lessons
-            CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
-
+            $total_lessons = CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
+            CreateDriverAction::createBill($driver_id, $driverArr['is_full'], $driverArr['course_id'], $total_lessons);
             DB::commit();
             return redirect()
                 ->route('admin.drivers.index')
@@ -130,12 +131,8 @@ class DriverController extends Controller
                 ->with('lessons')
                 ->delete();
             $driver = Driver::where('id', $id)->withTrashed()->first();
-            $course_id = $driver->course_id;
             Lesson::query()
                 ->where('driver_id', $id)
-                ->delete();
-            Course::query()
-                ->where('id', $course_id)
                 ->delete();
             $name = $driver->name;
             DB::commit();
@@ -147,4 +144,6 @@ class DriverController extends Controller
             return false;
         }
     }
+
+
 }

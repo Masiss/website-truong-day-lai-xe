@@ -80,8 +80,8 @@
                             <table class="table datatable-project">
                                 <thead>
                                 <tr>
-                                    <th>Tên giáo viên</th>
-                                    <th>Thời gian học</th>
+                                    <th>Tên học viên</th>
+                                    <th>Thời gian dạy</th>
                                     <th>Thời gian bắt đầu</th>
                                     <th>Đánh giá</th>
                                     <th>Trạng thái</th>
@@ -99,10 +99,11 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            <x-pagination :paginate="$lessons"/>
-
                         </div>
+
                     </div>
+                    <x-pagination :paginate="$lessons"/>
+
                     <!-- /Project table -->
                     <!-- Invoice table -->
                     <div class="card">

@@ -18,12 +18,6 @@ class CourseFactory extends Factory
     public function definition()
     {
         return [
-            'type' => random_int(0, 2),
-            'days_of_week' =>(Arr::random([
-                'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
-            ],2)),
-            'price' => $this->faker->numberBetween(1000000, 10000000),
-            'price_per_day' => $this->faker->numberBetween(200000, 400000),
 
         ];
     }

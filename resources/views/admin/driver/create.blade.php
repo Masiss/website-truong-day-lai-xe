@@ -257,12 +257,22 @@
                                                 <option value="PM">Chiều</option>
                                             </select>
                                         </div>
+
+                                        {{--                                        <div class="col-xl-4 col-md-6 col-12">--}}
+                                        {{--                                            <div class="mb-1">--}}
+                                        {{--                                                <label class="form-label" for="disabledInput">Số buổi</label>--}}
+                                        {{--                                                <input name="lesson" type="number" value="20" class="form-control"--}}
+                                        {{--                                                       id="lesson"--}}
+                                        {{--                                                       readonly/>--}}
+                                        {{--                                            </div>--}}
+                                        {{--                                        </div>--}}
                                         <div class="col-xl-4 col-md-6 col-12">
                                             <div class="mb-1">
-                                                <label class="form-label" for="disabledInput">Số buổi</label>
-                                                <input name="lesson" type="number" value="20" class="form-control"
-                                                       id="lesson"
-                                                       readonly/>
+                                                <label class="form-label">Số buổi</label>
+                                                <div>
+                                                    <span><b>Trọn gói:</b> 40 buổi/2 tiếng hoặc 20 buổi/4 tiếng</span>
+                                                    <span><b>Không trọn gói:</b> số buổi được đăng ký bằng số thứ đã chọn</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-xl-1 center-layout">
@@ -308,14 +318,30 @@
         <script type="text/javascript">
 
             $(document).ready(function () {
-                let last = document.getElementById("last");
-                last.addEventListener("change", function () {
-                    if (last.value === "2") {
-                        document.getElementById("lesson").value = 20;
-                    } else if (last.value === "4") {
-                        document.getElementById("lesson").value = 10;
+                // let last = document.getElementById("last");
+                // last.addEventListener("change", function () {
+                //     if (last.value === "2") {
+                //         document.getElementById("lesson").value = 20;
+                //     } else if (last.value === "4") {
+                //         document.getElementById("lesson").value = 10;
+                //     }
+                // });
+                var picker = $('.picker');
+                window.onload = function () {
+                    if (picker.length) {
+                        let now = new Date(),
+                            currY = now.getFullYear(),
+                            currM = now.getMonth(),
+                            currD = now.getDate(),
+                            max = currY - 18,
+                            min = currY - 70;
+                        flatpickr('#fp-human-friendly', {
+                            maxDate: new Date(max, currM, currD),
+                            minDate: new Date(min, currM, currD),
+                            allowInput: true,
+                        });
                     }
-                });
+                }
                 {{--$("#btn-submit").click(function (event) {--}}
                 {{--    //validate--}}
                 {{--    var form = document.getElementById('form-data-1');--}}

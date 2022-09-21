@@ -20,8 +20,12 @@ return new class extends Migration {
         DB::table('configs')->insert(
             [
                 [
-                    'key' => 'price_per_day',
-                    'value' => 0
+                    'key' => 'full_course_4_hours',
+                    'value' => 40
+                ],
+                [
+                    'key' => 'full_course_2_hours',
+                    'value' => 20
                 ],
                 [
                     'key' => 'price_full_course',
@@ -61,15 +65,27 @@ return new class extends Migration {
                 ],
                 [
                     'key' => 'B1',
-                    'value' => '23.000.000',
+                    'value' => 23000000,
                 ],
                 [
                     'key' => 'B2',
-                    'value' => '25.000.000',
+                    'value' => 25000000,
                 ],
                 [
                     'key' => 'C',
-                    'value' => '28.000.000',
+                    'value' => 27000000,
+                ],
+                [
+                    'key' => 'B1_per_day',
+                    'value' => 500000,
+                ],
+                [
+                    'key' => 'B2_per_day',
+                    'value' => 600000,
+                ],
+                [
+                    'key' => 'C_per_day',
+                    'value' => 700000,
                 ],
                 [
                     'key' => 'email',
@@ -77,15 +93,15 @@ return new class extends Migration {
                 ],
                 [
                     'key' => 'banner_1',
-                    'value' => null,
+                    'value' => 'homepage/banner_1.jpg',
                 ],
                 [
                     'key' => 'banner_2',
-                    'value' => null,
+                    'value' => 'homepage/banner_2.jpg',
                 ],
                 [
                     'key' => 'banner_bottom',
-                    'value' => null,
+                    'value' => 'homepage/banner_bottom.jpg',
                 ],
                 [
                     'key' => 'logo',
@@ -100,8 +116,10 @@ return new class extends Migration {
                     'key' => 'ig',
                     'value' => 'instagr.am/binhnguyen.03',
                 ],
-
-
+                [
+                    'key' => 'bank_number',
+                    'value' => 76210001845703,
+                ],
             ],
 
         );

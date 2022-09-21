@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\SalariesAction;
+use App\Enums\LessonStatusEnum;
 use App\Enums\SalaryStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApproveSalaryRequest;
 use App\Models\Instructor;
+use App\Models\Lesson;
 use App\Models\MonthSalary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
 
 class SalaryController extends Controller
 {
@@ -100,12 +100,41 @@ class SalaryController extends Controller
 
     }
 
-    public function show($id)
+    public function lessonAPI(Request $request)
     {
-        $info = SalariesAction::showSalary($id);
+        $salary=MonthSalary::query()
+            ->where('id',$request->id)->first();
+        $divideMonthYear = explode('/', $salary->month);
+        $month = $divideMonthYear[0];
+        $year = $divideMonthYear[1];
+
+        $lessons = Lesson::query()
+            ->where('ins_id', '=', $salary->ins_id)
+            ->with('driver')
+            ->where('status', LessonStatusEnum::HAPPENED->value)
+            ->whereMonth('date', '=', $month)
+            ->whereYear('date', '=', $year)
+            ->paginate(7);
+        return view('apps.lesson-list', [
+            'lessons' => $lessons
+        ]);
+    }
+
+    public function show(MonthSalary $salary)
+    {
+        $divideMonthYear = explode('/', $salary->month);
+        $month = $divideMonthYear[0];
+        $year = $divideMonthYear[1];
+
+        $info = SalariesAction::showSalary($salary, $month, $year);
+        $ins = Instructor::query()
+            ->where('id', '=', $salary->ins_id)
+            ->first();
+
+        $info->lessons = $info->lessons->paginate(7);
         $info->lessons->totalPage = ceil($info->lessons->total() / $info->lessons->perPage());
         return view('admin.salaries.show', [
-            'instructor' => $info->ins,
+            'instructor' => $ins,
             'lessons' => $info->lessons,
             'month_salary' => $info->month_salary,
             'detail_salary' => $info->detail_salary,
@@ -131,7 +160,7 @@ class SalaryController extends Controller
                 ->with('instructor')
                 ->first();
             return redirect()->route('admin.salaries.pending')
-                ->with('status', 'Đã duyệt lương cho '.$salary->instructor->name.' với mức lương '.$salary->total_salaries);
+                ->with('status', 'Đã duyệt lương cho ' . $salary->instructor->name . ' với mức lương ' . $salary->total_salaries);
 
         } catch (Throwable $e) {
             report($e);

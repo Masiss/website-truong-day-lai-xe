@@ -6,6 +6,7 @@ use App\Actions\createCourse;
 use App\Actions\CreateDriverAction;
 use App\Actions\StoreDriver;
 use App\Http\Requests\StoreDriverRequest;
+use App\Models\Course;
 use App\Models\Driver;
 use App\Models\Instructor;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class AuthController extends Controller
         try {
 
             $driverArr = $request->only([
+                'days_of_week',
                 'name',
                 'gender',
                 'birthdate',
@@ -37,7 +39,7 @@ class AuthController extends Controller
                 'email',
                 'file',
                 'is_full',
-                'password'
+                'password',
             ]);
             $driverArr['is_full'] = $request->boolean('is_full');
 
@@ -47,28 +49,25 @@ class AuthController extends Controller
                 'shift',
                 'last',
             ]);
-            $courseArr = $request->only([
-                'days_of_week',
-                'type',
-                'lesson',
-            ]);
-            $lessonArr['lesson'] = $courseArr['lesson'];
-
+            $course_type = $request->type;
             //add Course
-            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'],
-                $lessonArr['last']);
+            $driverArr['course_id'] = Course::query()
+                ->where('type', $course_type)
+                ->first()
+                ->id;
             $driver = Driver::query()
                 ->create($driverArr);
             $driver_id = $driver->id;
             $lessonArr['driver_id'] = $driver_id;
             //add lessons
-            CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
+            $total_lessons=CreateDriverAction::AddLessons($lessonArr, $driverArr['is_full']);
+            CreateDriverAction::createBill($driver_id, $driverArr['is_full'], $driverArr['course_id'], $total_lessons);
             DB::commit();
             auth('driver')->login($driver);
             return \redirect('./login');
         } catch (Throwable $e) {
             DB::rollBack();
-            echo $e;
+            dd($e);
             return false;
         }
     }

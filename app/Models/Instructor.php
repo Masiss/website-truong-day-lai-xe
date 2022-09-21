@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\DaysOfWeekEnum;
 use App\Enums\GenderNameEnum;
 use App\Enums\LevelEnum;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Kyslik\ColumnSortable\Sortable;
@@ -28,7 +30,6 @@ class Instructor extends \Illuminate\Foundation\Auth\User
         'phone_numbers',
         'birthdate',
         'gender',
-        'salary',
         'avatar',
         'password',
         'level',
@@ -36,20 +37,9 @@ class Instructor extends \Illuminate\Foundation\Auth\User
         'updated_at'
     ];
 
-    public $sortable=[
+    public $sortable = [
         'id',
     ];
-//    public static function checkLevel()
-//    {
-//        if (auth()->guard('instructor')->user()->level == LevelEnum::INSTRUCTOR->value) {
-//            return LevelEnum::INSTRUCTOR->name;
-//        } elseif (auth()->guard('instructor')->user()->level == LevelEnum::ADMIN->value) {
-//            return LevelEnum::ADMIN->name;
-//        } else {
-//            return redirect()->route('login');
-//        }
-//
-//    }
 
     public static function isAdmin()
     {
@@ -60,6 +50,10 @@ class Instructor extends \Illuminate\Foundation\Auth\User
 
     }
 
+    public function birthdateForEditing()
+    {
+        return date('Y-m-d', strtotime($this->birthdate));
+    }
 //    protected function name(): Attribute
 //    {
 //        return Attribute::make(
@@ -75,7 +69,7 @@ class Instructor extends \Illuminate\Foundation\Auth\User
     protected function birthdate(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => date('d/m/Y', strtotime($value)),
+            get: fn($value) => date('d-m-Y', strtotime($value)),
 //            set: fn($value) => date('Y/m/d', strtotime($value)),
         );
     }
@@ -91,7 +85,7 @@ class Instructor extends \Illuminate\Foundation\Auth\User
     {
         return Attribute::make(
             get: fn($value) => $value ? Storage::url($value) : null,
-            set: fn($value) => $value ? Storage::disk('public')->put('avatar', $value.'.jpg') : null,
+            set: fn($value) => $value ? Storage::disk('public')->put('avatar', $value . '.jpg') : null,
         );
     }
 

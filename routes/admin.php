@@ -10,40 +10,19 @@ use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\SalaryController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-//    $route = Route::currentRouteName();
-//    $breadCrumb = explode('.', $route);
-//    $pageName = last($breadCrumb);
-//    if (auth('driver')->check()) {
-//        $title = 'Học viên';
-//    } elseif (auth('instructor')->check()) {
-//        switch (auth('instructor')->user()->level) {
-//            case (LevelEnum::ADMIN->name):
-//                $title = 'Admin';
-//                break;
-//            case (LevelEnum::INSTRUCTOR->name):
-//                $title = 'Giáo viên';
-//                break;
-//        }
-//    } else {
-//        $title = "";
-//    }
-    return view('admin.index', [
-//        'pageName' => $pageName,
-//        'breadCrumb' => $breadCrumb,
-//        'title'=>$title,
-    ]);
-}
+Route::get('/', [\App\Http\Controllers\AdminController::class, 'index']
 )->name('index');
+Route::get('/drivers/api', [\App\Http\Controllers\AdminController::class, 'driverAPI'])->name('drivers.api');
+
 Route::resource('drivers', DriverController::class)->except([
     'edit'
 ]);
-
 Route::get('salaries/calculate', [SalaryController::class, 'monthCalculate'])->name('salaries.calculate');
 Route::get('salaries/pending', [SalaryController::class, 'pending'])->name('salaries.pending');
 Route::get('salaries/approved', [SalaryController::class, 'approved'])->name('salaries.approved');
 Route::get('salaries/{id}/approve', [SalaryController::class, 'approve'])->where('id',
     '[0-9]+')->name('salaries.approve');
+Route::get('salaries/lesson/api', [SalaryController::class, 'lessonAPI'])->name('salaries.lessons.api');
 Route::resource('salaries', SalaryController::class)->only([
     'update',
     'show',
@@ -80,6 +59,6 @@ Route::prefix('documents')
         Route::post('store', 'store')->name('store');
         Route::get('/{id}/show', 'show')->name('show');
         Route::delete('destroy', 'destroy')->name('destroy');
-        Route::post('/upload-image','storeImageFromUploaded')->name('upload-image');
-        Route::post('/upload-file','storeAttachmentFromUploaded')->name('upload-file');
+        Route::post('/upload-image', 'storeImageFromUploaded')->name('upload-image');
+        Route::post('/upload-file', 'storeAttachmentFromUploaded')->name('upload-file');
     });

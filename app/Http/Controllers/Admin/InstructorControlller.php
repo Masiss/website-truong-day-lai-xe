@@ -14,8 +14,6 @@ use App\Models\MonthSalary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
 class InstructorControlller extends Controller
@@ -43,7 +41,7 @@ class InstructorControlller extends Controller
         try {
             // Validate the value...
             $password = Hash::make(Str::random(8));
-            $id = Instructor::query()->create([
+            $name= Instructor::query()->create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone_numbers' => $request->phone_numbers,
@@ -52,9 +50,9 @@ class InstructorControlller extends Controller
                 'avatar' => $request->avatar,
                 'password' => $password,
                 'level' => LevelEnum::INSTRUCTOR->value,
-            ]);
+            ])->name;
             DB::commit();
-            echo '1';
+            return response()->json(['status'=> 'Thêm thành công giáo viên '.$name]);
         } catch (Throwable $e) {
             report($e);
             DB::rollBack();
@@ -118,7 +116,7 @@ class InstructorControlller extends Controller
                 ->name;
             DB::commit();
             return redirect()->route('admin.instructors.index')
-                ->with('status', 'Đã xóa thành công giáo viên '.$name);
+                ->with('status', 'Đã xóa thành công giáo viên ' . $name);
         } catch (Throwable $e) {
             report($e);
             DB::rollBack();

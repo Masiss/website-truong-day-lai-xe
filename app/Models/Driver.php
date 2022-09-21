@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Enums\DaysOfWeekEnum;
 use App\Enums\GenderNameEnum;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Kyslik\ColumnSortable\Sortable;
 
 //class Driver extends Model
@@ -39,6 +41,8 @@ class Driver extends \Illuminate\Foundation\Auth\User
         'password',
         'created_at',
         'updated_at',
+        'days_of_week',
+
     ];
     protected $cast = [
         'birthdate' => 'date:d-m-Y',
@@ -75,6 +79,23 @@ class Driver extends \Illuminate\Foundation\Auth\User
         );
     }
 
+    public static function FromDatabaseToString($array)
+    {
+        $array = Arr::map($array, function ($value) {
+            return DaysOfWeekEnum::getValueByKey($value);
+        });
+        return implode(', ', $array);
+
+    }
+
+    protected function daysOfWeek(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => self::FromDatabaseToString(json_decode($value)),
+            set: fn($value) => json_encode($value),
+        );
+    }
+
     protected function password(): Attribute
     {
         return Attribute::make(
@@ -87,7 +108,7 @@ class Driver extends \Illuminate\Foundation\Auth\User
         return Attribute::make(
             get: fn($value) => Storage::url($value),
             set: fn($value) => Storage::disk('public')
-                ->put('file', $value.'.jpg'),
+                ->put('file', $value . '.jpg'),
         );
     }
 

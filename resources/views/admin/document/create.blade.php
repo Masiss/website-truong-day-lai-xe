@@ -23,7 +23,7 @@
                           enctype="multipart/form-data">
                         @csrf
                         <div id="editorjs" name="text"></div>
-                        <button id="save-button">Save</button>
+                        <button class="btn btn-primary" id="save-button">Save</button>
                         <pre id="output"></pre>
                     </form>
                 </div>

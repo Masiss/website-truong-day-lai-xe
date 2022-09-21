@@ -25,6 +25,18 @@
                 }
 
             ]
+        },
+        {
+            "url": "drivers/change_password",
+            "name": "Đổi mật khẩu",
+            "icon": "lock",
+            "slug": "drivers.changePassword"
+        },
+        {
+            "url": "drivers/bill",
+            "name": "Học phí",
+            "icon": "dollar-sign",
+            "slug": "drivers.bill"
         }
     ]
 }

@@ -261,7 +261,7 @@
                                     <div class="col-xl-4 col-md-6 col-12">
                                         <div class="mb-1">
                                             <label class="form-label" for="disabledInput">Số buổi</label>
-                                            <input name="lesson" type="number" value="20" class="form-control"
+                                            <input name="lesson" type="number" value="40" class="form-control"
                                                    id="lesson"
                                                    readonly/>
                                         </div>
@@ -301,14 +301,6 @@
                                             <option value="1">B2</option>
                                             <option value="2">C</option>
                                         </select>
-                                    </div>
-                                    <div class="col-xl-4 col-md-6 col-12">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="disabledInput">Tổng tiền</label>
-                                            <input name="bill" type="number" value="" class="form-control"
-                                                   id="bill"
-                                                   disabled/>
-                                        </div>
                                     </div>
                                     <div class="d-flex justify-content-lg-center center-layout">
                                         <button type="submit" class="btn btn-primary " id="btn-submit">
@@ -359,76 +351,40 @@
     })
     $(document).ready(function () {
         let last = document.getElementById("last");
-        let bill = document.getElementById('bill'),
-            full = "3500000",
-            dow = document.getElementById('select2-limited').length,
-            notfull = last.value / 2 * 200000 * dow,
+        let dow = document.getElementById('select2-limited').length,
             isFull = document.getElementsByName('is_full');
-
-        last.addEventListener("change", function () {
-            isFull = $('input[name="is_full"]:checked').val();
-            if (isFull == "true") {
-                if (last.value === "2") {
-                    document.getElementById("lesson").value = 20;
-                } else if (last.value === "4") {
-                    document.getElementById("lesson").value = 10;
-                }
-            } else {
-
-                document.getElementById("lesson").value = $('select#select2-limited').val().length;
-
-            }
-
-        });
-        for (let i = 0; i < isFull.length; i++) {
-            isFull[i].addEventListener('change', function (value) {
-                let dow = $('select#select2-limited').val().length,
-                    notfull = last.value / 2 * 200000 * dow;
-                if (this.value == "true") {
-                    document.getElementById('bill').value = full;
-                } else {
-                    document.getElementById('bill').value = notfull;
-                }
-            })
+        for (var i = 0; i < isFull.length; i++) {
+            [last, document.getElementById('select2-limited'), isFull[i]]
+                .forEach(e => e.addEventListener("change", function () {
+                    isFull = $('input[name="is_full"]:checked').val();
+                    if (isFull === '1') {
+                        if (last.value === "2") {
+                            document.getElementById("lesson").value = 40;
+                        } else if (last.value === "4") {
+                            document.getElementById("lesson").value = 20;
+                        }
+                    } else {
+                        document.getElementById("lesson").value = $('select#select2-limited').val().length;
+                    }
+                }));
         }
-        {{--$("#btn-submit").click(function (event) {--}}
-        {{--    //validate--}}
-        {{--    console.log($("select#select2-limited").length);--}}
-        {{--    var form = document.getElementById('form-data-1');--}}
-        {{--    form.dispatchEvent(new Event('submit'));--}}
-        {{--    event.preventDefault();--}}
-
-        {{--    // Form data--}}
-        {{--    let dow = $("select#select2-limited").val();--}}
-        {{--    var form1 = new FormData(document.getElementById('form-data-1'));--}}
-        {{--    var day = $('input[name="lesson"]').val();--}}
-        {{--    var last = $('select[name="last"]').val();--}}
-        {{--    form1.append('lesson', day);--}}
-        {{--    form1.set('days_of_week', dow);--}}
-        {{--    //ajax--}}
-        {{--    $.ajax({--}}
-        {{--        headers: {--}}
-        {{--            'X-CSRF-TOKEN': '{{ csrf_token() }}'--}}
-        {{--        },--}}
-        {{--        url: '{{route('registering')}}',--}}
-        {{--        type: 'POST',--}}
-        {{--        dataType: "JSON",--}}
-        {{--        data: form1,--}}
-        {{--        // "'X-CSRF-TOKEN'": data1,--}}
-
-        {{--        contentType: false,--}}
-        {{--        processData: false,--}}
-        {{--        success: function (event) {--}}
-        {{--            if (event == "1") {--}}
-        {{--                window.location = "{{route('index')}}";--}}
-        {{--            } else {--}}
-        {{--                console.log(0);--}}
-        {{--            }--}}
-        {{--        },--}}
-
-        {{--    });--}}
-        {{--})--}}
     });
+    var picker = $('.picker');
+    window.onload = function () {
+        if (picker.length) {
+            let now = new Date(),
+                currY = now.getFullYear(),
+                currM = now.getMonth(),
+                currD = now.getDate(),
+                max = currY - 18,
+                min = currY - 70;
+            flatpickr('#fp-human-friendly', {
+                maxDate: new Date(max, currM, currD),
+                minDate: new Date(min, currM, currD),
+                allowInput: true,
+            });
+        }
+    }
 </script>
 <script src={{asset('js/form-validation.js')}}></script>
 

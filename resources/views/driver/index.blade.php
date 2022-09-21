@@ -190,7 +190,7 @@
                                         <div class="col-md-6 mb-1">
                                             <label class="form-label" for="">Ngày học</label>
                                             <input
-                                                value="{{$driver->course->days_of_week}}"
+                                                value="{{$driver->days_of_week}}"
                                                 type="text"
                                                 class="form-control"
                                                 required

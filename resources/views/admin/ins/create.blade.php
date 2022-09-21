@@ -28,6 +28,7 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <span id="success" class="alert alert-success"></span>
                             </div>
 
                             @csrf
@@ -89,8 +90,6 @@
                                                 placeholder=""
                                                 required
                                             />
-                                            <div class="valid-feedback"></div>
-                                            <div class="invalid-feedback">Please enter your name.</div>
                                         </div>
                                         <div class="col-xl-3 col-md-6 col-sm-12 mb-2">
                                             <label class="form-label" for="phone_numbers">Số điện thoại</label>
@@ -120,7 +119,7 @@
                                         </div>
                                         <div class="col-xl-5 col-md-6 col-sm-12 mb-2">
                                             <label for="customFile1" class="form-label">File hình thẻ</label>
-                                            <input class="form-control" name="avatar" type="file" id="file" />
+                                            <input class="form-control" name="avatar" type="file" id="file"/>
                                         </div>
                                         <div class="col-xl-1 center-layout">
                                             <button class="btn btn-primary " id="btn-submit">
@@ -146,22 +145,17 @@
     </div>
 
     @push('javascript')
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-        <script type="text/javascript"
-                src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/fh-3.2.3/datatables.min.js"></script>
         // Page JS
         <script src={{asset('js/picker.js')}}></script>
         <script src={{asset('js/picker.date.js')}}></script>
-        <script src={{asset('js/picker.time.js')}}></script>
+        {{--        <script src={{asset('js/picker.time.js')}}></script>--}}
         <script src={{asset('js/legacy.js')}}></script>
         <script src={{asset('js/flatpickr.min.js')}}></script>
-        <script src={{asset('js/form-pickers.min.js')}}></script>
+        {{--        <script src={{asset('js/form-pickers.min.js')}}></script>--}}
         <script src={{asset('js/select2.full.min.js')}}></script>
         <script src={{asset('js/jquery.validate.min.js')}}></script>
         <script src={{asset('js/form-select2.min.js')}}></script>
+        <script src={{asset('js/form-validation.js')}}></script>
         <script type="text/javascript">
 
             $(document).ready(function () {
@@ -184,12 +178,11 @@
                         contentType: false,
                         processData: false,
                         success: function (event) {
-                            if (event == "1") {
+                            document.getElementById('success').innerHTML = event.status;
+                            setTimeout(function () {
                                 window.location = "{{route('admin.instructors.store')}}";
 
-                            } else {
-                                console.log(0);
-                            }
+                            }, 3000)
                         },
                         error: function () {
                             console.log(0);
@@ -198,8 +191,23 @@
                     });
                 })
             });
+            var picker = $('.picker');
+            window.onload = function () {
+                if (picker.length) {
+                    let now = new Date(),
+                        currY = now.getFullYear(),
+                        currM = now.getMonth(),
+                        currD = now.getDate(),
+                        max = currY - 18,
+                        min = currY - 70;
+                    flatpickr('#fp-human-friendly', {
+                        maxDate: new Date(max, currM, currD),
+                        minDate: new Date(min, currM, currD),
+                        allowInput: true,
+                    });
+                }
+            }
         </script>
-        <script src={{asset('js/form-validation.js')}}></script>
 
     @endpush
 @endsection

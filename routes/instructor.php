@@ -15,3 +15,6 @@ Route::get('/salaries/show/{id}', 'show')->where('id',
     '[0-9]+')->name('salaries.show');
 Route::get('/lessons', 'lessons')->name('lessons');
 Route::get('/getLessons', 'getLessons')->name('getLessons');
+Route::get('change_password','changePassword')->name('changePassword');
+Route::put('update_password','updatePassword')->name('updatePassword');
+

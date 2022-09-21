@@ -100,43 +100,46 @@
                                     </div>
                                 </div>
                                 <h4 class="fw-bolder border-bottom pb-50 mb-1">Chi tiết</h4>
-                                <div class="info-container">
-                                    <ul class="list-unstyled">
-                                        <li class="mb-75">
-                                            <span class="fw-bolder me-25">Tên:</span>
-                                            <select id="name" class="form-select" required>
-                                                @foreach($instructors as $instructor)
-                                                    <option value="{{$instructor->id}}">{{$instructor->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </li>
-                                        <li class="mb-75">
-                                            <span class="fw-bolder me-25">Email:</span>
-                                            <input id="email" class="form-control"
-                                                   value="{{$instructor->first()->email}}"
-                                                   readonly
-                                            >
+                                <form method="POST" action="{{route('drivers.lessons.update.ins',$lesson->id)}}">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="info-container">
+                                        <ul class="list-unstyled">
+                                            <li class="mb-75">
+                                                <span class="fw-bolder me-25">Tên:</span>
+                                                <select id="name" name="instructor" class="form-select" required>
+                                                    @foreach($instructors as $instructor)
+                                                        <option
+                                                            value="{{$instructor->id}}">{{$instructor->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </li>
+                                            <li class="mb-75">
+                                                <span class="fw-bolder me-25">Email:</span>
+                                                <input id="email" class="form-control"
+                                                       value="{{$instructor->first()->email}}"
+                                                       readonly
+                                                >
 
-                                        </li>
-                                        <li class="mb-75">
-                                            <span class="fw-bolder me-25">Số điện thoại:</span>
-                                            <input id="phone_numbers" class="form-control"
-                                                   value="{{$instructor->first()->phone_numbers}}"
-                                                   readonly
-                                            >
+                                            </li>
+                                            <li class="mb-75">
+                                                <span class="fw-bolder me-25">Số điện thoại:</span>
+                                                <input id="phone_numbers" class="form-control"
+                                                       value="{{$instructor->first()->phone_numbers}}"
+                                                       readonly
+                                                >
 
-                                        </li>
-                                    </ul>
-                                    <div class="col-xl-12">
-                                        <form action="">
+                                            </li>
+                                        </ul>
+                                        <div class="col-xl-12">
+                                            <button id="btn-change" class="btn btn-primary">
+                                                Đổi
+                                            </button>
+                                        </div>
 
-                                        </form>
-                                        <button id="btn-change" class="btn btn-primary">
-                                            Đổi
-                                        </button>
                                     </div>
+                                </form>
 
-                                </div>
                             </div>
                         </div>
 
@@ -298,6 +301,7 @@
                     },
                     url: '{{route('drivers.lessons.update',$lesson->id)}}',
                     data: data,
+                    method: 'PUT',
                     dataType: "JSON",
                     success: function (event) {
                         console.log(event);

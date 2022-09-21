@@ -5,11 +5,11 @@ namespace App\Models;
 use App\Actions\SetLessonForCalendarAction;
 use App\Enums\LessonStatusEnum;
 use App\Enums\LevelEnum;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Kyslik\ColumnSortable\Sortable;
 
 class Lesson extends Model
@@ -98,14 +98,14 @@ class Lesson extends Model
     protected function last(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value." tiếng",
+            get: fn($value) => $value . " tiếng",
         );
     }
 
     protected function startAt(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value." giờ",
+            get: fn($value) => $value . " giờ",
         );
     }
 

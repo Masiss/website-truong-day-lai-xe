@@ -14,7 +14,7 @@ class ConfigController extends Controller
 {
     public function __construct()
     {
-        $this->model = Config::query();
+//        $this->model = Config::query();
     }
 
     public function index()

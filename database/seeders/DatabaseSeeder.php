@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        Course::factory(30)->create();
         Driver::factory(200)->create();
         Instructor::factory(10)->create();
         $this->call([

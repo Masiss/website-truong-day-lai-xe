@@ -43,7 +43,7 @@
                 <p>
                     <b>Nếu bạn học xong mà cảm thấy tay lái chưa vững?</b> Thì đừng lo bạn ơi, bạn có thể đăng ký thêm
                     các buổi
-                    học thêm để nâng cao tay lái với giá cả rất phải chăng.<u> Chỉ 200k cho 1 ca 2 tiếng.</u>
+                    học thêm để nâng cao tay lái với giá cả rất phải chăng.<u> Chỉ từ 500k cho 1 ca 2 tiếng.</u>
                 </p>
                 <p>
                     Thủ tục đăng ký học rất đơn giản, bạn có thể đến và đăng ký trực tiếp tại trung tâm hoặc nhấn nút

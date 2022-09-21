@@ -38,6 +38,7 @@
                             <h4 class="fw-bolder border-bottom pb-50 mb-1">Chi tiết</h4>
                             <div class="info-container">
                                 <ul class="list-unstyled">
+                                    <li value="{{$instructor->id}}" id="id" hidden></li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">Tên:</span>
                                         <span>{{$instructor->name}}</span>
@@ -106,33 +107,11 @@
                 <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
                     <!-- Project table -->
                     <div class="card">
-                        <h4 class="card-header">Số buổi học: {{$month_salary->total_lessons}}</h4>
-                        <div class="table-responsive">
-                            <table class="table datatable-project">
-                                <thead>
-                                <tr>
-                                    <th>Tên giáo viên</th>
-                                    <th>Thời gian học</th>
-                                    <th>Thời gian bắt đầu</th>
-                                    <th>Đánh giá</th>
-                                    <th>Trạng thái</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($lessons as $lesson)
-                                    <tr>
-                                        <td>{{$lesson->driver->name}}</td>
-                                        <td>{{$lesson->last}}</td>
-                                        <td>{{$lesson->start_at ." ". $lesson->date}}</td>
-                                        <td>{{$lesson->report}}</td>
-                                        <td>{{$lesson->status}}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                            <x-pagination :paginate="$lessons"/>
+                        <h4 class="card-header">Số buổi dạy: {{$month_salary->total_lessons}}</h4>
+                        <div id="list-lesson" class="table-responsive">
 
                         </div>
+                        <x-pagination :paginate="$lessons"/>
                     </div>
                     <!-- /Project table -->
                     <!-- current plan -->
@@ -224,10 +203,24 @@
             let a = document.getElementById('base'),
                 b = document.getElementById('minus'),
                 c = document.getElementById('total');
-            console.log(a);
             [a, b].forEach(e => e.addEventListener('keyup', function () {
                 c.value = a.value - b.value;
             }))
+            window.onload = function () {
+                let id = document.getElementById('id').value;
+                $.ajax({
+                    header: {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}',
+                    },
+                    url: '{{route('admin.salaries.lessons.api',)}}',
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        document.getElementById('list-lesson').innerHTML = data;
+                    }
+                })
+            }
         </script>
         {{--        <script src={{asset('js/form-validation.js')}}></script>--}}
 

@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->string('phone_numbers', 10);
             $table->date('birthdate');
             $table->boolean('gender');
-            $table->integer('salary')->nullable();
             $table->string('avatar')->nullable();
             $table->string('password');
             $table->tinyInteger('level');

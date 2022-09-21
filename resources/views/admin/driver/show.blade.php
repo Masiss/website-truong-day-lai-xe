@@ -73,7 +73,7 @@
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">Ngày học:</span>
-                                        <span>{{$course->days_of_week}}</span>
+                                        <span>{{$driver->days_of_week}}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">Loại bằng:</span>

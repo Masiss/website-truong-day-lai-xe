@@ -37,7 +37,7 @@
                                 (vào thứ 7, Chủ Nhật trong tuần)
                                 Không phát sinh thêm chi phí
                             </p>
-                            <a class="btn btn-primary">Xem thêm</a>
+                            <a class="btn btn-primary" href="{{route('courses')}}">Xem thêm</a>
                         </div>
                         <div class="w-25">
                             <h3>
@@ -49,7 +49,7 @@
                                 (vào thứ 7, Chủ Nhật trong tuần)
                                 Không phát sinh thêm chi phí
                             </p>
-                            <a class="btn btn-primary">Xem thêm</a>
+                            <a class="btn btn-primary" href="{{route('courses')}}">Xem thêm</a>
 
                         </div>
 
@@ -63,7 +63,7 @@
                                 (vào thứ 7, Chủ Nhật trong tuần)
                                 Không phát sinh thêm chi phí
                             </p>
-                            <a class="btn btn-primary">Xem thêm</a>
+                            <a class="btn btn-primary" href="{{route('courses')}}">Xem thêm</a>
 
                         </div>
                     </div>

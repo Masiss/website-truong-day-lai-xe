@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Course;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -27,6 +28,9 @@ class DriverFactory extends Factory
             'birthdate'=>$this->faker->date('Y-m-d'),
             'file'=>$this->faker->imageUrl(),
             'is_full'=>$this->faker->boolean(),
+            'days_of_week' =>(Arr::random([
+                'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
+            ],2)),
             'password'=>$this->faker->password(),
         ];
     }

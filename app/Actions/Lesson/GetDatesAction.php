@@ -26,7 +26,7 @@ class GetDatesAction
                 }
 
             }
-            $date->setISODate($date->format('o'), $date->format('W') + 1);
+            $date->setISODate($date->format('o'), $date->format('W') );
         }
         return $schedule;
 

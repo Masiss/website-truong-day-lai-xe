@@ -37,7 +37,7 @@
                                     <div class="row">
                                         @csrf
                                         @method('POST')
-                                        <div class="col-xl-4 col-md-6 col-sm-12 mb-1">
+                                        <div class="col-xl-3 col-md-6 col-sm-12 mb-1">
                                             <label class="form-label" class="d-block">Trọn gói</label>
                                             <div class="demo-inline-spacing">
                                                 <div class="form-check my-50">
@@ -62,7 +62,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-1">
+                                        <div class="col-xl-3">
+                                            <label class="form-label">Loại bằng</label>
+                                            <select class="form-control" name="type">
+                                                <option value="0">B1</option>
+                                                <option value="1">B2</option>
+                                                <option value="2">C</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-1">
                                             <label class="form-label" for="select2-limited">Chọn thứ</label>
                                             <select name="days_of_week[]"
                                                     class="max-length form-select form-control select2"
@@ -94,10 +102,11 @@
                                         </div>
                                         <div class="col-xl-4 col-md-6 col-12">
                                             <div class="mb-1">
-                                                <label class="form-label" for="disabledInput">Số buổi</label>
-                                                <input name="lesson" type="number" value="20" class="form-control"
-                                                       id="lesson"
-                                                       disabled/>
+                                                <label class="form-label">Số buổi</label>
+                                                <div>
+                                                    <span><b>Trọn gói:</b> 40 buổi/2 tiếng hoặc 20 buổi/4 tiếng</span>
+                                                    <span><b>Không trọn gói:</b> số buổi được đăng ký bằng số thứ đã chọn</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-xl-1 center-layout">

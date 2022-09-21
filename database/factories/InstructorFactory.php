@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Instructor>
@@ -22,8 +23,8 @@ class InstructorFactory extends Factory
             'birthdate'=>$this->faker->date('Y-m-d'),
             'phone_numbers'=>$this->faker->unique()->numberBetween(1111111111,9999999999),
             'gender'=>$this->faker->boolean(),
-            'salary'=>$this->faker->numberBetween(3000000,5000000),
             'avatar'=>$this->faker->imageUrl(),
+
             'password'=>$this->faker->password(),
             'level'=>1,
         ];

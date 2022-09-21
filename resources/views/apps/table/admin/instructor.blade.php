@@ -5,7 +5,6 @@
         <th>Tên</th>
         <th>Email</th>
         <th>Số điện thoại</th>
-        <th>Lương</th>
         <th></th>
         <th></th>
     </tr>
@@ -17,7 +16,6 @@
             <td>{{$instructor->name}}</td>
             <td>{{$instructor->email}}</td>
             <td>{{$instructor->phone_numbers}}</td>
-            <td>{{$instructor->salary}}</td>
             <td>
                 <a href="instructors/{{$instructor->id}}/">Chi tiết</a>
             </td>

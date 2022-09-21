@@ -37,6 +37,12 @@
                 }
 
             ]
+        },
+        {
+            "url": "instructors/change_password",
+            "name": "Đổi mật khẩu",
+            "icon": "lock",
+            "slug": "instructors.changePassword"
         }
     ]
 }

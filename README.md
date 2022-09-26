@@ -13,11 +13,17 @@
 - Đăng ký giờ học và chọn thầy dạy.
 - Xem danh sách các buổi học.
 - Báo cáo về chất lượng các buổi học.
+- Thay đổi giờ học, giáo viên.
 ### 2. Thầy dạy lái xe:
 - Quản lí thông tin cá nhân.(thông tin liên hệ)
-- Xem lương.
+- Xem tình trạng lương.
+- Điểm danh.
+- Xem lịch dạy.
 ### 3. Quản trị viên:
 - Xem xét duyệt lương cho các thầy.
 - Quản lí các báo cáo từ học viên.
 - Xem thông tin cá nhân của các học viên.
+- Viết tài liệu cho website.
+- Trả lời các câu hỏi, phản hồi của khách hàng.
+- Xem lịch dạy và lịch học.
 

@@ -24,7 +24,7 @@ class DriverController extends Controller
     public function index()
     {
 
-        $drivers = Driver::query()
+        $drivers = $this->model
             ->with('course')
             ->sortable()
             ->paginate(15);
@@ -73,7 +73,6 @@ class DriverController extends Controller
 
             $driverArr['password'] = Hash::make(Str::random(8));
             //add Course
-//            $driverArr['course_id'] = CreateDriverAction::createCourse($courseArr, $driverArr['is_full'], $lessonArr['last']);
             $driverArr['course_id'] = Course::query()
                 ->where('type', $courseArr['type'])
                 ->first()

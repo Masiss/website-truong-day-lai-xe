@@ -101,8 +101,8 @@
                         url:'{{route('admin.document.store')}}',
                         data:outputData,
                         method:'POST',
-                        success:function(html){
-                            window.location=html.location;
+                        success:function(){
+                            window.location="{{route('admin.document.index')}}";
                         }
                     })
                 }).catch((error) => {

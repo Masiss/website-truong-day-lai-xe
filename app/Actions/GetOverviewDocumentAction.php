@@ -7,7 +7,9 @@ class GetOverviewDocumentAction
     public static function handle($documents)
     {
         return $documents->map(function ($document) {
+            $document->content=json_decode($document->content);
             foreach ($document->content->blocks as $block) {
+
                 if ($block->type === 'header') {
                     $document->title = $block->data->text;
                 }

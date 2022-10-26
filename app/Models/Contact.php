@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\TypeContactEnums;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,4 +18,10 @@ class Contact extends Model
         'type_contacting',
         'message',
     ];
+    protected function typeContacting():Attribute
+    {
+        return Attribute::make(
+            get:fn($value)=>TypeContactEnums::toVNese($value),
+        );
+    }
 }

@@ -19,10 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('index', [HomePageController::class,'index'])->name('index');
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+Route::get('/', [HomePageController::class,'index'])->name('index');
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('registering', [AuthController::class, 'registering'])->name('registering');

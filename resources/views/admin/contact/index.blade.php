@@ -15,9 +15,9 @@
 @push('css')
     <!-- Page css files -->
     <link rel="stylesheet" href="{{ asset('css/vertical-menu.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/form-quill-editor.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/ext-component-toastr.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/app-email.min.css') }}">
+    {{--    <link rel="stylesheet" href="{{ asset('css/form-quill-editor.min.css') }}">--}}
+    {{--    <link rel="stylesheet" href="{{ asset('css/ext-component-toastr.min.css') }}">--}}
+    {{--    <link rel="stylesheet" href="{{ asset('css/app-email.min.css') }}">--}}
 @endpush
 
 <!-- Sidebar Area -->
@@ -32,15 +32,15 @@
                 <div class="sidebar">
                     <div class="sidebar-content email-app-sidebar">
                         <div class="email-app-menu">
-                            <div class="sidebar-menu-list">
+                            <div class="sidebar-menu-list width-250">
                                 <!-- <hr /> -->
                                 <h6 class="section-label mt-3 mb-1 px-2">Loại liên hệ</h6>
                                 <div class="list-group list-group-labels">
-                                    @foreach($type as $type)
+                                    @foreach($types as $type)
                                         <button name="btn-type" data-type="{{$type->value}}"
                                                 class="list-group-item list-group-item-action">
                                             <span class="bullet bullet-sm bullet-success me-1"></span>
-                                            {{$type->name}}
+                                            {{\App\Enums\TypeContactEnums::toVNese($type->value)}}
                                         </button>
                                     @endforeach
                                     <button name="btn-type" data-type="all"
@@ -49,6 +49,7 @@
                                         ALL
                                     </button>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -78,7 +79,7 @@
         <script>
             let alert = document.getElementById('alert');
             alert.innerHTML = '{{session()->get('status')}}';
-            setTimeout(function(){
+            setTimeout(function () {
                 alert.remove();
             }, 3000);
         </script>

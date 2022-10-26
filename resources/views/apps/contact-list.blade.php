@@ -16,11 +16,16 @@
                     <div class="mail-meta-item">
                         <span class="mail-date">{{$contact->created_at}}</span>
                     </div>
-                    <div class="d-flex demo-inline-spacing">
+                    <div class="mail-message d-flex justify-content-center">
+                        <p class="text-truncate mb-0">
+                            {{$contact->message}}
+                        </p>
+                    </div>
+                    <div class="d-flex">
                         @if(!TypeContactEnums::isReplied($contact->type_contacting))
-                        <button class="btn">
-                            <a href="{{route('admin.contact.show',$contact->id)}}">Phản hồi</a>
-                        </button>
+                            <button class="btn">
+                                <a href="{{route('admin.contact.show',$contact->id)}}">Phản hồi</a>
+                            </button>
                         @endif
                         <form action="{{route('admin.contact.destroy',$contact->id)}}" method="POST">
                             @csrf
@@ -31,11 +36,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="mail-message">
-                    <p class="text-truncate mb-0">
-                        {{$contact->message}}
-                    </p>
-                </div>
+
             </div>
         </li>
     @endforeach

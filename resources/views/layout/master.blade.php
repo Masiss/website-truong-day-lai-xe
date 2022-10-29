@@ -61,19 +61,19 @@
 {{--@endif--}}
 @include('layout.sidebar')
 <!-- BEGIN: Content-->
-<div class="app-content content ">
+<div class="app-content content @hasSidebar()
+{{"email-application"}}
+@endhasSidebar">
     <div class="content-overlay">
 
     </div>
     <div class="header-navbar-shadow">
     </div>
     @include('layout.header')
-    <div class="content-wrapper container-xxl p-0">
-        <div class="sidebar-left">
-            <div class="sidebar">
-                @yield('content-sidebar')
-            </div>
-        </div>
+    <div
+        class="@hasSidebar() content-area-wrapper @else content-wrapper @endhasSidebar
+    container-xxl
+     p-0">
         @yield('content')
 
     </div>

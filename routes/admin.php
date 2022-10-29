@@ -46,8 +46,8 @@ Route::prefix('contact')
         Route::get('/', 'index')->name('index');
         Route::get('/api', 'api')->name('api');
         Route::get('/{id}', 'show')->name('show');
-        Route::post('/{contact}/reply', 'reply')->name('reply');
-        Route::delete('/{contact}', 'destroy')->name('destroy');
+        Route::post('/{id}/reply', 'reply')->name('reply');
+        Route::delete('/{id}', 'destroy')->name('destroy');
 
     });
 Route::prefix('documents')

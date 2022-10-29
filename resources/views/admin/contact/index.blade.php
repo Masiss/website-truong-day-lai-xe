@@ -15,51 +15,62 @@
 @push('css')
     <!-- Page css files -->
     <link rel="stylesheet" href="{{ asset('css/vertical-menu.min.css') }}">
-    {{--    <link rel="stylesheet" href="{{ asset('css/form-quill-editor.min.css') }}">--}}
-    {{--    <link rel="stylesheet" href="{{ asset('css/ext-component-toastr.min.css') }}">--}}
-    {{--    <link rel="stylesheet" href="{{ asset('css/app-email.min.css') }}">--}}
+    <link rel="stylesheet" href="{{ asset('css/form-quill-editor.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ext-component-toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-email.min.css') }}">
 @endpush
 
 <!-- Sidebar Area -->
-
-
 @section('content')
-    <div class="email-application">
-        <div class="content-overlay"></div>
-        <div class="header-navbar-shadow"></div>
-        <div class="content-area-wrapper container-xxl p-0">
-            <div class="sidebar-left">
-                <div class="sidebar">
-                    <div class="sidebar-content email-app-sidebar">
-                        <div class="email-app-menu">
-                            <div class="sidebar-menu-list width-250">
-                                <!-- <hr /> -->
-                                <h6 class="section-label mt-3 mb-1 px-2">Loại liên hệ</h6>
-                                <div class="list-group list-group-labels">
-                                    @foreach($types as $type)
-                                        <button name="btn-type" data-type="{{$type->value}}"
-                                                class="list-group-item list-group-item-action">
-                                            <span class="bullet bullet-sm bullet-success me-1"></span>
-                                            {{\App\Enums\TypeContactEnums::toVNese($type->value)}}
-                                        </button>
-                                    @endforeach
-                                    <button name="btn-type" data-type="all"
-                                            class="list-group-item list-group-item-action">
-                                        <span class="bullet bullet-sm bullet-success me-1"></span>
-                                        ALL
-                                    </button>
-                                </div>
+    @include('admin.contact.sidebar')
+    <div class="content-right">
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <div class="body-content-overlay"></div>
+                <!-- Email list Area -->
+                <div class="email-app-list">
+                    <!-- Email search starts -->
+                    <!-- Email search ends -->
 
+                    <!-- Email actions starts -->
+                    <div class="app-action">
+                        <div class="action-left">
+                            <div class="form-check selectAll">
+                                <input type="checkbox" class="form-check-input" id="selectAllCheck"/>
+                                <label class="form-check-label fw-bolder ps-25" for="selectAllCheck">Chọn hết</label>
                             </div>
                         </div>
+                        <div class="action-right">
+                            <ul class="list-inline m-0">
+                                <li class="list-inline-item mail-delete">
+                                        <span class="action-icon"><i data-feather="trash-2"
+                                                                     class="font-medium-2"></i></span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <span class="position-absolute alert" style="top:25%;left:25%" id="alert"></span>
-            <div id="list" class="email-user-list w-100">
+                    <!-- Email actions ends -->
 
+                    <!-- Email list starts -->
+                    <div id="list" class="email-user-list">
+
+                    </div>
+                    <!-- Email list ends -->
+                </div>
+                <!--/ Email list Area -->
+                <!-- Detailed Email View -->
+
+                <!-- Detailed Email Header ends -->
+
+                <!-- Detailed Email Content starts -->
+                <!-- Detailed Email Content ends -->
             </div>
-            <!-- Email list ends -->
+            <!--/ Detailed Email View -->
+
+            <!-- compose email -->
+            <!--/ compose email -->
 
         </div>
     </div>
@@ -92,6 +103,28 @@
             callList(value);
         }))
 
+        function show(currElement) {
+            // document.getElementsByName('show').forEach(e => e.addEventListener('click', function () {
+            let id = currElement.getAttribute('data-id'),
+                url = currElement.getAttribute('data-url');
+            $.ajax({
+                header: '{{csrf_token()}}',
+                url: url,
+                success: function (info) {
+                    $('#list').empty();
+                    $('#list').html(info);
+                    feather.replace();
+                }
+            })
+            // }))
+        }
+
+        function back() {
+            $('#list').empty();
+            callList();
+        }
+
+
         function callList(value) {
             $.ajax({
                 header: '{{csrf_token()}}',
@@ -104,6 +137,7 @@
                 }
 
             })
+
         }
     </script>
 @endpush

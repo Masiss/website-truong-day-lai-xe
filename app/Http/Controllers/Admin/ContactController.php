@@ -6,6 +6,7 @@ use App\Enums\TypeContactEnums;
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class ContactController extends Controller
 {
@@ -23,20 +24,22 @@ class ContactController extends Controller
     public function api(Request $request)
     {
         $contacts = Contact::query();
-        $type=$request->type;
-       if(isset($type)){
-           $contacts=$contacts->where('type_contacting',$type)->get();
-       }else{
-           $contacts=$contacts->get();
-       }
+        $type = $request->type;
+        if (isset($type)) {
+            $contacts = $contacts->where('type_contacting', $type)->get();
+        } else {
+            $contacts = $contacts->get();
+        }
         return view('apps.contact-list', [
             'contacts' => $contacts
         ]);
     }
 
-    public function show()
+    public function show(Contact $id)
     {
-
+        return view('admin.contact.show', [
+            'contact' => $id
+        ]);
     }
 
     public function destroy()
@@ -44,7 +47,7 @@ class ContactController extends Controller
 
     }
 
-    public function reply()
+    public function reply(Contact $id)
     {
 
     }

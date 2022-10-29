@@ -24,4 +24,8 @@ class Contact extends Model
             get:fn($value)=>TypeContactEnums::toVNese($value),
         );
     }
+    protected function createdAt():Attribute
+    {
+        return Attribute::get(fn($value)=>date("M j",strtotime($value)));
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Actions\GetTitleForUserAction;
 use App\Enums\LevelEnum;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -39,6 +40,14 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('driver', function () {
             return auth('driver')->check();
         });
+        Blade::if('hasSidebar', function () {
+            $apps = ['contact'];
+            $route = Route::getCurrentRoute()->getName();
+            $mid = explode('.', $route)[1];
+            return in_array($mid, $apps);
+        });
+
+
         View::composer('*', function ($view) {
             $title = GetTitleForUserAction::handle();
             $route = Route::currentRouteName();

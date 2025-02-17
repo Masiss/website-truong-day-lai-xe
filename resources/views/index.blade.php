@@ -9,24 +9,28 @@
         <section>
             <div class="d-flex row">
                 <div class="col-6 ">
+                @if($configs->get('banner_1'))
+
                     <div class="card ">
                         @php
                             @endphp
-                        <img class="card-img" src="{{$configs->get('banner_1')->value}}">
+                        <img class="card-img" src="{{$configs->get('banner_1')->value}}" alt="banner_1"/>
                     </div>
-
+@endif
                 </div>
+                @if($configs->get('banner_2'))
                 <div class="col-6">
                     <div class="card ">
-                        <img class="card-img" src="{{$configs->get('banner_2')->value}}">
+                        <img class="card-img" src="{{$configs->get('banner_2')->value}}"  alt="banner_2" />
                     </div>
                 </div>
+                @endif
             </div>
             <div class="d-flex row card justify-content-between align-content-center" >
                 <div class="col-xl-12">
                     <div class="row">
                         <img style="z-index: 0;position: relative;" class="card-img"
-                             src="{{$configs->get('banner_bottom')->value}}">
+                             src="{{$configs->get('banner_bottom')->value}}" alt="banner_bottom" />
                         <div class="w-25">
                             <h3>
                                 HỌC LÁI XE HẠNG B1

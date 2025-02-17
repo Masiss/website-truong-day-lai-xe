@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('hasSidebar', function () {
             $apps = ['contact'];
             $route = Route::getCurrentRoute()->getName();
-            $mid = explode('.', $route)[1];
+            $mid = explode('.', $route)[1]??'';
             return in_array($mid, $apps);
         });
 

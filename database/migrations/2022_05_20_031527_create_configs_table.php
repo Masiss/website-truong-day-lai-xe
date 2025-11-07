@@ -92,18 +92,6 @@ return new class extends Migration {
                     'value' => 'hopelessornohope@gmail.com',
                 ],
                 [
-                    'key' => 'banner_1',
-                    'value' => 'homepage/banner_1.jpg',
-                ],
-                [
-                    'key' => 'banner_2',
-                    'value' => 'homepage/banner_2.jpg',
-                ],
-                [
-                    'key' => 'banner_bottom',
-                    'value' => 'homepage/banner_bottom.jpg',
-                ],
-                [
                     'key' => 'logo',
                     'value' => null,
 
@@ -123,7 +111,6 @@ return new class extends Migration {
             ],
 
         );
-
     }
 
     /**

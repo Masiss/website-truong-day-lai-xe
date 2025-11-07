@@ -6,15 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 
 class ConfigController extends Controller
 {
     public function __construct()
     {
-//        $this->model = Config::query();
+        //        $this->model = Config::query();
     }
 
     public function index()
@@ -26,6 +24,7 @@ class ConfigController extends Controller
                 $config->value = Storage::url($config->value);
             }
         }
+
         return view('admin.config', [
             'configs' => $configs,
             'arr_banner' => $arr_banner,
@@ -37,9 +36,13 @@ class ConfigController extends Controller
         DB::beginTransaction();
         try {
             if (Config::isImg($request->key)) {
+                $file = $request->file('new_value');
+                $extension = $file->getClientOriginalExtension(); // Lấy .png, .jpg, .webp...
+                $filename = $request->key.'.'.$extension;
+
                 $path = $request->file('new_value')->storeAs(
                     'homepage',
-                    $request->key.'.jpg',
+                    $filename,
                     'public');
                 Config::query()->where('key', $request->key)
                     ->update([
@@ -52,16 +55,17 @@ class ConfigController extends Controller
                     ]);
             }
             DB::commit();
+
             return back()->with(
                 'status', 'Cập nhật thành công',
             );
         } catch (Throwable $e) {
             report($e);
             DB::rollBack();
+
             return redirect()->withErrors([
-                'status', 'Đã xảy ra lỗi, vui lòng kiểm tra lại'
+                'status', 'Đã xảy ra lỗi, vui lòng kiểm tra lại',
             ])->back();
         }
     }
-
 }

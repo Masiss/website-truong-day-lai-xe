@@ -16,7 +16,7 @@
                             @endphp
                         <img class="card-img" src="{{$configs->get('banner_1')->value}}" alt="banner_1"/>
                     </div>
-@endif
+                @endif
                 </div>
                 @if($configs->get('banner_2'))
                 <div class="col-6">
